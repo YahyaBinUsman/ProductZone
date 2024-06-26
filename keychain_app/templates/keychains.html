@@ -1,0 +1,584 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion Bank - Key Chain Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+    <style>
+        html, body {
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #222;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        #categories {
+            background-color: hsla(0, 0%, 100%, 0.308); /* Light gray background for categories section */
+            text-align: center;
+            padding: 20px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            flex: 1; /* Take remaining vertical space */
+        }
+
+        .card {
+            background-color: #000;
+            color: #ddd;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: calc(33.33% - 20px); /* Set the width to approximately one-third of the container width */
+            max-width: 250px; /* Set a maximum width to maintain consistency */
+            height: 500px;
+        }
+
+        .card img {
+            width: 100%;
+            border-radius: 10px; /* Rounded corners for images */
+        }
+
+        .card h2 {
+            margin-bottom: 10px;
+        }
+        #header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: hsla(0, 0%, 100%, 0.308);
+        }
+    
+        #header-text {
+            font-size: 48px;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            color: black;
+            text-transform: uppercase;
+        }
+        
+        #header-text span {
+            font-weight: bold;
+            color: #ff6f61;
+        }
+        #logo {
+            width: 200px;
+            height: auto;
+        }
+    
+        #round-logo {
+            width: 230px;
+            height: 200px;
+            border-radius: 50%;
+        }
+    
+        #navbar {
+            background-color: #000;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        #navbar1 {
+            background-color: #000;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+    
+        #menu-cart-wrapper {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            width: auto; /* Adjusted width */
+        }
+    
+        #menu-icon {
+            font-size: 28px;
+            cursor: pointer;
+            padding: 10px 20px; /* Added padding */
+        }
+        #menu-icon1 {
+            font-size: 28px;
+            cursor: pointer;
+            padding: 10px 20px; /* Added padding */
+        }
+    
+        #cart-button {
+            font-size: 30px;
+            padding: 5px;
+            margin-left: 20px; /* Added margin for separation */
+        }
+    
+        /* Sidebar Navigation */
+        #side-nav {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.9);
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+            z-index: 2;
+        }
+    
+        #side-nav a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 22px;
+            color: #fff;
+            display: block;
+            transition: 0.3s;
+        }
+    
+        #side-nav a:hover {
+            background-color: #575757;
+        }
+    
+        #close-btn {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 36px;
+        }
+    
+        #search-bar-container {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            justify-content: center;
+        }
+        
+        #search-bar {
+            margin: 0 5px;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        #search-button {
+            cursor: pointer;
+            padding: 10px;
+            border: none;
+            background-color: #000;
+            color: #fff;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        #search-button i {
+            margin-right: 5px;
+        }
+    
+        #categories {
+            background-color: hsla(0, 0%, 100%, 0.308);
+            text-align: center;
+            padding: 20px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+    
+        .category-card-link {
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+        }
+        
+        .category-card {
+            background-color: #000;
+            color: #ddd;
+            padding: 20px;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 150px;
+            height: 150px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .category-card:hover {
+            transform: scale(1.05);
+        }
+    
+        .category-card h2 {
+            margin-bottom: 10px;
+        }
+    
+        #text-section {
+            background-color: #000;
+            padding: 20px;
+        }
+    
+        #text-section a {
+            color: #ddd;
+            margin: 10px 0;
+            text-decoration: none;
+            display: block;
+        }
+    
+        #cash-navbar {
+            background-color: #555;
+            padding: 10px;
+            text-align: center;
+            font-size: 18px;
+            color: #fff;
+            animation: fadeInUp 1.5s ease;
+        }
+    
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    
+        @media screen and (max-width: 768px) {
+            #header {
+                flex-direction: column;
+                align-items: center;
+            }
+    
+            #navbar {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 10px 0;
+            }
+            #navbar1 {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 10px 0;
+            }
+    
+            #menu-cart-wrapper {
+                justify-content: space-between;
+                width: 100%; /* Adjusted width for full width */
+                padding: 0 20px; /* Added padding */
+            }
+    
+            #menu-icon {
+                order: -1;
+                align-self: flex-start;
+                padding: 10px 0; /* Adjusted padding */
+            }
+            #menu-icon1 {
+                order: -1;
+                align-self: flex-start;
+                padding: 10px 0; /* Adjusted padding */
+            }
+    
+            #cart-button {
+                order: -1;
+                align-self: flex-end;
+                padding: 5px;
+                margin-left: 0; /* Removed margin */
+            }
+    
+            #search-bar-container {
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                padding: 10px 0;
+            }
+    
+            #search-bar,
+            #search-button {
+                width: auto;
+                margin: 0 5px;
+                padding: 15px;
+            }
+    
+            .category-card {
+                width: 45%;
+                margin-bottom: 20px;
+            }
+    
+            #text-section {
+                display: flex;
+                flex-direction: column;
+            }
+    
+            #text-section a {
+                margin-bottom: 10px;
+            }
+    
+            #header-text,
+            #round-logo {
+                display: none;
+            }
+    
+            #logo {
+                width: 100%;
+                height: 200px;
+            }
+        }
+    
+        @media screen and (max-width: 480px) {
+            #navbar {
+                padding: 5px;
+                display: none;
+            }
+            #navbar1 {
+                padding: 5px;
+            }
+    
+            #menu-icon {
+                font-size: 24px;
+            }
+            #menu-icon1 {
+                font-size: 24px;
+            }
+    
+            #menu-cart-wrapper {
+                justify-content: space-between;
+                padding: 0 5px; /* Adjusted padding */
+            }
+    
+            #search-bar-container {
+                margin-right: 0;
+            }
+    
+            #search-bar,
+            #search-button {
+                padding: 10px;
+            }
+    
+            #cart-button {
+                font-size: 32px;
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+    
+            .category-card {
+                padding: 10px;
+                width: 90%;
+                height: auto;
+                border-radius: 10px;
+            }
+            
+        }
+        @media screen and (min-width: 488px) {
+            #navbar {
+                padding: 5px;
+                
+            }
+            #navbar1 {
+                padding: 5px;
+                display: none;
+            }
+            
+        }
+        @media screen and (max-width: 768px) {
+            .card {
+                           width: 100%; /* Full width for cards on smaller screens */
+                       }
+                    }
+        
+       
+    </style>
+</head>
+<body>
+    <div id="header">
+        <img id="logo" src="{% static 'product zone.jpg' %}" alt="Fashion Bank Logo">
+        <h1 id="header-text">Product Zone By V.C & S.</h1>
+        <img id="round-logo" src="{% static '09fa5653-c54b-43a6-817a-5c0300fc60db.webp' %}" alt="Round Logo">
+    </div>
+    <div id="navbar">
+        <div id="menu-cart-wrapper">
+            <div id="menu-icon">&#9776; Menu</div>
+            
+        </div>
+        <div id="search-bar-container">
+            <input type="text" id="search-bar" placeholder="Search...">
+            <div id="search-button">
+                <i class="fas fa-search"></i> Search
+            </div>
+        </div>
+        <div id="cart-button">
+            <a href="{% url 'view_cart' %}" class="fas fa-shopping-cart"></a>
+        </div>
+    </div>
+    <div id="navbar1">
+        <div id="menu-cart-wrapper">
+            <div id="menu-icon1">&#9776; Menu</div>
+            <div id="cart-button">
+                <a href="{% url 'view_cart' %}" class="fas fa-shopping-cart"></a>
+            </div>
+            
+        </div>
+        <div id="search-bar-container">
+            <input type="text" id="search-bar" placeholder="Search...">
+            <div id="search-button">
+                <i class="fas fa-search"></i> Search
+            </div>
+        </div>
+       
+    </div>
+    
+    <div id="side-nav">
+        <a href="javascript:void(0)" id="close-btn">&times;</a>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'clothes' %}">clothes</a>
+        <a href="{% url 'keychains' %}">Key Chains</a>
+        <a href="{% url 'wallets' %}">Wallets</a>
+        <a href="{% url 'view_cart' %}">View Cart</a>
+    </div>
+    
+    <div id="cash-navbar">
+        Cash on Delivery Available!
+    </div>
+    
+    <div id="success-message" style="display: none; background-color: #4CAF50; color: white; padding: 15px; border-radius: 5px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999;"></div>
+    
+
+    <div id="categories">
+        {% for keychain in keychains_list %}
+            {% if keychain.quantity > 0 %}
+                <div class="card">
+                    <img src="{{ keychain.image.url }}" alt="{{ keychain.name }}">
+                    <h2>{{ keychain.name }}</h2>
+                    <p>{{ keychain.description }}</p>
+                    <p>Price: Rs{{ keychain.price }}</p>
+                    <p>Quantity: {{ keychain.quantity }}</p>
+                    <form action="{% url 'add_keychain_to_cart' keychain.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="number" name="quantity_keychain_{{ keychain.id }}" value="1" min="1" max="{{ keychain.quantity }}">
+                        <button type="submit" id="add-keychain-to-cart-form">Add to Cart</button>
+                    </form>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    
+    <div id="text-section">
+        <a href="#">Terms and Conditions</a><br>
+        <a href="#">FAQs</a><br>
+        <a href="{% url 'contact'%}">Contact Us</a>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var menuIcon = document.getElementById('menu-icon');
+            var menuIcon1 = document.getElementById('menu-icon1'); // Add reference to menu-icon1
+            var sideNav = document.getElementById('side-nav');
+            var closeBtn = document.getElementById('close-btn');
+            var closeBtn1 = document.getElementById('close-btn1'); // Add reference to close-btn1
+        
+            function openSideNav() {
+                sideNav.style.width = '250px';
+            }
+        
+            function closeSideNav() {
+                sideNav.style.width = '0';
+            }
+        
+            menuIcon.addEventListener('click', openSideNav);
+            if (menuIcon1) {
+                menuIcon1.addEventListener('click', openSideNav);
+            }
+        
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closeSideNav);
+            }
+        
+            if (closeBtn1) {
+                closeBtn1.addEventListener('click', closeSideNav);
+            }
+        
+            document.addEventListener('click', function(event) {
+                if (!sideNav.contains(event.target) && !menuIcon.contains(event.target) && !(menuIcon1 && menuIcon1.contains(event.target))) {
+                    closeSideNav();
+                }
+            });
+        });
+        
+
+  window.onload = function() {
+            var scrollPosition = sessionStorage.getItem('scrollPosition');
+            if (scrollPosition) {
+                window.scrollTo(0, scrollPosition);
+                sessionStorage.removeItem('scrollPosition');
+            }
+    
+            // Check if success message should be shown and then display it
+            var showMessage = sessionStorage.getItem('showMessage');
+            if (showMessage) {
+                showSuccessMessage(showMessage);
+                sessionStorage.removeItem('showMessage'); // Clear the flag after showing the message
+            }
+        }
+    
+        // Save scroll position before page reload
+        window.onbeforeunload = function() {
+            sessionStorage.setItem('scrollPosition', window.scrollY);
+        }
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            var addToCartForms = document.querySelectorAll('form');
+            addToCartForms.forEach(function(form) {
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    var formData = new FormData(form);
+                    fetch(form.action, {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                sessionStorage.setItem('showMessage', "Item added to your cart.");
+                                location.reload(); // Reload the page immediately after form submission
+                            } else {
+                                console.error("Error occurred while adding item to cart.");
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            console.error("Error occurred while adding item to cart.");
+                        });
+                });
+            });
+        });
+    
+        // Function to show the success message
+        function showSuccessMessage(message) {
+            var successMessage = document.getElementById('success-message');
+            if (successMessage) {
+                successMessage.textContent = message;
+                successMessage.style.display = 'block'; // Show the success message
+    
+                // Hide the success message after 2 seconds
+                setTimeout(function() {
+                    successMessage.style.display = 'none';
+                }, 2000); // 2000 milliseconds = 2 seconds
+            }
+        }
+    </script>
+</body>
+</html>
