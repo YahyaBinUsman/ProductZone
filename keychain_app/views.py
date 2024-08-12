@@ -261,11 +261,10 @@ from django.db import transaction
 from .models import Order, Clothes, KeyChain, Wallet
 from django.conf import settings
 
-@transaction.atomic
 def process_order(request):
     if request.method == 'POST':
         name = request.POST.get('name')
-        email = request.POST.get('email')
+        email = request.POST.get('email')  # Get the customer's email
         phone = request.POST.get('phone')
         address = request.POST.get('address')
         postal_code = request.POST.get('postal_code')
@@ -327,9 +326,9 @@ def process_order(request):
                         # Log error or handle as needed
                         pass
 
-                # Construct email content
-                subject = 'New Order Placed on Your Website'
-                message = (
+                # Construct the email content for the owner
+                subject_owner = 'New Order Placed on Your Website'
+                message_owner = (
                     f"New order details:\n\n"
                     f"Name: {name}\n"
                     f"Email: {email}\n"
@@ -340,14 +339,39 @@ def process_order(request):
                     f"Ordered Products:\n"
                 )
                 for product in products:
-                    message += f"- {product}\n"
+                    message_owner += f"- {product}\n"
                 
-                message += f"\nTotal Price: ${total_price_after_gst}"
+                message_owner += f"\nTotal Price: ${total_price_after_gst}"
 
-                # Send email notification to owner
+                # Send email notification to the owner
                 email_from = settings.EMAIL_HOST_USER
-                recipient_list = ['uslover30@gmail.com']  # Replace with actual recipient email
-                send_mail(subject, message, email_from, recipient_list)
+                recipient_list_owner = ['yahyabinusman7@gmail.com']  # Replace with actual recipient email
+                send_mail(subject_owner, message_owner, email_from, recipient_list_owner)
+
+                # Construct the email content for the customer
+                subject_customer = 'Your Order Confirmation'
+                message_customer = (
+                    f"Dear {name},\n\n"
+                    f"Thank you for your order!\n"
+                    f"Here are your order details:\n\n"
+                    f"Name: {name}\n"
+                    f"Email: {email}\n"
+                    f"Phone: {phone}\n"
+                    f"Address: {address}\n"
+                    f"Postal Code: {postal_code}\n"
+                    f"City: {city}\n\n"
+                    f"Ordered Products:\n"
+                )
+                for product in products:
+                    message_customer += f"- {product}\n"
+
+                message_customer += f"\nTotal Price: ${total_price_after_gst}\n\n"
+                message_customer += "Your order will be delivered soon. Thank you for shopping with us!\n\n"
+                message_customer += "Best regards,\nYour Company Name"
+
+                # Send email confirmation to the customer
+                recipient_list_customer = [email]
+                send_mail(subject_customer, message_customer, email_from, recipient_list_customer)
 
                 # Clear the cart session
                 request.session['cart'] = {}
@@ -363,6 +387,7 @@ def process_order(request):
     else:
         # If the request method is not POST, return a bad request response
         return JsonResponse({'error': 'Invalid request method.'}, status=400)
+
 
     
 def error_page(request):

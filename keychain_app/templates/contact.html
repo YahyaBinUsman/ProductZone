@@ -78,17 +78,29 @@
         }
     
         #header-text {
-            font-size: 48px;
+            font-family: 'Playfair Display', serif; /* Apply Playfair Display font */
+            font-size: 64px;
             text-align: center;
             margin: 0;
             padding: 20px;
-            color: black;
             text-transform: uppercase;
+            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+            letter-spacing: 2px;
+            line-height: 1.2;
+            color: #000;
         }
         
-        #header-text span {
-            font-weight: bold;
-            color: #ff6f61;
+        
+        #header-text #by {
+            font-size: 0.8em; /* Make "by" smaller */
+            text-transform: lowercase; /* Make "by" lowercase */
+            color: black;
+        }
+        
+        #header-text #ampersand {
+            font-family: 'Arial', sans-serif; /* Ensure the ampersand uses the default font family */
+            font-weight: normal; /* Ensure the ampersand does not apply any font weight */
+            color: black;
         }
         #logo {
             width: 200px;
@@ -423,7 +435,9 @@
 <body>
     <div id="header">
         <img id="logo" src="{% static 'product zone.jpg' %}" alt="Fashion Bank Logo">
-        <h1 id="header-text">Product Zone By V.C & S.</h1>
+        <h1 id="header-text">
+            <i>Product Zone&nbsp;&nbsp;&nbsp;<span id="by">&nbsp;&nbsp;by&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;V.C. <span id="ampersand">&amp;</span> S.</i>
+        </h1>
         <img id="round-logo" src="{% static '09fa5653-c54b-43a6-817a-5c0300fc60db.webp' %}" alt="Round Logo">
     </div>
     <div id="navbar">
