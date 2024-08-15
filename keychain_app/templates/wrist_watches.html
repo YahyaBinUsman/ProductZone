@@ -449,25 +449,24 @@
     
 
     <div id="categories">
-        {% for wallet in wallets_list %}
-            {% if wallet.quantity > 0 %}
-                <div class="card" data-product-id="{{ wallet.id }}">
-                    <img src="{{ wallet.image.url }}" alt="{{ wallet.name }}">
-                    
-                    <h2>{{ wallet.name }}</h2>
-                    <p>{{ wallet.description }}</p>
-                    <p>Price: Rs{{ wallet.price }}</p>
-                    <p>Quantity: {{ wallet.quantity }}</p>
-                    <form action="{% url 'add_wallet_to_cart' wallet.id %}" method="post">
+        {% for wrist_watch in wrist_watches_list %}
+            {% if wrist_watch.quantity > 0 %}
+                <div class="card" data-product-id="{{ wrist_watch.id }}">
+                    <img src="{{ wrist_watch.image.url }}" alt="{{ wrist_watch.name }}">
+                    <h2>{{ wrist_watch.name }}</h2>
+                    <p>{{ wrist_watch.description }}</p>
+                    <p>Price: Rs{{ wrist_watch.price }}</p>
+                    <p>Quantity: {{ wrist_watch.quantity }}</p>
+                    <form action="{% url 'add_wrist_watch_to_cart' wrist_watch.id %}" method="post">
                         {% csrf_token %}
-                        <input type="number" name="quantity_wallet_{{ wallet.id }}" value="1" min="1" max="{{ wallet.quantity }}">
-                        <button type="submit" id="add-wallet-to-cart-form">Add to Cart</button>
+                        <input type="number" name="quantity_wrist_watch_{{ wrist_watch.id }}" value="1" min="1" max="{{ wrist_watch.quantity }}">
+                        <button type="submit">Add to Cart</button>
                     </form>
                 </div>
             {% endif %}
         {% endfor %}
     </div>
-    
+
     <div id="text-section">
         <a href="#">Terms and Conditions</a><br>
         <a href="#">FAQs</a><br>
@@ -572,6 +571,7 @@
     </script>
        <script>
 </script>
+    
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const urlParams = new URLSearchParams(window.location.search);
@@ -598,5 +598,6 @@
     
 </script>
 
+    
 </body>
 </html> 

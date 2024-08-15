@@ -186,7 +186,7 @@
 
         .category-card-link {
             text-decoration: none;
-            width: 250px;
+            width: 400px;
         }
 
         .category-card {
@@ -213,7 +213,97 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-        }
+        } 
+        /* Grid layout for featured products */
+#featured-products {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Featured product card styling */
+.featured-product {
+    background-color: #000;
+    color: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 350px;
+    width: 230px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.featured-product:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5);
+}
+
+.featured-product img {
+    width: 100%;
+    height: auto;
+    max-height: 150px;
+    border-radius: 10px;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+.featured-product h3 {
+    margin-bottom: 10px;
+    font-size: 1.2em;
+}
+
+.view-product-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.view-product-button:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive design adjustments */
+@media screen and (max-width: 1024px) {
+    #featured-products {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    #featured-products {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .featured-product {
+        height: auto;
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    #featured-products {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .featured-product {
+        height: auto;
+        width: 80%;
+    }
+}
+
 
         #text-section {
             background-color: #000;
@@ -395,45 +485,27 @@
         </h1>
         <img id="round-logo" src="{% static '09fa5653-c54b-43a6-817a-5c0300fc60db.webp' %}" alt="Round Logo">
     </div>
-    <div id="navbar">
-        <div id="menu-cart-wrapper">
-            <div id="menu-icon">&#9776; Menu</div>
-        </div>
-        <div id="search-bar-container">
-            <input type="text" id="search-bar" placeholder="Search...">
-            <div id="search-button">
-                <i class="fas fa-search"></i> Search
-            </div>
-        </div>
-        <div id="cart-button">
-            <a href="{% url 'view_cart' %}" class="fas fa-shopping-cart"></a>
-        </div>
-    </div>
-    <div id="navbar1">
-        <div id="menu-cart-wrapper">
-            <div id="menu-icon1">&#9776; Menu</div>
-            <div id="cart-button">
-                <a href="{% url 'view_cart' %}" class="fas fa-shopping-cart"></a>
-            </div>
-        </div>
-        <div id="search-bar-container">
-            <input type="text" id="search-bar" placeholder="Search...">
-            <div id="search-button">
-                <i class="fas fa-search"></i> Search
-            </div>
-        </div>
-    </div>
-    <div id="side-nav">
-        <a href="javascript:void(0)" id="close-btn">&times;</a>
-        <a href="{% url 'home' %}">Home</a>
-        <a href="{% url 'clothes' %}">Clothes</a>
-        <a href="{% url 'keychains' %}">Key Chains</a>
-        <a href="{% url 'wallets' %}">Wallets</a>
-        <a href="{% url 'view_cart' %}">View Cart</a>
-    </div>
+    {% include 'navbar.html' %}
+
+
     <div id="cash-navbar">
         Cash on Delivery Available!
     </div>
+    <h2>Featured Products</h2>
+    <div id="featured-products">
+        {% for category, products in featured_products.items %}
+        {% for product in products %}
+            <div class="featured-product" data-product-id="{{ product.id }}">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" >
+                <h3>{{ product.name }}</h3>
+                <p>{{ product.description }}</p>
+                <p>${{ product.price }}</p>
+                <a href="{% url 'product_redirect' category=category product_id=product.id %}" class="view-product-button" onclick="saveProductID('{{ product.id }}')">View Product</a>
+            </div>
+        {% endfor %}
+        {% endfor %}
+    </div>
+
     <div id="categories">
         <a href="{% url 'clothes' %}" class="category-card-link">
             <div class="category-card">
@@ -456,7 +528,29 @@
                 <button>Shop Now</button>
             </div>
         </a>
+        <a href="{% url 'wrist_watches' %}" class="category-card-link">
+            <div class="category-card">
+                <h2>Wrist Watches</h2>
+                <p>Explore our stylish wrist watches collection.</p>
+                <button>Shop Now</button>
+            </div>
+        </a>
+        <a href="{% url 'hosiery' %}" class="category-card-link">
+            <div class="category-card">
+                <h2>Hosiery</h2>
+                <p>Explore our stylish hosiery collection.</p>
+                <button>Shop Now</button>
+            </div>
+        </a>
+        <a href="{% url 'belts' %}" class="category-card-link">
+            <div class="category-card">
+                <h2>Belts</h2>
+                <p>Explore our stylish belts collection.</p>
+                <button>Shop Now</button>
+            </div>
+        </a>
     </div>
+    
     <div id="text-section">
         <a href="#">Terms and Conditions</a><br>
         <a href="#">FAQs</a><br>
@@ -498,5 +592,45 @@
             });
         });
     </script>
+       <script>
+</script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('product_id');
+        
+            if (productId) {
+                const productElement = document.querySelector(`[data-product-id='${productId}']`);
+                if (productElement) {
+                    productElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else {
+                    console.error('Element not found for ID:', productId);
+                }
+            }
+        });
+        
+    </script>
+    <script>
+        function saveProductID(productId) {
+            sessionStorage.setItem('scrollToProductID', productId);
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const productId = sessionStorage.getItem('scrollToProductID');
+            
+            if (productId) {
+                const productElement = document.querySelector(`[data-product-id='${productId}']`);
+                if (productElement) {
+                    productElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    sessionStorage.removeItem('scrollToProductID');  // Clear the storage after use
+                }
+            }
+        });
+        
+    </script>
+    
+    
 </body>
+
 </html>

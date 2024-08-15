@@ -7,6 +7,8 @@ class Clothes(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField()
     image = models.ImageField(upload_to='clothes_images')  # Add image field
+    is_featured = models.BooleanField(default=False)
+
 
     def __str__(self):
         return self.name
@@ -17,6 +19,7 @@ class KeyChain(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField()
     image = models.ImageField(upload_to='keychain_images')  # Add image field
+    is_featured = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -27,6 +30,7 @@ class Wallet(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField()
     image = models.ImageField(upload_to='wallet_images')  # Add image field
+    is_featured = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -46,6 +50,7 @@ class Order(models.Model):
     total_price_after_gst = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
     products = models.TextField(default='[]')  # Default value set to an empty list
+    is_complete = models.BooleanField(default=False)
 
     def __str__(self):
         return f'Order #{self.id}'
@@ -55,3 +60,40 @@ class Order(models.Model):
 
     def get_products(self):
         return json.loads(self.products)
+
+from django.db import models
+
+class WristWatch(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.PositiveIntegerField()
+    image = models.ImageField(upload_to='wrist_watches/')
+    is_featured = models.BooleanField(default=False)
+
+
+    def __str__(self):
+        return self.name
+
+class Hosiery(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.PositiveIntegerField()
+    image = models.ImageField(upload_to='hoisery/')
+    is_featured = models.BooleanField(default=False)
+
+
+    def __str__(self):
+        return self.name
+
+class Belt(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.PositiveIntegerField()
+    image = models.ImageField(upload_to='belts/')
+    is_featured = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name

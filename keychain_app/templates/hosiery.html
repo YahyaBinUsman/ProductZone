@@ -11,6 +11,7 @@
         html, body {
             overflow-x: hidden; /* Prevent horizontal scrolling */
         }
+
         body {
             font-family: 'Arial', sans-serif;
             background-color: #222;
@@ -21,6 +22,20 @@
             flex-direction: column;
             min-height: 100vh;
         }
+        .highlighted-product {
+            border: 3px solid blue;
+            animation: shine 1s infinite alternate;
+        }
+        
+        @keyframes shine {
+            from {
+                box-shadow: 0 0 10px rgba(0, 0, 255, 0.5);
+            }
+            to {
+                box-shadow: 0 0 20px rgba(0, 0, 255, 1);
+            }
+        }
+        
         #categories {
             background-color: hsla(0, 0%, 100%, 0.308); /* Light gray background for categories section */
             text-align: center;
@@ -413,20 +428,7 @@
                        }
                     }
         
-                    .highlighted-product {
-                        border: 3px solid blue;
-                        animation: shine 1s infinite alternate;
-                    }
-                    
-                    @keyframes shine {
-                        from {
-                            box-shadow: 0 0 10px rgba(0, 0, 255, 0.5);
-                        }
-                        to {
-                            box-shadow: 0 0 20px rgba(0, 0, 255, 1);
-                        }
-                    }
-                    
+       
     </style>
 </head>
 <body>
@@ -449,19 +451,18 @@
     
 
     <div id="categories">
-        {% for wallet in wallets_list %}
-            {% if wallet.quantity > 0 %}
-                <div class="card" data-product-id="{{ wallet.id }}">
-                    <img src="{{ wallet.image.url }}" alt="{{ wallet.name }}">
-                    
-                    <h2>{{ wallet.name }}</h2>
-                    <p>{{ wallet.description }}</p>
-                    <p>Price: Rs{{ wallet.price }}</p>
-                    <p>Quantity: {{ wallet.quantity }}</p>
-                    <form action="{% url 'add_wallet_to_cart' wallet.id %}" method="post">
+        {% for hosiery in hosiery_list %}
+            {% if hosiery.quantity > 0 %}
+                <div class="card" data-product-id="{{ hosiery.id }}">
+                    <img src="{{ hosiery.image.url }}" alt="{{ hosiery.name }}">
+                    <h2>{{ hosiery.name }}</h2>
+                    <p>{{ hosiery.description }}</p>
+                    <p>Price: Rs{{ hosiery.price }}</p>
+                    <p>Quantity: {{ hosiery.quantity }}</p>
+                    <form action="{% url 'add_hosiery_to_cart' hosiery.id %}" method="post">
                         {% csrf_token %}
-                        <input type="number" name="quantity_wallet_{{ wallet.id }}" value="1" min="1" max="{{ wallet.quantity }}">
-                        <button type="submit" id="add-wallet-to-cart-form">Add to Cart</button>
+                        <input type="number" name="quantity_hosiery_{{ hosiery.id }}" value="1" min="1" max="{{ hosiery.quantity }}">
+                        <button type="submit" id="add-hosiery-to-cart-form">Add to Cart</button>
                     </form>
                 </div>
             {% endif %}

@@ -413,7 +413,20 @@
                        }
                     }
         
-       
+                    .highlighted-product {
+                        border: 3px solid blue;
+                        animation: shine 1s infinite alternate;
+                    }
+                    
+                    @keyframes shine {
+                        from {
+                            box-shadow: 0 0 10px rgba(0, 0, 255, 0.5);
+                        }
+                        to {
+                            box-shadow: 0 0 20px rgba(0, 0, 255, 1);
+                        }
+                    }
+                    
     </style>
 </head>
 <body>
@@ -424,46 +437,9 @@
         </h1>
         <img id="round-logo" src="{% static '09fa5653-c54b-43a6-817a-5c0300fc60db.webp' %}" alt="Round Logo">
     </div>
-    <div id="navbar">
-        <div id="menu-cart-wrapper">
-            <div id="menu-icon">&#9776; Menu</div>
-            
-        </div>
-        <div id="search-bar-container">
-            <input type="text" id="search-bar" placeholder="Search...">
-            <div id="search-button">
-                <i class="fas fa-search"></i> Search
-            </div>
-        </div>
-        <div id="cart-button">
-            <a href="{% url 'view_cart' %}" class="fas fa-shopping-cart"></a>
-        </div>
-    </div>
-    <div id="navbar1">
-        <div id="menu-cart-wrapper">
-            <div id="menu-icon1">&#9776; Menu</div>
-            <div id="cart-button">
-                <a href="{% url 'view_cart' %}" class="fas fa-shopping-cart"></a>
-            </div>
-            
-        </div>
-        <div id="search-bar-container">
-            <input type="text" id="search-bar" placeholder="Search...">
-            <div id="search-button">
-                <i class="fas fa-search"></i> Search
-            </div>
-        </div>
-       
-    </div>
-    
-    <div id="side-nav">
-        <a href="javascript:void(0)" id="close-btn">&times;</a>
-        <a href="{% url 'home' %}">Home</a>
-        <a href="{% url 'clothes' %}">Clothes</a>
-        <a href="{% url 'keychains' %}">Key Chains</a>
-        <a href="{% url 'wallets' %}">Wallets</a>
-        <a href="{% url 'view_cart' %}">View Cart</a>
-    </div>
+    {% include 'navbar.html' %}
+
+
     
     <div id="cash-navbar">
         Cash on Delivery Available!
@@ -474,23 +450,23 @@
 
     <div id="categories">
         {% for clothes in clothes_list %}
-            {% if clothes.quantity > 0 %}
-                <div class="card">
-                    <img src="{{ clothes.image.url }}" alt="{{ clothes.name }}">
-                    <h2>{{ clothes.name }}</h2>
-                    <p>{{ clothes.description }}</p>
-                    <p>Price: Rs{{ clothes.price }}</p>
-                    <p>Quantity: {{ clothes.quantity }}</p>
-                    <form action="{% url 'add_to_cart' clothes.id %}" method="post">
-                        {% csrf_token %}
-                        <input type="number" name="quantity" value="1" min="1" max="{{ clothes.quantity }}">
-                        <button type="submit">Add to Cart</button>
-                    </form>
-                    
-                </div>
-            {% endif %}
+        {% if clothes.quantity > 0 %}
+            <div class="card" data-product-id="{{ clothes.id }}">
+                <img src="{{ clothes.image.url }}" alt="{{ clothes.name }}">
+                <h2>{{ clothes.name }}</h2>
+                <p>{{ clothes.description }}</p>
+                <p>Price: Rs{{ clothes.price }}</p>
+                <p>Quantity: {{ clothes.quantity }}</p>
+                <form action="{% url 'add_to_cart' clothes.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="number" name="quantity" value="1" min="1" max="{{ clothes.quantity }}">
+                    <button type="submit">Add to Cart</button>
+                </form>
+            </div>
+        {% endif %}
         {% endfor %}
     </div>
+    
     
     <div id="text-section">
         <a href="#">Terms and Conditions</a><br>
@@ -599,5 +575,32 @@
       
         
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('product_id');
+        
+            if (productId) {
+                const productElement = document.querySelector(`[data-product-id='${productId}']`);
+                
+                if (productElement) {
+                    // Scroll the product into view
+                    productElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+                    // Move the product to the top of the list
+                    const categoriesContainer = document.getElementById('categories');
+                    categoriesContainer.prepend(productElement);
+        
+                    // Apply the highlighted effect
+                    productElement.classList.add('highlighted-product');
+                } else {
+                    console.error('Element not found for ID:', productId);
+                }
+            }
+        });
+        
+    </script>
+    
 </body>
 </html> 

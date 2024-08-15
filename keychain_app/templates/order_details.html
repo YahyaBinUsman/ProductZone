@@ -1,0 +1,586 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
+    <style>
+        html,
+        body {
+          overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+        body {
+          font-family: "Arial", sans-serif;
+          background-color: #222;
+          color: #fff;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+          min-height: 100vh;
+        }
+        table {
+          width: 80%;
+          margin: 20px auto;
+          border-collapse: collapse;
+          border: 4px solid;
+        }
+  
+        th,
+        td {
+          padding: 10px;
+          border-bottom: 1px solid #ddd;
+          text-align: center;
+        }
+  
+        th {
+          background-color: #000;
+          color: #fff;
+        }
+  
+        tbody tr:nth-child(even) {
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+  
+        tfoot {
+          background-color: #000;
+          color: #fff;
+        }
+  
+        tfoot td {
+          font-weight: bold;
+          text-align: center;
+        }
+  
+        button {
+          background-color: #000;
+          color: #fff;
+          border: none;
+          padding: 5px 10px;
+          cursor: pointer;
+        }
+  
+        button:hover {
+          background-color: #333;
+        }
+  
+        p {
+          text-align: center;
+          margin-top: 20px;
+        }
+        #header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 20px;
+          background-color: hsla(0, 0%, 100%, 0.308);
+      }
+  
+      #header-text {
+          font-family: 'Playfair Display', serif; /* Apply Playfair Display font */
+          font-size: 64px;
+          text-align: center;
+          margin: 0;
+          padding: 20px;
+          text-transform: uppercase;
+          text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+          letter-spacing: 2px;
+          line-height: 1.2;
+          color: #000;
+      }
+      
+      
+      #header-text #by {
+          font-size: 0.8em; /* Make "by" smaller */
+          text-transform: lowercase; /* Make "by" lowercase */
+          color: black;
+      }
+      
+      #header-text #ampersand {
+          font-family: 'Arial', sans-serif; /* Ensure the ampersand uses the default font family */
+          font-weight: normal; /* Ensure the ampersand does not apply any font weight */
+          color: black;
+      }
+        #logo {
+          width: 200px;
+          height: auto;
+        }
+  
+        #round-logo {
+          width: 230px;
+          height: 200px;
+          border-radius: 50%;
+        }
+  
+        #navbar {
+          background-color: #000;
+          padding: 10px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          position: relative;
+        }
+        #navbar1 {
+          background-color: #000;
+          padding: 10px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          position: relative;
+        }
+  
+        #menu-cart-wrapper {
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+          width: auto; /* Adjusted width */
+        }
+  
+        #menu-icon {
+          font-size: 28px;
+          cursor: pointer;
+          padding: 10px 20px; /* Added padding */
+        }
+        #menu-icon1 {
+          font-size: 28px;
+          cursor: pointer;
+          padding: 10px 20px; /* Added padding */
+        }
+  
+        #cart-button {
+          font-size: 30px;
+          padding: 5px;
+          margin-left: 20px; /* Added margin for separation */
+        }
+  
+        /* Sidebar Navigation */
+        #side-nav {
+          height: 100%;
+          width: 0;
+          position: fixed;
+          top: 0;
+          left: 0;
+          background-color: rgba(0, 0, 0, 0.9);
+          overflow-x: hidden;
+          transition: 0.5s;
+          padding-top: 60px;
+          z-index: 2;
+        }
+  
+        #side-nav a {
+          padding: 10px 15px;
+          text-decoration: none;
+          font-size: 22px;
+          color: #fff;
+          display: block;
+          transition: 0.3s;
+        }
+  
+        #side-nav a:hover {
+          background-color: #575757;
+        }
+  
+        #close-btn {
+          position: absolute;
+          top: 20px;
+          right: 25px;
+          font-size: 36px;
+        }
+  
+        #search-bar-container {
+          display: flex;
+          align-items: center;
+          flex: 1;
+          justify-content: center;
+        }
+  
+        #search-bar {
+          margin: 0 5px;
+          padding: 15px;
+          border: none;
+          border-radius: 5px;
+          width: 100%;
+          max-width: 400px;
+        }
+  
+        #search-button {
+          cursor: pointer;
+          padding: 10px;
+          border: none;
+          background-color: #000;
+          color: #fff;
+          border-radius: 5px;
+          display: flex;
+          align-items: center;
+        }
+  
+        #search-button i {
+          margin-right: 5px;
+        }
+  
+        #categories {
+          background-color: hsla(0, 0%, 100%, 0.308);
+          text-align: center;
+          padding: 20px;
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+          flex-wrap: wrap;
+          flex: 1;
+        }
+  
+        .category-card-link {
+          text-decoration: none;
+          display: inline-block;
+          margin: 10px;
+        }
+  
+        .category-card {
+          background-color: #000;
+          color: #ddd;
+          padding: 20px;
+          border-radius: 50%;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          width: 150px;
+          height: 150px;
+          text-align: center;
+          transition: transform 0.3s ease;
+        }
+  
+        .category-card:hover {
+          transform: scale(1.05);
+        }
+  
+        .category-card h2 {
+          margin-bottom: 10px;
+        }
+  
+        #text-section {
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+          background-color: #000;
+          padding: 20px;
+        }
+        
+        #text-section a {
+          color: #ddd;
+          margin: 10px 0;
+          text-decoration: none;
+          display: block;
+        }
+        
+  
+        #cash-navbar {
+          background-color: #555;
+          padding: 10px;
+          text-align: center;
+          font-size: 18px;
+          color: #fff;
+          animation: fadeInUp 1.5s ease;
+        }
+  
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+  
+        @media screen and (max-width: 768px) {
+          #header {
+            flex-direction: column;
+            align-items: center;
+          }
+  
+          #navbar {
+            flex-direction: column;
+            align-items: stretch;
+            padding: 10px 0;
+          }
+          #navbar1 {
+            flex-direction: column;
+            align-items: stretch;
+            padding: 10px 0;
+          }
+  
+          #menu-cart-wrapper {
+            justify-content: space-between;
+            width: 100%; /* Adjusted width for full width */
+            padding: 0 20px; /* Added padding */
+          }
+  
+          #menu-icon {
+            order: -1;
+            align-self: flex-start;
+            padding: 10px 0; /* Adjusted padding */
+          }
+          #menu-icon1 {
+            order: -1;
+            align-self: flex-start;
+            padding: 10px 0; /* Adjusted padding */
+          }
+  
+          #cart-button {
+            order: -1;
+            align-self: flex-end;
+            padding: 5px;
+            margin-left: 0; /* Removed margin */
+          }
+  
+          #search-bar-container {
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 10px 0;
+          }
+  
+          #search-bar,
+          #search-button {
+            width: auto;
+            margin: 0 5px;
+            padding: 15px;
+          }
+  
+          .category-card {
+            width: 45%;
+            margin-bottom: 20px;
+          }
+  
+          #text-section {
+            display: flex;
+            flex-direction: column;
+          }
+  
+          #text-section a {
+            margin-bottom: 10px;
+          }
+  
+          #header-text,
+          #round-logo {
+            display: none;
+          }
+  
+          #logo {
+            width: 100%;
+            height: 200px;
+          }
+        }
+  
+        @media screen and (max-width: 480px) {
+          #navbar {
+            padding: 5px;
+            display: none;
+          }
+          #navbar1 {
+            padding: 5px;
+          }
+  
+          #menu-icon {
+            font-size: 24px;
+          }
+          #menu-icon1 {
+            font-size: 24px;
+          }
+  
+          #menu-cart-wrapper {
+            justify-content: space-between;
+            padding: 0 5px; /* Adjusted padding */
+          }
+  
+          #search-bar-container {
+            margin-right: 0;
+          }
+  
+          #search-bar,
+          #search-button {
+            padding: 10px;
+          }
+  
+          #cart-button {
+            font-size: 32px;
+            padding: 10px;
+            margin-bottom: 10px;
+          }
+  
+          .category-card {
+            padding: 10px;
+            width: 90%;
+            height: auto;
+            border-radius: 10px;
+          }
+        }
+        @media screen and (min-width: 488px) {
+          #navbar {
+            padding: 5px;
+          }
+          #navbar1 {
+            padding: 5px;
+            display: none;
+          }
+        }
+        @media screen and (max-width: 768px) {
+          table {
+            width: 100%; /* Make table width full width on smaller screens */
+            font-size: 14px; /* Adjust font size for better readability */
+          }
+        
+          th,
+          td {
+            padding: 8px; /* Reduce padding for better spacing */
+          }
+        
+          /* Hide columns on smaller screens */
+          th:nth-child(2), td:nth-child(2), /* Price (After GST) column */
+          th:nth-child(3), td:nth-child(3) /* Quantity column */ {
+            display: none;
+          }
+        
+          /* Adjust specific styles as needed */
+        }
+        
+        @media screen and (max-width: 768px) {
+          table {
+            width: 100%; /* Make table width full width on smaller screens */
+            font-size: 14px; /* Adjust font size for better readability */
+            overflow-x: auto; /* Allow horizontal scrolling on smaller screens if needed */
+          }
+      
+          th,
+          td {
+            padding: 8px; /* Reduce padding for better spacing */
+            text-align: center; /* Center-align text in cells */
+          }
+      
+          /* Hide specific columns on smaller screens */
+          th:nth-child(2),
+          td:nth-child(2), /* Price (Before GST) column */
+          th:nth-child(3),
+          td:nth-child(3) /* GST Amount column */ {
+            display: none;
+          }
+        }
+      
+        @media screen and (max-width: 480px) {
+          table {
+            font-size: 12px; /* Further reduce font size for smaller screens */
+          }
+      
+          th,
+          td {
+            padding: 4px; /* Adjust padding for tighter spacing */
+          }
+        }
+      </style>
+</head>
+<body>
+    
+    <div id="navbar">
+        <div id="menu-icon">&#9776; Menu</div>
+        <form method="get" action="{% url 'products_overview' %}" id="search-bar-container">
+            <input type="text" name="search" placeholder="Search Products" id="search-bar">
+            <button type="submit" id="search-button"><i class="fas fa-search"></i> Search</button>
+        </form>
+        <div id="cart-button">
+            <a href="{% url 'view_cart' %}" class="fas fa-shopping-cart"></a>
+        </div>
+    </div>
+
+    <div id="side-nav">
+        <div id="close-btn">&times;</div>
+        <a href="{% url 'products_view' %}">Products</a>
+        <a href="{% url 'add_product' %}">Add Product</a>
+        <a href="{% url 'products_overview' %}">Products Overview</a>
+        <a href="{% url 'order_details' %}">Order Details</a>
+    </div>
+    <h1 style="text-align: center; margin-top: 20px;">Order Details</h1>
+    
+    <h2 style="text-align: center;">Pending Orders</h2>
+    <table>
+        <thead>
+            <tr>
+                <td></td>
+                <td></td>
+                    <td><p class="total-sales">Total Sales (Completed Orders): {{ total_sales }}</p></td>
+                    <td><p class="total-sales">Potential Sales (Pending Orders): {{ potential_sales }}</p></td>
+                    <td><p class="total-sales">Total Orders: {{ total_orders }}</p></td>
+                    <td><p class="total-sales">Pending Orders: {{ total_pending_orders }}</p></td>
+                    <td></td>
+                    <td></td>
+            </tr>
+            <tr>
+                <th>Order ID</th>
+                <th>Customer Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Products</th>
+                <th>Total Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in pending_orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.name }}</td>
+                <td>{{ order.email }}</td>
+                <td>{{ order.phone }}</td>
+                <td>{{ order.address }}</td>
+                <td>{{ order.products }}</td>
+                <td>${{ order.total_price_after_gst }}</td>
+                <td>
+                    <form action="{% url 'mark_order_complete' order.id %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-complete">Mark as Complete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var menuIcon = document.getElementById('menu-icon');
+            var menuIcon1 = document.getElementById('menu-icon1'); // Add reference to menu-icon1
+            var sideNav = document.getElementById('side-nav');
+            var closeBtn = document.getElementById('close-btn');
+            var closeBtn1 = document.getElementById('close-btn1'); // Add reference to close-btn1
+        
+            function openSideNav() {
+                sideNav.style.width = '250px';
+            }
+        
+            function closeSideNav() {
+                sideNav.style.width = '0';
+            }
+        
+            menuIcon.addEventListener('click', openSideNav);
+            if (menuIcon1) {
+                menuIcon1.addEventListener('click', openSideNav);
+            }
+        
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closeSideNav);
+            }
+        
+            if (closeBtn1) {
+                closeBtn1.addEventListener('click', closeSideNav);
+            }
+        
+            document.addEventListener('click', function(event) {
+                if (!sideNav.contains(event.target) && !menuIcon.contains(event.target) && !(menuIcon1 && menuIcon1.contains(event.target))) {
+                    closeSideNav();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

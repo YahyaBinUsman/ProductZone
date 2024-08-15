@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search and Redirect</title>
+    <style>
+        /* Style for search bar container */
+        #search-bar-container {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            justify-content: center;
+        }
+
+        /* Apply the same style to the search bar in the mobile navbar */
+        #search-bar, #search-bar1 {
+            margin: 0 5px;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        /* Style the search button */
+        #search-button {
+            cursor: pointer;
+            padding: 10px;
+            border: none;
+            background-color: #000;
+            color: #fff;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        #search-button i {
+            margin-right: 5px;
+        }
+
+        /* Ensure the search results container has the same style */
+        #search-results, #search-results1 {
+            position: absolute;
+            top: calc(100% + 5px); /* Position results just below the search bar */
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+            width: 100%;
+            padding: 10px; /* Add some padding for a cleaner look */
+        }
+
+        /* Style individual search result items */
+        .search-result-item {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none; /* Remove border for the last item */
+        }
+
+        .search-result-item:hover {
+            background-color: #f2f2f2; /* Light grey background on hover */
+        }
+
+        .search-result-item a {
+            text-decoration: none;
+            color: #333;
+            display: block;
+        }
+
+        .search-result-item strong {
+            font-weight: bold;
+            color: #000;
+        }
+
+        /* Mobile screen adjustments */
+        @media screen and (max-width: 768px) {
+            #search-results, #search-results1 {
+                top: calc(100% + 5px); /* Position results just below the search bar */
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            #search-results, #search-results1 {
+                top: calc(100% + 5px); /* Position results just below the search bar */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Desktop Navbar -->
+<div id="navbar">
+    <div id="menu-cart-wrapper">
+        <div id="menu-icon">&#9776; Menu</div>
+    </div>
+    <div id="search-bar-container">
+        <input type="text" id="search-bar" placeholder="Search...">
+        <div id="search-button">
+            <i class="fas fa-search"></i> Search
+        </div>
+        <div id="search-results" class="search-results-container"></div>
+    </div>
+    <div id="cart-button">
+        <a href="{% url 'view_cart' %}" class="fas fa-shopping-cart"></a>
+    </div>
+</div>
+
+<!-- Mobile Navbar -->
+<div id="navbar1">
+    <div id="menu-cart-wrapper">
+        <div id="menu-icon1">&#9776; Menu</div>
+        <div id="cart-button">
+            <a href="{% url 'view_cart' %}" class="fas fa-shopping-cart"></a>
+        </div>
+    </div>
+    <div id="search-bar-container">
+        <input type="text" id="search-bar1" placeholder="Search..."> <!-- Notice the ID difference -->
+        <div id="search-button">
+            <i class="fas fa-search"></i> Search
+        </div>
+        <div id="search-results1" class="search-results-container"></div>
+    </div>
+</div>
+
+<div id="side-nav">
+    <a href="javascript:void(0)" id="close-btn">&times;</a>
+    <a href="{% url 'home' %}">Home</a>
+    <a href="{% url 'clothes' %}">Clothes</a>
+    <a href="{% url 'keychains' %}">Key Chains</a>
+    <a href="{% url 'wallets' %}">Wallets</a>
+    <a href="{% url 'wrist_watches' %}">Wrist Watches</a>
+    <a href="{% url 'hosiery' %}">Hosiery</a>
+    <a href="{% url 'belts' %}">Belts</a>
+    <a href="{% url 'view_cart' %}">View Cart</a>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const handleSearch = (searchBarId, resultsContainerId) => {
+            const searchBar = document.getElementById(searchBarId);
+            const resultsContainer = document.getElementById(resultsContainerId);
+    
+            searchBar.addEventListener('input', () => {
+                const query = searchBar.value;
+                if (query.trim() === '') {
+                    resultsContainer.innerHTML = ''; // Clear results if query is empty
+                    resultsContainer.style.display = 'none'; // Hide the results container
+                    return;
+                }
+    
+                fetch(`/search/?query=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const results = data.results;
+                        resultsContainer.innerHTML = ''; // Clear previous results
+    
+                        if (results.length > 0) {
+                            results.forEach(product => {
+                                const resultItem = document.createElement('div');
+                                resultItem.classList.add('search-result-item');
+                                resultItem.innerHTML = `
+                                    <a href="/${product.category}/product/${product.id}/">
+                                        <strong>${product.name}</strong> - ${product.price} <br>
+                                        ${product.description}
+                                    </a>
+                                `;
+                                resultsContainer.appendChild(resultItem);
+                            });
+                            resultsContainer.style.display = 'block'; // Show the results container
+                        } else {
+                            resultsContainer.innerHTML = '<p>No results found.</p>';
+                            resultsContainer.style.display = 'block'; // Show the results container
+                        }
+                    });
+            });
+    
+            // Hide the search results when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!searchBar.contains(e.target) && !resultsContainer.contains(e.target)) {
+                    resultsContainer.style.display = 'none';
+                }
+            });
+        };
+    
+        // Initialize search for both desktop and mobile navbars
+        handleSearch('search-bar', 'search-results');
+        handleSearch('search-bar1', 'search-results1');
+    });
+    
+</script>
+
+</body>
+</html>

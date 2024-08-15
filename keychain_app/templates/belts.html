@@ -412,7 +412,6 @@
                            width: 100%; /* Full width for cards on smaller screens */
                        }
                     }
-        
                     .highlighted-product {
                         border: 3px solid blue;
                         animation: shine 1s infinite alternate;
@@ -427,6 +426,7 @@
                         }
                     }
                     
+       
     </style>
 </head>
 <body>
@@ -447,27 +447,24 @@
     
     <div id="success-message" style="display: none; background-color: #4CAF50; color: white; padding: 15px; border-radius: 5px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999;"></div>
     
-
     <div id="categories">
-        {% for wallet in wallets_list %}
-            {% if wallet.quantity > 0 %}
-                <div class="card" data-product-id="{{ wallet.id }}">
-                    <img src="{{ wallet.image.url }}" alt="{{ wallet.name }}">
-                    
-                    <h2>{{ wallet.name }}</h2>
-                    <p>{{ wallet.description }}</p>
-                    <p>Price: Rs{{ wallet.price }}</p>
-                    <p>Quantity: {{ wallet.quantity }}</p>
-                    <form action="{% url 'add_wallet_to_cart' wallet.id %}" method="post">
+        {% for belt in belts_list %}
+            {% if belt.quantity > 0 %}
+                <div class="card" data-product-id="{{ belt.id }}">
+                    <img src="{{ belt.image.url }}" alt="{{ belt.name }}">
+                    <h2>{{ belt.name }}</h2>
+                    <p>{{ belt.description }}</p>
+                    <p>Price: Rs{{ belt.price }}</p>
+                    <p>Quantity: {{ belt.quantity }}</p>
+                    <form action="{% url 'add_belt_to_cart' belt.id %}" method="post">
                         {% csrf_token %}
-                        <input type="number" name="quantity_wallet_{{ wallet.id }}" value="1" min="1" max="{{ wallet.quantity }}">
-                        <button type="submit" id="add-wallet-to-cart-form">Add to Cart</button>
+                        <input type="number" name="quantity_belt_{{ belt.id }}" value="1" min="1" max="{{ belt.quantity }}">
+                        <button type="submit" id="add-belt-to-cart-form">Add to Cart</button>
                     </form>
                 </div>
             {% endif %}
         {% endfor %}
     </div>
-    
     <div id="text-section">
         <a href="#">Terms and Conditions</a><br>
         <a href="#">FAQs</a><br>
@@ -570,33 +567,30 @@
             }
         }
     </script>
-       <script>
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const productId = urlParams.get('product_id');
-    
-        if (productId) {
-            const productElement = document.querySelector(`[data-product-id='${productId}']`);
-            
-            if (productElement) {
-                // Scroll the product into view
-                productElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    
-                // Move the product to the top of the list
-                const categoriesContainer = document.getElementById('categories');
-                categoriesContainer.prepend(productElement);
-    
-                // Apply the highlighted effect
-                productElement.classList.add('highlighted-product');
-            } else {
-                console.error('Element not found for ID:', productId);
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('product_id');
+        
+            if (productId) {
+                const productElement = document.querySelector(`[data-product-id='${productId}']`);
+                
+                if (productElement) {
+                    // Scroll the product into view
+                    productElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+                    // Move the product to the top of the list
+                    const categoriesContainer = document.getElementById('categories');
+                    categoriesContainer.prepend(productElement);
+        
+                    // Apply the highlighted effect
+                    productElement.classList.add('highlighted-product');
+                } else {
+                    console.error('Element not found for ID:', productId);
+                }
             }
-        }
-    });
-    
-</script>
-
+        });
+        
+    </script>
 </body>
 </html> 
