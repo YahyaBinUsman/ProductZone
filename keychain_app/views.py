@@ -882,19 +882,33 @@ from django.http import JsonResponse
 from django.db.models import Q
 from django.http import JsonResponse
 from django.db.models import Q
+from django.http import JsonResponse
+from django.db.models import Q
 
 def search(request):
     query = request.GET.get('query', '')
     results = []
 
     if query:
-        # Search across all product types
-        clothes = Clothes.objects.filter(Q(name__icontains=query) | Q(description__icontains=query))
-        keychains = KeyChain.objects.filter(Q(name__icontains=query) | Q(description__icontains=query))
-        wallets = Wallet.objects.filter(Q(name__icontains=query) | Q(description__icontains=query))
-        wrist_watches = WristWatch.objects.filter(Q(name__icontains=query) | Q(description__icontains=query))
-        hosiery = Hosiery.objects.filter(Q(name__icontains=query) | Q(description__icontains=query))
-        belts = Belt.objects.filter(Q(name__icontains=query) | Q(description__icontains=query))
+        # Search across all product types with quantity greater than 1
+        clothes = Clothes.objects.filter(
+            (Q(name__icontains=query) | Q(description__icontains=query)) & Q(quantity__gt=1)
+        )
+        keychains = KeyChain.objects.filter(
+            (Q(name__icontains=query) | Q(description__icontains=query)) & Q(quantity__gt=1)
+        )
+        wallets = Wallet.objects.filter(
+            (Q(name__icontains=query) | Q(description__icontains=query)) & Q(quantity__gt=1)
+        )
+        wrist_watches = WristWatch.objects.filter(
+            (Q(name__icontains=query) | Q(description__icontains=query)) & Q(quantity__gt=1)
+        )
+        hosiery = Hosiery.objects.filter(
+            (Q(name__icontains=query) | Q(description__icontains=query)) & Q(quantity__gt=1)
+        )
+        belts = Belt.objects.filter(
+            (Q(name__icontains=query) | Q(description__icontains=query)) & Q(quantity__gt=1)
+        )
 
         # Combine all the results with their respective categories
         all_products = [
@@ -914,3 +928,4 @@ def search(request):
         results = all_products
 
     return JsonResponse({'results': results})
+
