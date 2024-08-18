@@ -42,6 +42,8 @@ urlpatterns = [
     path('keychains/', views.keychains, name='keychains'),
     path('wallets/', views.wallets, name='wallets'),
     path('<str:category>/product/<int:product_id>/', views.product_redirect, name='product_redirect'),
+    path('faqs/', views.faqs, name='faqs'),
+    path('terms/', views.terms, name='terms'),
    
 
 ]

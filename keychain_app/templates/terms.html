@@ -4,10 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fashion Bank - Key Chain Store</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" rel="stylesheet">
+    <title>Terms and Conditions - Product Zone</title>
     <style>
         html, body {
             overflow-x: hidden; /* Prevent horizontal scrolling */
@@ -479,158 +476,24 @@
 </head>
 <body>
     <div id="header">
-        <img id="logo" src="{% static 'product zone.jpg' %}" alt="Fashion Bank Logo">
+        <img id="logo" src="{% static 'product zone.jpg' %}" alt="Product Zone Logo">
         <h1 id="header-text">
             <i>Product Zone&nbsp;&nbsp;&nbsp;<span id="by">&nbsp;&nbsp;by&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;V.C. <span id="ampersand">&amp;</span> S.</i>
         </h1>
         <img id="round-logo" src="{% static '09fa5653-c54b-43a6-817a-5c0300fc60db.webp' %}" alt="Round Logo">
     </div>
-    {% include 'navbar.html' %}
 
-
-    <div id="cash-navbar">
-        Cash on Delivery Available!
-    </div>
-    <h2>Featured Products</h2>
-    <div id="featured-products">
-        {% for category, products in featured_products.items %}
-        {% for product in products %}
-            <div class="featured-product" data-product-id="{{ product.id }}">
-                <img src="{{ product.image.url }}" alt="{{ product.name }}" >
-                <h3>{{ product.name }}</h3>
-                <p>{{ product.description }}</p>
-                <p>${{ product.price }}</p>
-                <a href="{% url 'product_redirect' category=category product_id=product.id %}" class="view-product-button" onclick="saveProductID('{{ product.id }}')">View Product</a>
-            </div>
-        {% endfor %}
-        {% endfor %}
+    <div id="terms-content">
+        <h2>Terms and Conditions</h2>
+        <p>Welcome to Product Zone. By accessing or using our website, you agree to comply with and be bound by the following terms and conditions...</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit sint exercitationem ullam cum voluptates fugit officiis, odit provident, ipsa minus cupiditate aspernatur, dignissimos molestiae voluptate illum ducimus numquam fugiat animi architecto. Veniam maxime ea fuga soluta ut necessitatibus nesciunt, adipisci cum incidunt exercitationem, alias quaerat atque molestiae mollitia ex voluptates, reprehenderit iure facilis totam ullam. Temporibus quam mollitia id magnam. Impedit, sit laudantium perferendis asperiores minima enim facere, vitae sequi odio dicta omnis quod corrupti repudiandae at incidunt doloribus. Maiores, inventore. Iusto maiores culpa iure id quaerat ad omnis ullam, nisi perspiciatis. Iure nihil delectus corrupti sint aspernatur officia ad harum excepturi eligendi facilis, quibusdam rem magni dolorem fugit repudiandae explicabo nostrum qui quae. Animi quae aliquid cum ullam ad tempore eum a corporis unde! Molestias consequatur laborum veniam quis ratione quos delectus quod! Eum, animi facere fuga dolore nesciunt dolorem nam magni maxime! Nisi totam molestiae quae tempora quia non eos similique, dicta reprehenderit consequuntur corporis cum tenetur, laboriosam, dolorum numquam animi ipsa! Quaerat voluptate repellendus doloribus tempora, quibusdam asperiores labore cupiditate possimus consequatur dolor excepturi enim a dicta. Facere, molestias nulla laborum voluptate provident animi quae ratione hic ipsa deleniti repellendus itaque velit non explicabo distinctio neque quibusdam pariatur! Ipsam delectus tempora quos corrupti dolor voluptatibus deserunt reprehenderit, sed iure iste porro explicabo autem laudantium tempore velit ea sapiente optio repellat, quia fugiat rem earum, voluptatum voluptate. Eligendi perferendis quos vitae error harum nemo labore debitis sequi soluta, ut rerum rem officiis impedit recusandae a ratione eos tempora sed, sapiente, distinctio sit. Vero blanditiis est at aperiam tempore soluta dignissimos, nihil culpa eos reprehenderit eligendi, ratione tempora. Atque vel beatae itaque voluptatum illo facilis reprehenderit placeat cumque, vero nemo quae! Ducimus vel eaque labore, neque suscipit repudiandae eveniet ipsam mollitia. Iusto dolore fugiat magni ad corrupti cupiditate blanditiis alias labore. Iusto modi consequuntur repudiandae reprehenderit quisquam a asperiores suscipit aut mollitia dolores ducimus ratione eveniet eum quas, dolore nisi, in placeat? Non, dolores eaque aliquid sequi, ratione voluptatem animi consequuntur recusandae nemo tenetur aut vitae accusantium velit. Magnam, voluptas ratione! Laborum corrupti itaque minus cum libero. Iste itaque odit officiis nihil amet! Libero delectus error aperiam maiores dolor quas sint voluptatum deleniti, eveniet quae quisquam modi quos sequi vel nisi, reiciendis repellendus. Tenetur consequatur voluptate atque, reiciendis numquam omnis sed delectus odio, maiores fugit quidem quae. Laborum ad fuga est sed nesciunt, magni voluptate facilis rerum a quo reprehenderit neque pariatur rem veritatis libero eligendi natus doloribus unde nobis minima quis modi. Obcaecati debitis ea cumque nostrum et quisquam laborum exercitationem blanditiis saepe aliquid quasi ex fuga rem possimus totam quod sed molestiae asperiores vero earum deserunt, reiciendis vel recusandae? Mollitia ipsam explicabo minus laboriosam excepturi, impedit esse quis neque a natus porro. Reprehenderit culpa minima velit voluptatibus ipsa ad, voluptas alias expedita perferendis suscipit eveniet eligendi sed, sapiente illo ipsum laborum harum facilis nobis molestiae? Quas aperiam minima perferendis animi veniam quod, adipisci possimus quia fuga minus hic nihil accusamus aspernatur corrupti consequuntur facilis dolorem blanditiis omnis ipsum alias porro. Porro, enim aspernatur fugit quasi totam perferendis est natus aut quo provident repudiandae qui numquam debitis nemo minus eligendi ex, vitae doloremque ullam cumque! Molestias commodi quo cumque? Aliquid eligendi ullam ea dolorem ipsum aperiam explicabo velit quidem! Architecto neque quis sint culpa explicabo! Pariatur qui, hic, tempora obcaecati error, impedit iusto excepturi modi saepe fugiat harum ipsum deserunt accusantium vero doloremque totam quia. Et, dolor. Quia, quasi, ratione praesentium corrupti sed perspiciatis obcaecati iure modi consequatur fuga itaque, distinctio repudiandae qui ipsam! Dicta amet ullam dolorum suscipit explicabo eaque placeat ducimus? Recusandae non beatae incidunt ipsa repellat qui rem consequatur, deleniti ab! Perspiciatis deleniti minima eveniet eaque, cum eum, sunt dolorum obcaecati, sed officia ipsum vero aspernatur aut hic ipsa soluta corrupti odit natus harum a corporis reiciendis excepturi quis! Dolor incidunt animi nam? Eum provident suscipit recusandae dolorum perspiciatis sunt quae, officiis pariatur tempore quam itaque voluptatibus quidem error quos. In amet placeat pariatur deserunt alias ex eius quam ducimus sunt enim adipisci non facere soluta, temporibus, at veniam laboriosam, cupiditate iure aspernatur porro ratione voluptatem rerum facilis deleniti? Libero possimus non sequi ipsum sapiente deserunt voluptates, delectus perferendis consectetur commodi quae. Officia minima nihil numquam aliquid deleniti ducimus beatae quae cupiditate iusto, voluptatem molestias ipsum quas suscipit, ipsam facere, saepe illum harum vel ut tempore natus mollitia? Quo maxime iure laudantium quibusdam laboriosam distinctio quam deserunt provident! Dicta quam exercitationem tenetur deleniti at aspernatur atque corporis rem obcaecati natus itaque quaerat iusto ex possimus eos, animi accusantium est earum? Illo, repudiandae! Voluptas commodi maiores dolore repellat placeat ab esse, vero natus exercitationem illo, et aliquam sunt magni voluptatum. Cum in fugiat, laborum ullam laudantium omnis et fugit quis laboriosam accusantium minima voluptatem, dolorem corrupti aliquid recusandae earum provident quam voluptate culpa mollitia aut delectus, amet sed modi. Amet consectetur commodi, excepturi officiis ipsum sed deleniti consequuntur optio veniam repellat magni! Nulla possimus, at beatae qui amet ullam quisquam officia asperiores, nobis facilis quos laudantium? Excepturi, necessitatibus iure rerum recusandae quae dolor animi nostrum, esse est non nam enim odio explicabo eaque magnam consequuntur rem voluptate et similique facere vitae nihil at nulla laboriosam! Distinctio libero quam numquam, minus dolores commodi laborum voluptatem hic vel iusto velit explicabo eveniet laboriosam omnis dicta enim quas. Laboriosam, in doloribus. Velit rerum voluptates dicta corrupti illo quibusdam, quas aliquam labore perspiciatis omnis praesentium eum earum cumque eius aliquid tempora porro deserunt illum officia veniam quasi temporibus amet itaque. Cumque, reiciendis pariatur fugiat, placeat dolores quisquam quam quibusdam cupiditate dignissimos, autem a eos nihil eum quaerat maxime temporibus voluptatum quo laudantium quod. Quas illo minima soluta tenetur impedit corrupti voluptas aliquid veniam molestiae in fuga, nostrum nam id, fugiat explicabo quibusdam necessitatibus omnis nihil commodi voluptate! Neque exercitationem aliquam quibusdam quaerat. Perspiciatis consectetur error accusantium, itaque voluptates cumque iure odio dicta nemo officiis saepe laborum iste. Eligendi rerum soluta reiciendis expedita. Nulla velit quam accusamus impedit ducimus ex officia voluptate doloremque cumque similique? Voluptatum dignissimos ad animi quam omnis.</p>
+        <!-- Continue adding more paragraphs as needed -->
     </div>
 
-    <div id="categories">
-        <a href="{% url 'clothes' %}" class="category-card-link">
-            <div class="category-card">
-                <h2>Clothes</h2>
-                <p>Explore our stylish clothes collection.</p>
-                <button>Shop Now</button>
-            </div>
-        </a>
-        <a href="{% url 'keychains' %}" class="category-card-link">
-            <div class="category-card">
-                <h2>Key Chains</h2>
-                <p>Explore our stylish key chain collection.</p>
-                <button>Shop Now</button>
-            </div>
-        </a>
-        <a href="{% url 'wallets' %}" class="category-card-link">
-            <div class="category-card">
-                <h2>Wallets</h2>
-                <p>Explore our stylish wallets collection.</p>
-                <button>Shop Now</button>
-            </div>
-        </a>
-        <a href="{% url 'wrist_watches' %}" class="category-card-link">
-            <div class="category-card">
-                <h2>Wrist Watches</h2>
-                <p>Explore our stylish wrist watches collection.</p>
-                <button>Shop Now</button>
-            </div>
-        </a>
-        <a href="{% url 'hosiery' %}" class="category-card-link">
-            <div class="category-card">
-                <h2>Hosiery</h2>
-                <p>Explore our stylish hosiery collection.</p>
-                <button>Shop Now</button>
-            </div>
-        </a>
-        <a href="{% url 'belts' %}" class="category-card-link">
-            <div class="category-card">
-                <h2>Belts</h2>
-                <p>Explore our stylish belts collection.</p>
-                <button>Shop Now</button>
-            </div>
-        </a>
-    </div>
-    
     <div id="text-section">
         <a href="{% url 'terms'%}">Terms and Conditions</a><br>
         <a href="{% url 'faqs'%}">FAQs</a><br>
         <a href="{% url 'contact'%}">Contact Us</a>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var menuIcon = document.getElementById('menu-icon');
-            var menuIcon1 = document.getElementById('menu-icon1'); // Add reference to menu-icon1
-            var sideNav = document.getElementById('side-nav');
-            var closeBtn = document.getElementById('close-btn');
-            var closeBtn1 = document.getElementById('close-btn1'); // Add reference to close-btn1
-        
-            function openSideNav() {
-                sideNav.style.width = '250px';
-            }
-        
-            function closeSideNav() {
-                sideNav.style.width = '0';
-            }
-        
-            menuIcon.addEventListener('click', openSideNav);
-            if (menuIcon1) {
-                menuIcon1.addEventListener('click', openSideNav);
-            }
-        
-            if (closeBtn) {
-                closeBtn.addEventListener('click', closeSideNav);
-            }
-        
-            if (closeBtn1) {
-                closeBtn1.addEventListener('click', closeSideNav);
-            }
-        
-            document.addEventListener('click', function(event) {
-                if (!sideNav.contains(event.target) && !menuIcon.contains(event.target) && !(menuIcon1 && menuIcon1.contains(event.target))) {
-                    closeSideNav();
-                }
-            });
-        });
-    </script>
-       <script>
-</script>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const productId = urlParams.get('product_id');
-        
-            if (productId) {
-                const productElement = document.querySelector(`[data-product-id='${productId}']`);
-                if (productElement) {
-                    productElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                } else {
-                    console.error('Element not found for ID:', productId);
-                }
-            }
-        });
-        
-    </script>
-    <script>
-        function saveProductID(productId) {
-            sessionStorage.setItem('scrollToProductID', productId);
-        }
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            const productId = sessionStorage.getItem('scrollToProductID');
-            
-            if (productId) {
-                const productElement = document.querySelector(`[data-product-id='${productId}']`);
-                if (productElement) {
-                    productElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    sessionStorage.removeItem('scrollToProductID');  // Clear the storage after use
-                }
-            }
-        });
-        
-    </script>
-    
-    
 </body>
-
 </html>

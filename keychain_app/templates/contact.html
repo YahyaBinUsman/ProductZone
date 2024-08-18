@@ -441,15 +441,22 @@
         <img id="round-logo" src="{% static '09fa5653-c54b-43a6-817a-5c0300fc60db.webp' %}" alt="Round Logo">
     </div>
     {% include 'navbar.html' %}
-
-
     
     <div id="cash-navbar">
         Cash on Delivery Available!
     </div>
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert {{ message.tags }}" id="success-message" style=" background-color: #4CAF50; color: white; padding: 15px; border-radius: 5px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999;">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<br><br>
     <div id="form-container">
-        <form action="https://api.web3forms.com/submit" method="POST">
-            <input type="hidden" name="access_key" value="669f4345-f337-4267-afa0-c9dc9aa5cb9e">
+        <form method="POST" action="">
+            {% csrf_token %}
             <div class="form-group">
                 <label for="name">Your Name:</label>
                 <input type="text" id="name" name="name" required>
@@ -468,10 +475,11 @@
         </form>
     </div>
     
+    
    
     <div id="text-section">
-        <a href="#">Terms and Conditions</a><br>
-        <a href="#">FAQs</a><br>
+        <a href="{% url 'terms'%}">Terms and Conditions</a><br>
+        <a href="{% url 'faqs'%}">FAQs</a><br>
         <a href="{% url 'contact'%}">Contact Us</a>
     </div>
     
@@ -509,6 +517,64 @@
                     closeSideNav();
                 }
             });
+        });
+        window.onload = function() {
+            var scrollPosition = sessionStorage.getItem('scrollPosition');
+            if (scrollPosition) {
+                window.scrollTo(0, scrollPosition);
+                sessionStorage.removeItem('scrollPosition');
+            }
+    
+            // Check if success message should be shown and then display it
+            var showMessage = sessionStorage.getItem('showMessage');
+            if (showMessage) {
+                showSuccessMessage(showMessage);
+                sessionStorage.removeItem('showMessage'); // Clear the flag after showing the message
+            }
+        }
+    
+        // Save scroll position before page reload
+        window.onbeforeunload = function() {
+            sessionStorage.setItem('scrollPosition', window.scrollY);
+        }
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            // Function to show the success message
+            function showSuccessMessage(message) {
+                var successMessage = document.getElementById('success-message');
+                if (successMessage) {
+                    successMessage.textContent = message;
+                    successMessage.style.display = 'block'; // Show the success message
+        
+                    // Hide the success message after 2 seconds
+                    setTimeout(function() {
+                        successMessage.style.display = 'none';
+                    }, 2000); // 2000 milliseconds = 2 seconds
+                }
+            }
+        
+            // Check if success message should be shown and then display it
+            var showMessage = sessionStorage.getItem('showMessage');
+            if (showMessage) {
+                showSuccessMessage(showMessage);
+                sessionStorage.removeItem('showMessage'); // Clear the flag after showing the message
+            }
+        });
+        fetch(form.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                sessionStorage.setItem('showMessage', "Item added to your cart.");
+                location.reload(); // Reload the page immediately after form submission
+            } else {
+                console.error("Error occurred while adding item to cart.");
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            console.error("Error occurred while adding item to cart.");
         });
         
     </script>

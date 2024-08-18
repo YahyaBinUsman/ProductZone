@@ -413,17 +413,17 @@
                        }
                     }
         
-                    .highlighted-product {
-                        border: 3px solid blue;
+                   .highlighted-product {
+                        border: 3px solid rgb(255, 123, 0);
                         animation: shine 1s infinite alternate;
                     }
                     
                     @keyframes shine {
                         from {
-                            box-shadow: 0 0 10px rgba(0, 0, 255, 0.5);
+                            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
                         }
                         to {
-                            box-shadow: 0 0 20px rgba(0, 0, 255, 1);
+                            box-shadow: 0 0 20px rgb(255, 0, 0);
                         }
                     }
                     
@@ -469,8 +469,8 @@
     
     
     <div id="text-section">
-        <a href="#">Terms and Conditions</a><br>
-        <a href="#">FAQs</a><br>
+        <a href="{% url 'terms'%}">Terms and Conditions</a><br>
+        <a href="{% url 'faqs'%}">FAQs</a><br>
         <a href="{% url 'contact'%}">Contact Us</a>
     </div>
     

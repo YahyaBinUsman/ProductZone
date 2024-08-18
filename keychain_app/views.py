@@ -33,8 +33,32 @@ def wallets(request):
     wallets_list = Wallet.objects.all()
     return render(request, 'wallets.html', {'wallets_list': wallets_list})
 
+from django.shortcuts import render, redirect
+from django.core.mail import send_mail
+from django.contrib import messages
+
 def contact(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+
+        # Compose the email
+        subject = f"New message from {name}"
+        body = f"Message:\n{message}\n\nFrom: {name}\nEmail: {email}"
+        recipient_email = 'yahyabinusman7@gmail.com'
+
+        # Send the email
+        try:
+            send_mail(subject, body, email, [recipient_email])
+            messages.success(request, 'Your message has been sent successfully!')
+            return redirect('contact')  # Redirect to the same page or a success page
+        except Exception as e:
+            messages.error(request, f'Error sending message: {str(e)}')
+            return redirect('contact')
+
     return render(request, 'contact.html')
+
 
 from django.shortcuts import redirect
 
@@ -929,3 +953,12 @@ def search(request):
 
     return JsonResponse({'results': results})
 
+
+
+from django.shortcuts import render
+
+def faqs(request):
+    return render(request, 'faqs.html')
+
+def terms(request):
+    return render(request, 'terms.html')

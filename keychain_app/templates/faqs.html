@@ -1,18 +1,17 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fashion Bank - Key Chain Store</title>
+    <title>FAQs - Product Zone</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
     <style>
         html, body {
             overflow-x: hidden; /* Prevent horizontal scrolling */
         }
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Roboto', sans-serif; /* Apply Roboto font */
             background-color: #222;
             color: #fff;
             margin: 0;
@@ -21,43 +20,73 @@
             flex-direction: column;
             min-height: 100vh;
         }
-        #categories {
-            background-color: hsla(0, 0%, 100%, 0.308); /* Light gray background for categories section */
-            text-align: center;
-            padding: 20px;
+        #faqs {
+            padding: 40px 20px;
             display: flex;
-            justify-content: space-around;
-            align-items: center;
-            flex-wrap: wrap;
-            flex: 1; /* Take remaining vertical space */
+            flex-direction: column;
+            gap: 15px;
+            max-width: 800px;
+            margin: 0 auto;
         }
-
-        .card {
-            background-color: #000;
-            color: #ddd;
+        .faq-card {
+            background-color: #333;
             padding: 20px;
-            margin: 10px;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: calc(33.33% - 20px); /* Set the width to approximately one-third of the container width */
-            max-width: 250px; /* Set a maximum width to maintain consistency */
-            height: 500px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .faq-card:hover {
+            background-color: #444;
+        }
+        .faq-card h3 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+        .faq-card .icon {
+            float: right;
+            transition: transform 0.3s ease;
+        }
+        .faq-card.active .icon {
+            transform: rotate(45deg);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            padding: 0 20px;
+            margin-top: 10px;
+            background-color: #444;
+            border-radius: 0 0 10px 10px;
+        }
+        .faq-card.active .faq-answer {
+            max-height: 150px; /* Adjust this value based on the content */
+            padding: 15px 20px;
+        }
+        .faq-answer p {
+            margin: 0;
+            font-size: 1.2em;
+            line-height: 1.5;
+        }
+        #text-section {
+            background-color: #000;
+            padding: 20px;
+            font-family: 'Roboto', sans-serif;
+            text-align: center;
+        }
+        #text-section a {
+            color: #ddd;
+            margin: 10px 0;
+            text-decoration: none;
+            display: block;
         }
 
-        .card img {
-            width: 100%;
-            border-radius: 10px; /* Rounded corners for images */
-        }
-
-        .card h2 {
-            margin-bottom: 10px;
-        }
         #header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px;
             background-color: hsla(0, 0%, 100%, 0.308);
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
         }
     
         #header-text {
@@ -85,6 +114,8 @@
             font-weight: normal; /* Ensure the ampersand does not apply any font weight */
             color: black;
         }
+        
+      
         #logo {
             width: 200px;
             height: auto;
@@ -203,45 +234,75 @@
         }
     
         #categories {
-            background-color: hsla(0, 0%, 100%, 0.308);
-            text-align: center;
-            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.3);
+            padding: 40px 20px;
             display: flex;
-            justify-content: space-around;
-            align-items: center;
+            justify-content: center;
+            gap: 30px;
             flex-wrap: wrap;
-            flex: 1;
         }
-    
+
         .category-card-link {
             text-decoration: none;
-            display: inline-block;
-            margin: 10px;
+            width: 400px;
         }
-        
+
         .category-card {
             background-color: #000;
             color: #ddd;
-            padding: 20px;
-            border-radius: 50%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 150px;
-            height: 150px;
+            padding: 30px;
+            border-radius: 15px;
             text-align: center;
             transition: transform 0.3s ease;
         }
-        
+
         .category-card:hover {
             transform: scale(1.05);
         }
-    
+
         .category-card h2 {
             margin-bottom: 10px;
         }
-    
+
+        .category-card button {
+            padding: 10px 20px;
+            background-color: #6a0dad;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        } 
+      
+
+
+@media screen and (max-width: 768px) {
+    .faq-card h3 {
+        font-size: 1.3em;
+    }
+    .faq-answer p {
+        font-size: 1em;
+    }
+}
+
+@media screen and (max-width: 480px) {
+  
+    #faqs {
+        padding: 20px;
+    }
+    .faq-card h3 {
+        font-size: 1.2em;
+    }
+    .faq-answer p {
+        font-size: 0.9em;
+    }
+}
+
+
         #text-section {
             background-color: #000;
             padding: 20px;
+            font-family: 'Roboto', sans-serif; /* Apply Roboto font */
+            text-align: left;
         }
     
         #text-section a {
@@ -347,7 +408,7 @@
             }
     
             #logo {
-                width: 100%;
+                width: 80%;
                 height: 200px;
             }
         }
@@ -407,71 +468,72 @@
             }
             
         }
-        @media screen and (max-width: 768px) {
-            .card {
-                           width: 100%; /* Full width for cards on smaller screens */
-                       }
-                    }
-                    .highlighted-product {
-                        border: 3px solid rgb(255, 123, 0);
-                        animation: shine 1s infinite alternate;
-                    }
-                    
-                    @keyframes shine {
-                        from {
-                            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
-                        }
-                        to {
-                            box-shadow: 0 0 20px rgb(255, 0, 0);
-                        }
-                    }
-                    
-       
+        
     </style>
 </head>
 <body>
     <div id="header">
-        <img id="logo" src="{% static 'product zone.jpg' %}" alt="Fashion Bank Logo">
+        <img id="logo" src="{% static 'product zone.jpg' %}" alt="Product Zone Logo">
         <h1 id="header-text">
             <i>Product Zone&nbsp;&nbsp;&nbsp;<span id="by">&nbsp;&nbsp;by&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;V.C. <span id="ampersand">&amp;</span> S.</i>
         </h1>
         <img id="round-logo" src="{% static '09fa5653-c54b-43a6-817a-5c0300fc60db.webp' %}" alt="Round Logo">
     </div>
-    {% include 'navbar.html' %}
-
-
-    
-    <div id="cash-navbar">
-        Cash on Delivery Available!
+{% include 'navbar.html' %}
+    <div id="faqs">
+        <div class="faq-card">
+            <h3>What is the return policy?</h3>
+            <i class="icon fas fa-plus"></i>
+            <div class="faq-answer">
+                <p>We offer a 30-day return policy. For more details, visit our return policy page.</p>
+            </div>
+        </div>
+        <div class="faq-card">
+            <h3>How long does shipping take?</h3>
+            <i class="icon fas fa-plus"></i>
+            <div class="faq-answer">
+                <p>Shipping typically takes 5-7 business days depending on your location.</p>
+            </div>
+        </div>
+        <div class="faq-card">
+            <h3>Do you ship internationally?</h3>
+            <i class="icon fas fa-plus"></i>
+            <div class="faq-answer">
+                <p>Yes, we offer international shipping. Shipping times and rates vary by country.</p>
+            </div>
+        </div>
+        <div class="faq-card">
+            <h3>How can I track my order?</h3>
+            <i class="icon fas fa-plus"></i>
+            <div class="faq-answer">
+                <p>You can track your order using the tracking number provided in your shipping confirmation email.</p>
+            </div>
+        </div>
+        <div class="faq-card">
+            <h3>What payment methods do you accept?</h3>
+            <i class="icon fas fa-plus"></i>
+            <div class="faq-answer">
+                <p>We accept Visa, MasterCard, American Express, and PayPal.</p>
+            </div>
+        </div>
     </div>
-    
-    <div id="success-message" style="display: none; background-color: #4CAF50; color: white; padding: 15px; border-radius: 5px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999;"></div>
-    
-    <div id="categories">
-        {% for belt in belts_list %}
-            {% if belt.quantity > 0 %}
-                <div class="card" data-product-id="{{ belt.id }}">
-                    <img src="{{ belt.image.url }}" alt="{{ belt.name }}">
-                    <h2>{{ belt.name }}</h2>
-                    <p>{{ belt.description }}</p>
-                    <p>Price: Rs{{ belt.price }}</p>
-                    <p>Quantity: {{ belt.quantity }}</p>
-                    <form action="{% url 'add_belt_to_cart' belt.id %}" method="post">
-                        {% csrf_token %}
-                        <input type="number" name="quantity_belt_{{ belt.id }}" value="1" min="1" max="{{ belt.quantity }}">
-                        <button type="submit" id="add-belt-to-cart-form">Add to Cart</button>
-                    </form>
-                </div>
-            {% endif %}
-        {% endfor %}
-    </div>
+
     <div id="text-section">
         <a href="{% url 'terms'%}">Terms and Conditions</a><br>
         <a href="{% url 'faqs'%}">FAQs</a><br>
         <a href="{% url 'contact'%}">Contact Us</a>
     </div>
-    
+
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const faqCards = document.querySelectorAll('.faq-card');
+
+            faqCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    card.classList.toggle('active');
+                });
+            });
+        });
         document.addEventListener('DOMContentLoaded', function() {
             var menuIcon = document.getElementById('menu-icon');
             var menuIcon1 = document.getElementById('menu-icon1'); // Add reference to menu-icon1
@@ -506,91 +568,6 @@
                 }
             });
         });
- 
-  window.onload = function() {
-            var scrollPosition = sessionStorage.getItem('scrollPosition');
-            if (scrollPosition) {
-                window.scrollTo(0, scrollPosition);
-                sessionStorage.removeItem('scrollPosition');
-            }
-    
-            // Check if success message should be shown and then display it
-            var showMessage = sessionStorage.getItem('showMessage');
-            if (showMessage) {
-                showSuccessMessage(showMessage);
-                sessionStorage.removeItem('showMessage'); // Clear the flag after showing the message
-            }
-        }
-    
-        // Save scroll position before page reload
-        window.onbeforeunload = function() {
-            sessionStorage.setItem('scrollPosition', window.scrollY);
-        }
-    
-        document.addEventListener('DOMContentLoaded', function() {
-            var addToCartForms = document.querySelectorAll('form');
-            addToCartForms.forEach(function(form) {
-                form.addEventListener('submit', function(event) {
-                    event.preventDefault();
-                    var formData = new FormData(form);
-                    fetch(form.action, {
-                            method: 'POST',
-                            body: formData
-                        })
-                        .then(response => {
-                            if (response.ok) {
-                                sessionStorage.setItem('showMessage', "Item added to your cart.");
-                                location.reload(); // Reload the page immediately after form submission
-                            } else {
-                                console.error("Error occurred while adding item to cart.");
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            console.error("Error occurred while adding item to cart.");
-                        });
-                });
-            });
-        });
-    
-        // Function to show the success message
-        function showSuccessMessage(message) {
-            var successMessage = document.getElementById('success-message');
-            if (successMessage) {
-                successMessage.textContent = message;
-                successMessage.style.display = 'block'; // Show the success message
-    
-                // Hide the success message after 2 seconds
-                setTimeout(function() {
-                    successMessage.style.display = 'none';
-                }, 2000); // 2000 milliseconds = 2 seconds
-            }
-        }
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const productId = urlParams.get('product_id');
-        
-            if (productId) {
-                const productElement = document.querySelector(`[data-product-id='${productId}']`);
-                
-                if (productElement) {
-                    // Scroll the product into view
-                    productElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        
-                    // Move the product to the top of the list
-                    const categoriesContainer = document.getElementById('categories');
-                    categoriesContainer.prepend(productElement);
-        
-                    // Apply the highlighted effect
-                    productElement.classList.add('highlighted-product');
-                } else {
-                    console.error('Element not found for ID:', productId);
-                }
-            }
-        });
-        
     </script>
 </body>
-</html> 
+</html>
