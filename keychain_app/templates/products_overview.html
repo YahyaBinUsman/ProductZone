@@ -228,246 +228,55 @@
 
     <h1>Products Overview</h1>
 <!-- Clothes -->
-<h2>Clothes</h2>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Price</th>
-        <th>Quantity</th>
-        <th>Action</th> <!-- New column for the form -->
-    </tr>
-    {% for cloth in clothes %}
-    <tr>
-        <td>{{ cloth.id }}</td>
-        <td>{{ cloth.name }}</td>
-        <td>{{ cloth.description }}</td>
-        <td>${{ cloth.price }}</td>
-        <td>{{ cloth.quantity }}</td>
-        <td>
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="product_id" value="{{ cloth.id }}">
-                <input type="hidden" name="product_type" value="clothes">
-                {% if cloth.is_featured %}
-                <button type="submit" name="action" value="remove">Remove from Featured</button>
-                {% else %}
-                <button type="submit" name="action" value="feature">Add to Featured</button>
-                {% endif %}
-            </form>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
-<div class="summary">
-    <p>Total Items: {{ clothes_count }}</p>
-    <p>Total Quantity: {{ clothes_quantity }}</p>
-    <p>Total Value: ${{ clothes_total_price }}</p>
-</div>
+{% for data in categories %}
+    <h2>{{ data.category.name }}</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Action</th>
+        </tr>
+        {% for product in data.products %}
+        <tr>
+            <td>{{ product.id }}</td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.description }}</td>
+            <td>${{ product.price }}</td>
+            <td>{{ product.quantity }}</td>
+            <td>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="product_id" value="{{ product.id }}">
+                    {% if product.is_featured %}
+                    <button type="submit" name="action" value="remove">Remove from Featured</button>
+                    {% else %}
+                    <button type="submit" name="action" value="feature">Add to Featured</button>
+                    {% endif %}
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
 
-<!-- Keychains -->
-<h2>Keychains</h2>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Price</th>
-        <th>Quantity</th>
-        <th>Action</th> <!-- New column for the form -->
-    </tr>
-    {% for keychain in keychains %}
-    <tr>
-        <td>{{ keychain.id }}</td>
-        <td>{{ keychain.name }}</td>
-        <td>{{ keychain.description }}</td>
-        <td>${{ keychain.price }}</td>
-        <td>{{ keychain.quantity }}</td>
-        <td>
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="product_id" value="{{ keychain.id }}">
-                <input type="hidden" name="product_type" value="keychains">
-                {% if keychain.is_featured %}
-                <button type="submit" name="action" value="remove">Remove from Featured</button>
-                {% else %}
-                <button type="submit" name="action" value="feature">Add to Featured</button>
-                {% endif %}
-            </form>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
-<div class="summary">
-    <p>Total Items: {{ keychains_count }}</p>
-    <p>Total Quantity: {{ keychains_quantity }}</p>
-    <p>Total Value: ${{ keychains_total_price }}</p>
-</div>
-
-<!-- Wallets -->
-<h2>Wallets</h2>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Price</th>
-        <th>Quantity</th>
-        <th>Action</th> <!-- New column for the form -->
-    </tr>
-    {% for wallet in wallets %}
-    <tr>
-        <td>{{ wallet.id }}</td>
-        <td>{{ wallet.name }}</td>
-        <td>{{ wallet.description }}</td>
-        <td>${{ wallet.price }}</td>
-        <td>{{ wallet.quantity }}</td>
-        <td>
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="product_id" value="{{ wallet.id }}">
-                <input type="hidden" name="product_type" value="wallets">
-                {% if wallet.is_featured %}
-                <button type="submit" name="action" value="remove">Remove from Featured</button>
-                {% else %}
-                <button type="submit" name="action" value="feature">Add to Featured</button>
-                {% endif %}
-            </form>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
-<div class="summary">
-    <p>Total Items: {{ wallets_count }}</p>
-    <p>Total Quantity: {{ wallets_quantity }}</p>
-    <p>Total Value: ${{ wallets_total_price }}</p>
-</div>
-
-<!-- WristWatches -->
-<h2>WristWatches</h2>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Price</th>
-        <th>Quantity</th>
-        <th>Action</th> <!-- New column for the form -->
-    </tr>
-    {% for watch in wrist_watches %}
-    <tr>
-        <td>{{ watch.id }}</td>
-        <td>{{ watch.name }}</td>
-        <td>{{ watch.description }}</td>
-        <td>${{ watch.price }}</td>
-        <td>{{ watch.quantity }}</td>
-        <td>
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="product_id" value="{{ watch.id }}">
-                <input type="hidden" name="product_type" value="wrist_watches">
-                {% if watch.is_featured %}
-                <button type="submit" name="action" value="remove">Remove from Featured</button>
-                {% else %}
-                <button type="submit" name="action" value="feature">Add to Featured</button>
-                {% endif %}
-            </form>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
-<div class="summary">
-    <p>Total Items: {{ wrist_watches_count }}</p>
-    <p>Total Quantity: {{ wrist_watches_quantity }}</p>
-    <p>Total Value: ${{ wrist_watches_total_price }}</p>
-</div>
-
-<!-- Hosiery -->
-<h2>Hosiery</h2>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Price</th>
-        <th>Quantity</th>
-        <th>Action</th> <!-- New column for the form -->
-    </tr>
-    {% for hosiery_item in hosiery %}
-    <tr>
-        <td>{{ hosiery_item.id }}</td>
-        <td>{{ hosiery_item.name }}</td>
-        <td>{{ hosiery_item.description }}</td>
-        <td>${{ hosiery_item.price }}</td>
-        <td>{{ hosiery_item.quantity }}</td>
-        <td>
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="product_id" value="{{ hosiery_item.id }}">
-                <input type="hidden" name="product_type" value="hosiery">
-                {% if hosiery_item.is_featured %}
-                <button type="submit" name="action" value="remove">Remove from Featured</button>
-                {% else %}
-                <button type="submit" name="action" value="feature">Add to Featured</button>
-                {% endif %}
-            </form>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
-<div class="summary">
-    <p>Total Items: {{ hosiery_count }}</p>
-    <p>Total Quantity: {{ hosiery_quantity }}</p>
-    <p>Total Value: ${{ hosiery_total_price }}</p>
-</div>
-
-<!-- Belts -->
-<h2>Belts</h2>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Price</th>
-        <th>Quantity</th>
-        <th>Action</th> <!-- New column for the form -->
-    </tr>
-    {% for belt in belts %}
-    <tr>
-        <td>{{ belt.id }}</td>
-        <td>{{ belt.name }}</td>
-        <td>{{ belt.description }}</td>
-        <td>${{ belt.price }}</td>
-        <td>{{ belt.quantity }}</td>
-        <td>
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="product_id" value="{{ belt.id }}">
-                <input type="hidden" name="product_type" value="belts">
-                {% if belt.is_featured %}
-                <button type="submit" name="action" value="remove">Remove from Featured</button>
-                {% else %}
-                <button type="submit" name="action" value="feature">Add to Featured</button>
-                {% endif %}
-            </form>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
-<div class="summary">
-    <p>Total Items: {{ belts_count }}</p>
-    <p>Total Quantity: {{ belts_quantity }}</p>
-    <p>Total Value: ${{ belts_total_price }}</p>
-</div>
+    <!-- Category Summary -->
+    <div class="summary">
+        <p>Total Items: {{ data.products.count }}</p> <!-- Number of items in this category -->
+        <p>Total Quantity: {{ data.total_quantity }}</p> <!-- Total quantity in this category -->
+        <p>Total Value: ${{ data.total_price }}</p> <!-- Total value in this category -->
+    </div>
+{% endfor %}
 
 <!-- Overall Summary -->
-<div class="summary">
+<div class="summary overall-summary">
     <h2>Overall Summary</h2>
-    <p>Total Items: {{ total_items }}</p>
-    <p>Total Quantity: {{ total_quantity }}</p>
-    <p>Total Value: ${{ total_price_sum }}</p>
+    <p>Total Items: {{ total_items }}</p> <!-- Overall total items -->
+    <p>Total Quantity: {{ total_quantity }}</p> <!-- Overall total quantity -->
+    <p>Total Value: ${{ total_price_sum }}</p> <!-- Overall total value -->
 </div>
+
 
     <script>
         const menuIcon = document.getElementById("menu-icon");

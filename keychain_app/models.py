@@ -1,36 +1,22 @@
-# models.py
 from django.db import models
 
-class Clothes(models.Model):
+class Category(models.Model):
     name = models.CharField(max_length=100)
-    description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    quantity = models.PositiveIntegerField()
-    image = models.ImageField(upload_to='clothes_images')  # Add image field
-    is_featured = models.BooleanField(default=False)
+    url_name = models.SlugField(unique=True, default='none')  # Specify a default value
 
+    description = models.TextField(blank=True)
 
     def __str__(self):
         return self.name
 
-class KeyChain(models.Model):
+class Product(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField()
-    image = models.ImageField(upload_to='keychain_images')  # Add image field
+    image = models.ImageField(upload_to='products/')
     is_featured = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.name
-
-class Wallet(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    quantity = models.PositiveIntegerField()
-    image = models.ImageField(upload_to='wallet_images')  # Add image field
-    is_featured = models.BooleanField(default=False)
+    category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -61,39 +47,3 @@ class Order(models.Model):
     def get_products(self):
         return json.loads(self.products)
 
-from django.db import models
-
-class WristWatch(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    quantity = models.PositiveIntegerField()
-    image = models.ImageField(upload_to='wrist_watches/')
-    is_featured = models.BooleanField(default=False)
-
-
-    def __str__(self):
-        return self.name
-
-class Hosiery(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    quantity = models.PositiveIntegerField()
-    image = models.ImageField(upload_to='hoisery/')
-    is_featured = models.BooleanField(default=False)
-
-
-    def __str__(self):
-        return self.name
-
-class Belt(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    quantity = models.PositiveIntegerField()
-    image = models.ImageField(upload_to='belts/')
-    is_featured = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.name

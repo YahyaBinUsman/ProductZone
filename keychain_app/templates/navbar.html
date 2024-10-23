@@ -1,204 +1,206 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search and Redirect</title>
+    <title>Navbar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Style for search bar container */
-        #search-bar-container {
-            display: flex;
-            align-items: center;
-            flex: 1;
-            justify-content: center;
-        }
-
-        /* Apply the same style to the search bar in the mobile navbar */
-        #search-bar, #search-bar1 {
-            margin: 0 5px;
-            padding: 15px;
-            border: none;
-            border-radius: 5px;
-            width: 100%;
-            max-width: 400px;
-        }
-
-        /* Style the search button */
-        #search-button {
-            cursor: pointer;
-            padding: 10px;
-            border: none;
-            background-color: #000;
-            color: #fff;
-            border-radius: 5px;
+        marquee{
             display: flex;
             align-items: center;
         }
-
-        #search-button i {
-            margin-right: 5px;
+        
+        ::selection{
+            background-color: #252525;
+            color: white;
+        }
+        /* Navbar Styles */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1em;
+            background-color: peachpuff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        /* Ensure the search results container has the same style */
-        #search-results, #search-results1 {
-            position: absolute;
-            top: calc(100% + 5px); /* Position results just below the search bar */
-            left: 0;
-            right: 0;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            max-height: 400px;
-            overflow-y: auto;
-            z-index: 1000;
-            display: none;
-            width: 100%;
-            padding: 10px; /* Add some padding for a cleaner look */
-        }
-
-        /* Style individual search result items */
-        .search-result-item {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-            transition: background-color 0.3s ease;
-        }
-
-        .search-result-item:last-child {
-            border-bottom: none; /* Remove border for the last item */
-        }
-
-        .search-result-item:hover {
-            background-color: #f2f2f2; /* Light grey background on hover */
-        }
-
-        .search-result-item a {
-            text-decoration: none;
-            color: #333;
-            display: block;
-        }
-
-        .search-result-item strong {
+        .logo {
+            font-size: 1.8em;
             font-weight: bold;
-            color: #000;
         }
 
-        /* Mobile screen adjustments */
-        @media screen and (max-width: 768px) {
-            #search-results, #search-results1 {
-                top: calc(100% + 5px); /* Position results just below the search bar */
-            }
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            letter-spacing: 3px;
         }
 
-        @media screen and (max-width: 480px) {
-            #search-results, #search-results1 {
-                top: calc(100% + 5px); /* Position results just below the search bar */
-            }
+        .nav-links li a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 0.9em;
+        }
+
+        .nav-links li a:hover {
+            color: white;
+        }
+
+        .nav-icons i {
+            margin-left: 1em;
+            font-size: 1.5em;
+            transition: transform 0.3s;
+        }
+
+        .nav-icons i:hover {
+            transform: scale(1.2);
+        }
+
+        /* Search Bar Container */
+        .search-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-bar-container input {
+            width: 250px;
+            padding: 0.5em;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .search-bar-container button {
+            padding: 0.5em 1em;
+            background-color: orange;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-bar-container button:hover {
+            background-color: darkorange;
         }
     </style>
 </head>
 <body>
-
-<!-- Desktop Navbar -->
-<div id="navbar">
-    <div id="menu-cart-wrapper">
-        <div id="menu-icon">&#9776; Menu</div>
-    </div>
-    <div id="search-bar-container">
-        <input type="text" id="search-bar" placeholder="Search...">
-        <div id="search-button">
-            <i class="fas fa-search"></i> Search
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">Product Zone</div>
+        <ul class="nav-links">
+            <li><a href="#categories">CATEGORIES</a></li>
+            <li><a href="#featured-products">FEATURED</a></li>
+            <li><a href="#popular-products">POPULAR</a></li>
+            <li><a href="#discounted-items">DISCOUNTED</a></li>
+            <li><a href="#testimonials">TESTIMONIALS</a></li>
+            <li><a href="#blog">BLOG</a></li>
+            <li><a href="#newsletter">NEWSLETTER</a></li>
+        </ul>
+        <div class="nav-icons">
+            <i class="fas fa-search"></i>
+            <a href="{% url 'view_cart' %}"><i class="fas fa-shopping-cart"></i></a>
         </div>
-        <div id="search-results" class="search-results-container"></div>
-    </div>
-    <div id="cart-button">
-        <a href="{% url 'view_cart' %}" class="fas fa-shopping-cart"></a>
-    </div>
-</div>
+    </nav>
 
-<!-- Mobile Navbar -->
-<div id="navbar1">
-    <div id="menu-cart-wrapper">
-        <div id="menu-icon1">&#9776; Menu</div>
-        <div id="cart-button">
-            <a href="{% url 'view_cart' %}" class="fas fa-shopping-cart"></a>
-        </div>
-    </div>
-    <div id="search-bar-container">
-        <input type="text" id="search-bar1" placeholder="Search..."> <!-- Notice the ID difference -->
-        <div id="search-button">
-            <i class="fas fa-search"></i> Search
-        </div>
-        <div id="search-results1" class="search-results-container"></div>
-    </div>
-</div>
+    <!-- Marquee -->
+    <marquee>GET EXCLUSIVE DISCOUNTS ON LATEST ARRIVALS -- | -- GET EXCLUSIVE DISCOUNTS ON LATEST ARRIVALS </marquee>
 
-<div id="side-nav">
-    <a href="javascript:void(0)" id="close-btn">&times;</a>
-    <a href="{% url 'home' %}">Home</a>
-    <a href="{% url 'clothes' %}">Clothes</a>
-    <a href="{% url 'keychains' %}">Key Chains</a>
-    <a href="{% url 'wallets' %}">Wallets</a>
-    <a href="{% url 'wrist_watches' %}">Wrist Watches</a>
-    <a href="{% url 'hosiery' %}">Hosiery</a>
-    <a href="{% url 'belts' %}">Belts</a>
-    <a href="{% url 'view_cart' %}">View Cart</a>
-</div>
+    <!-- Search Bar -->
+    <div class="search-bar">
+        <input id="search-bar" type="text" placeholder="Search products...">
+        <button id="search-button">Search</button>
+    </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const handleSearch = (searchBarId, resultsContainerId) => {
-            const searchBar = document.getElementById(searchBarId);
-            const resultsContainer = document.getElementById(resultsContainerId);
-    
-            searchBar.addEventListener('input', () => {
-                const query = searchBar.value;
-                if (query.trim() === '') {
-                    resultsContainer.innerHTML = ''; // Clear results if query is empty
-                    resultsContainer.style.display = 'none'; // Hide the results container
-                    return;
-                }
-    
-                fetch(`/search/?query=${encodeURIComponent(query)}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        const results = data.results;
-                        resultsContainer.innerHTML = ''; // Clear previous results
-    
-                        if (results.length > 0) {
-                            results.forEach(product => {
-                                const resultItem = document.createElement('div');
-                                resultItem.classList.add('search-result-item');
-                                resultItem.innerHTML = `
-                                    <a href="/${product.category}/product/${product.id}/">
-                                        <strong>${product.name}</strong> - ${product.price} <br>
-                                        ${product.description}
-                                    </a>
-                                `;
-                                resultsContainer.appendChild(resultItem);
-                            });
-                            resultsContainer.style.display = 'block'; // Show the results container
-                        } else {
-                            resultsContainer.innerHTML = '<p>No results found.</p>';
-                            resultsContainer.style.display = 'block'; // Show the results container
+    <!-- Search results container (initially hidden) -->
+    <div id="search-results" style="display:none;"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Handle form submissions for Enter key and button click
+            const searchForms = ['search-bar'];  // Only the desktop search input for now
+
+            searchForms.forEach((searchFormId) => {
+                const searchBar = document.getElementById(searchFormId);
+
+                searchBar.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const query = searchBar.value.trim();
+                        if (query) {
+                            // Redirect to the search results page
+                            window.location.href = `/search/?query=${encodeURIComponent(query)}`;
                         }
-                    });
+                    }
+                });
             });
-    
-            // Hide the search results when clicking outside
-            document.addEventListener('click', (e) => {
-                if (!searchBar.contains(e.target) && !resultsContainer.contains(e.target)) {
-                    resultsContainer.style.display = 'none';
+
+            const searchButton = document.getElementById('search-button');
+            searchButton.addEventListener('click', () => {
+                const query = document.getElementById('search-bar').value.trim();
+                if (query) {
+                    // Redirect to the search results page
+                    window.location.href = `/search/?query=${encodeURIComponent(query)}`;
                 }
             });
-        };
-    
-        // Initialize search for both desktop and mobile navbars
-        handleSearch('search-bar', 'search-results');
-        handleSearch('search-bar1', 'search-results1');
-    });
-    
-</script>
 
+            // Function to handle search result display and fetch
+            const handleSearch = (searchBarId, resultsContainerId) => {
+                const searchBar = document.getElementById(searchBarId);
+                const resultsContainer = document.getElementById(resultsContainerId);
+        
+                searchBar.addEventListener('input', () => {
+                    const query = searchBar.value;
+                    if (query.trim() === '') {
+                        resultsContainer.innerHTML = ''; // Clear results if query is empty
+                        resultsContainer.style.display = 'none'; // Hide the results container
+                        return;
+                    }
+        
+                    fetch(`/search/?query=${encodeURIComponent(query)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const results = data.results;
+                            resultsContainer.innerHTML = ''; // Clear previous results
+        
+                            if (results.length > 0) {
+                                results.forEach(product => {
+                                    const resultItem = document.createElement('div');
+                                    resultItem.classList.add('search-result-item');
+                                    resultItem.innerHTML = `
+                                        <a href="/${product.category}/product/${product.id}/">
+                                            <strong>${product.name}</strong> - ${product.price} <br>
+                                            ${product.description}
+                                        </a>
+                                    `;
+                                    resultsContainer.appendChild(resultItem);
+                                });
+                                resultsContainer.style.display = 'block'; // Show the results container
+                            } else {
+                                resultsContainer.innerHTML = '<p>No results found.</p>';
+                                resultsContainer.style.display = 'block'; // Show the results container
+                            }
+                        });
+                });
+        
+                // Hide the search results when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!searchBar.contains(e.target) && !resultsContainer.contains(e.target)) {
+                        resultsContainer.style.display = 'none';
+                    }
+                });
+            };
+
+            // Initialize search functionality
+            handleSearch('search-bar', 'search-results');
+        });
+    </script>
 </body>
 </html>

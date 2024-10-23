@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <style>
+        .product-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px;
+            text-align: center;
+        }
+        .product-card img {
+            max-width: 100px;
+            height: auto;
+        }
+        .product-card.highlight {
+            border: 2px solid green;
+        }
+        .product-name {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Search Results for "{{ query }}"</h1>
+
+    {% if products %}
+        <div class="product-list">
+            {% for product in products %}
+                <div class="product-card" id="product-{{ product.id }}">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    <h3 class="product-name">{{ product.name }}</h3>
+                    <p>{{ product.description }}</p>
+                    <p>Price: ${{ product.price }}</p>
+                    <p>Available: {{ product.quantity }}</p>
+                    <a href="/category/{{ product.category.name }}/product/{{ product.id }}/">View Product</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No results found for "{{ query }}"</p>
+    {% endif %}
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background: #fff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        h3 {
+            margin: 0 0 10px;
+            color: #007BFF;
+        }
+        p {
+            margin: 5px 0;
+            color: #555;
+        }
+        .product-details {
+            margin-top: 10px;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+        .add-to-cart {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .add-to-cart input {
+            width: 60px;
+            margin-right: 10px;
+        }
+        .add-to-cart button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .add-to-cart button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <h2>Categories</h2>
+    <ul>
+        {% for category in categories %}
+            <li>
+                <h3>{{ category.name }}</h3>
+                <p>{{ category.description }}</p>
+                <ul>
+                    {% for product in category.products.all %}
+                        <li>
+                            <div>
+                                <h4>{{ product.name }}</h4>
+                                <p>Price: {{ product.price }}</p>
+                                <div class="product-details">
+                                    <p>Available Quantity: {{ product.quantity }}</p>
+                                    <form method="post" action="{% url 'add_product_to_cart' product.id %}" class="add-to-cart">
+                                        {% csrf_token %}
+                                        <input type="number" name="quantity_{{ product.id }}" value="1" min="1" max="{{ product.quantity }}">
+                                        <button type="submit">Add to Cart</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

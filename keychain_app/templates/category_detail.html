@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ category.name }} - Products</title>
+</head>
+<body>
+    <h1>{{ category.name }}</h1>
+    <p>{{ category.description }}</p>
+
+    <h2>Products in this Category</h2>
+    <ul>
+        {% for product in products %}
+            <li>
+                <h3>{{ product.name }}</h3>
+                <p>Price: ${{ product.price }}</p>
+                <p>{{ product.description }}</p>
+                <p>{{ product.quantity }}</p>
+
+                <form method="post" action="{% url 'add_product_to_cart' product.id %}">
+                    {% csrf_token %}
+                    <input type="number" name="quantity_{{ product.id }}" value="1" min="1" max="{{ product.quantity }}">
+                    <button type="submit">Add to Cart</button>
+                </form>
+            </li>
+        {% empty %}
+            <p>No products available in this category.</p>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -381,28 +381,42 @@
         <h1>{% if product %}Edit{% else %}Add{% endif %} Product</h1>
         <form method="post" enctype="multipart/form-data" id="checkout-form">
             {% csrf_token %}
+            
+            <!-- Category dropdown -->
             <label for="category">Category</label>
             <select id="category" name="category" required>
                 <option value="">Select a category</option>
-                <option value="Clothes">Clothes</option>
-                <option value="KeyChain">KeyChain</option>
-                <option value="Wallet">Wallet</option>
-                <option value="WristWatches">WristWatches</option>
-                <option value="Hosiery">Hosiery</option>
-                <option value="Belts">Belts</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}" {% if product.category and product.category.id == category.id %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                {% endfor %}
             </select>
+        
+            <!-- Product name -->
             <label for="name">Product Name</label>
             <input type="text" id="name" name="name" value="{{ product.name }}" required>
+        
+            <!-- Description -->
             <label for="description">Description</label>
             <textarea id="description" name="description" required>{{ product.description }}</textarea>
+        
+            <!-- Price -->
             <label for="price">Price</label>
             <input type="number" step="0.01" id="price" name="price" value="{{ product.price }}" required>
+        
+            <!-- Quantity -->
             <label for="quantity">Quantity</label>
             <input type="number" id="quantity" name="quantity" value="{{ product.quantity }}" required>
+        
+            <!-- Product Image -->
             <label for="image">Product Image</label>
             <input type="file" id="image" name="image">
+        
+            <!-- Submit button -->
             <button type="submit">{% if product %}Update{% else %}Add{% endif %} Product</button>
         </form>
+        
     </div>
     <script>
         const menuIcon = document.getElementById("menu-icon");
