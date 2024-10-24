@@ -7,479 +7,154 @@
     <title>FAQs - Product Zone</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
     <style>
+        /* General Styles */
         html, body {
-            overflow-x: hidden; /* Prevent horizontal scrolling */
-        }
-        body {
-            font-family: 'Roboto', sans-serif; /* Apply Roboto font */
-            background-color: #222;
-            color: #fff;
+            overflow-x: hidden;
             margin: 0;
             padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #222;
+            color: #fff;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
+
         #faqs {
             padding: 40px 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
             max-width: 800px;
             margin: 0 auto;
         }
+
+        /* FAQ Card Styles */
         .faq-card {
             background-color: #333;
             padding: 20px;
             border-radius: 10px;
-            transition: all 0.3s ease;
+            transition: background-color 0.3s ease;
             cursor: pointer;
+            margin-bottom: 15px;
         }
+
         .faq-card:hover {
             background-color: #444;
         }
+
         .faq-card h3 {
-            margin: 0;
             font-size: 1.5em;
+            margin: 0;
+            color: orange;
         }
+
         .faq-card .icon {
             float: right;
             transition: transform 0.3s ease;
         }
+
         .faq-card.active .icon {
             transform: rotate(45deg);
         }
+
         .faq-answer {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease, padding 0.3s ease;
             padding: 0 20px;
-            margin-top: 10px;
             background-color: #444;
             border-radius: 0 0 10px 10px;
+            color: #fff;
         }
+
         .faq-card.active .faq-answer {
-            max-height: 150px; /* Adjust this value based on the content */
+            max-height: 150px;
             padding: 15px 20px;
         }
+
         .faq-answer p {
             margin: 0;
             font-size: 1.2em;
             line-height: 1.5;
         }
+
+        /* Text Section */
         #text-section {
-            background-color: #000;
+            background-color: #fffdfd;
             padding: 20px;
-            font-family: 'Roboto', sans-serif;
-            text-align: center;
-        }
-        #text-section a {
-            color: #ddd;
-            margin: 10px 0;
-            text-decoration: none;
-            display: block;
-        }
-
-        #header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            background-color: hsla(0, 0%, 100%, 0.308);
-            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-        }
-    
-        #header-text {
-            font-family: 'Playfair Display', serif; /* Apply Playfair Display font */
-            font-size: 64px;
-            text-align: center;
-            margin: 0;
-            padding: 20px;
-            text-transform: uppercase;
-            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-            letter-spacing: 2px;
-            line-height: 1.2;
-            color: #000;
-        }
-        
-        
-        #header-text #by {
-            font-size: 0.8em; /* Make "by" smaller */
-            text-transform: lowercase; /* Make "by" lowercase */
-            color: black;
-        }
-        
-        #header-text #ampersand {
-            font-family: 'Arial', sans-serif; /* Ensure the ampersand uses the default font family */
-            font-weight: normal; /* Ensure the ampersand does not apply any font weight */
-            color: black;
-        }
-        
-      
-        #logo {
-            width: 200px;
-            height: auto;
-        }
-    
-        #round-logo {
-            width: 230px;
-            height: 200px;
-            border-radius: 50%;
-        }
-    
-        #navbar {
-            background-color: #000;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-        }
-        #navbar1 {
-            background-color: #000;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-        }
-    
-        #menu-cart-wrapper {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            width: auto; /* Adjusted width */
-        }
-    
-        #menu-icon {
-            font-size: 28px;
-            cursor: pointer;
-            padding: 10px 20px; /* Added padding */
-        }
-        #menu-icon1 {
-            font-size: 28px;
-            cursor: pointer;
-            padding: 10px 20px; /* Added padding */
-        }
-    
-        #cart-button {
-            font-size: 30px;
-            padding: 5px;
-            margin-left: 20px; /* Added margin for separation */
-        }
-    
-        /* Sidebar Navigation */
-        #side-nav {
-            height: 100%;
-            width: 0;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background-color: rgba(0, 0, 0, 0.9);
-            overflow-x: hidden;
-            transition: 0.5s;
-            padding-top: 60px;
-            z-index: 2;
-        }
-    
-        #side-nav a {
-            padding: 10px 15px;
-            text-decoration: none;
-            font-size: 22px;
-            color: #fff;
-            display: block;
-            transition: 0.3s;
-        }
-    
-        #side-nav a:hover {
-            background-color: #575757;
-        }
-    
-        #close-btn {
-            position: absolute;
-            top: 20px;
-            right: 25px;
-            font-size: 36px;
-        }
-    
-        #search-bar-container {
-            display: flex;
-            align-items: center;
-            flex: 1;
-            justify-content: center;
-        }
-        
-        #search-bar {
-            margin: 0 5px;
-            padding: 15px;
-            border: none;
-            border-radius: 5px;
-            width: 100%;
-            max-width: 400px;
-        }
-        
-        #search-button {
-            cursor: pointer;
-            padding: 10px;
-            border: none;
-            background-color: #000;
-            color: #fff;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-        }
-        
-        #search-button i {
-            margin-right: 5px;
-        }
-    
-        #categories {
-            background-color: rgba(255, 255, 255, 0.3);
-            padding: 40px 20px;
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
-        }
-
-        .category-card-link {
-            text-decoration: none;
-            width: 400px;
-        }
-
-        .category-card {
-            background-color: #000;
-            color: #ddd;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-
-        .category-card:hover {
-            transform: scale(1.05);
-        }
-
-        .category-card h2 {
-            margin-bottom: 10px;
-        }
-
-        .category-card button {
-            padding: 10px 20px;
-            background-color: #6a0dad;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        } 
-      
-
-
-@media screen and (max-width: 768px) {
-    .faq-card h3 {
-        font-size: 1.3em;
-    }
-    .faq-answer p {
-        font-size: 1em;
-    }
-}
-
-@media screen and (max-width: 480px) {
-  
-    #faqs {
-        padding: 20px;
-    }
-    .faq-card h3 {
-        font-size: 1.2em;
-    }
-    .faq-answer p {
-        font-size: 0.9em;
-    }
-}
-
-
-        #text-section {
-            background-color: #000;
-            padding: 20px;
-            font-family: 'Roboto', sans-serif; /* Apply Roboto font */
             text-align: left;
+            margin-top: auto;
+            border-top: #000000;
         }
-    
+
         #text-section a {
-            color: #ddd;
+            color: #000000;
             margin: 10px 0;
             text-decoration: none;
             display: block;
         }
-    
-        #cash-navbar {
-            background-color: #555;
-            padding: 10px;
-            text-align: center;
-            font-size: 18px;
-            color: #fff;
-            animation: fadeInUp 1.5s ease;
-        }
-    
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    
+
+        /* Responsive Design */
         @media screen and (max-width: 768px) {
             #header {
                 flex-direction: column;
                 align-items: center;
             }
-    
+
+            #header-text {
+                font-size: 36px;
+            }
+
+            .faq-card h3 {
+                font-size: 1.3em;
+            }
+
+            .faq-answer p {
+                font-size: 1em;
+            }
+
             #navbar {
                 flex-direction: column;
                 align-items: stretch;
-                padding: 10px 0;
             }
-            #navbar1 {
-                flex-direction: column;
-                align-items: stretch;
-                padding: 10px 0;
-            }
-    
+
             #menu-cart-wrapper {
                 justify-content: space-between;
-                width: 100%; /* Adjusted width for full width */
-                padding: 0 20px; /* Added padding */
+                padding: 0 20px;
             }
-    
-            #menu-icon {
-                order: -1;
-                align-self: flex-start;
-                padding: 10px 0; /* Adjusted padding */
+        }
+
+        @media screen and (max-width: 480px) {
+            .faq-card h3 {
+                font-size: 1.2em;
             }
-            #menu-icon1 {
-                order: -1;
-                align-self: flex-start;
-                padding: 10px 0; /* Adjusted padding */
+
+            .faq-answer p {
+                font-size: 0.9em;
             }
-    
-            #cart-button {
-                order: -1;
-                align-self: flex-end;
-                padding: 5px;
-                margin-left: 0; /* Removed margin */
+
+            #logo {
+                width: 100px;
             }
-    
-            #search-bar-container {
-                flex-direction: row;
-                align-items: center;
-                justify-content: center;
-                width: 100%;
-                padding: 10px 0;
-            }
-    
-            #search-bar,
-            #search-button {
-                width: auto;
-                margin: 0 5px;
-                padding: 15px;
-            }
-    
-            .category-card {
-                width: 45%;
-                margin-bottom: 20px;
-            }
-    
-            #text-section {
-                display: flex;
-                flex-direction: column;
-            }
-    
-            #text-section a {
-                margin-bottom: 10px;
-            }
-    
-            #header-text,
+
             #round-logo {
                 display: none;
             }
-    
-            #logo {
-                width: 80%;
-                height: 200px;
-            }
-        }
-    
-        @media screen and (max-width: 480px) {
-            #navbar {
-                padding: 5px;
+
+            #header-text {
                 display: none;
             }
-            #navbar1 {
-                padding: 5px;
-            }
-    
-            #menu-icon {
-                font-size: 24px;
-            }
-            #menu-icon1 {
-                font-size: 24px;
-            }
-    
-            #menu-cart-wrapper {
-                justify-content: space-between;
-                padding: 0 5px; /* Adjusted padding */
-            }
-    
-            #search-bar-container {
-                margin-right: 0;
-            }
-    
-            #search-bar,
-            #search-button {
-                padding: 10px;
-            }
-    
-            #cart-button {
-                font-size: 32px;
-                padding: 10px;
-                margin-bottom: 10px;
-            }
-    
-            .category-card {
-                padding: 10px;
-                width: 90%;
-                height: auto;
-                border-radius: 10px;
-            }
-            
-        }
-        @media screen and (min-width: 488px) {
+
             #navbar {
                 padding: 5px;
-                
             }
-            #navbar1 {
-                padding: 5px;
-                display: none;
-            }
-            
         }
-        
     </style>
 </head>
 <body>
-    <div id="header">
-        <img id="logo" src="{% static 'product zone.jpg' %}" alt="Product Zone Logo">
-        <h1 id="header-text">
-            <i>Product Zone&nbsp;&nbsp;&nbsp;<span id="by">&nbsp;&nbsp;by&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;V.C. <span id="ampersand">&amp;</span> S.</i>
-        </h1>
-        <img id="round-logo" src="{% static '09fa5653-c54b-43a6-817a-5c0300fc60db.webp' %}" alt="Round Logo">
-    </div>
-{% include 'navbar.html' %}
+   
+    <!-- Navbar -->
+    {% include 'navbar.html' %}
+
+    <!-- FAQs Section -->
     <div id="faqs">
         <div class="faq-card">
             <h3>What is the return policy?</h3>
@@ -518,12 +193,14 @@
         </div>
     </div>
 
+    <!-- Text Section -->
     <div id="text-section">
-        <a href="{% url 'terms'%}">Terms and Conditions</a><br>
-        <a href="{% url 'faqs'%}">FAQs</a><br>
+        <a href="{% url 'terms'%}">Terms and Conditions</a>
+        <a href="{% url 'faqs'%}">FAQs</a>
         <a href="{% url 'contact'%}">Contact Us</a>
     </div>
 
+    <!-- FAQ Toggle Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const faqCards = document.querySelectorAll('.faq-card');
@@ -532,40 +209,6 @@
                 card.addEventListener('click', function() {
                     card.classList.toggle('active');
                 });
-            });
-        });
-        document.addEventListener('DOMContentLoaded', function() {
-            var menuIcon = document.getElementById('menu-icon');
-            var menuIcon1 = document.getElementById('menu-icon1'); // Add reference to menu-icon1
-            var sideNav = document.getElementById('side-nav');
-            var closeBtn = document.getElementById('close-btn');
-            var closeBtn1 = document.getElementById('close-btn1'); // Add reference to close-btn1
-        
-            function openSideNav() {
-                sideNav.style.width = '250px';
-            }
-        
-            function closeSideNav() {
-                sideNav.style.width = '0';
-            }
-        
-            menuIcon.addEventListener('click', openSideNav);
-            if (menuIcon1) {
-                menuIcon1.addEventListener('click', openSideNav);
-            }
-        
-            if (closeBtn) {
-                closeBtn.addEventListener('click', closeSideNav);
-            }
-        
-            if (closeBtn1) {
-                closeBtn1.addEventListener('click', closeSideNav);
-            }
-        
-            document.addEventListener('click', function(event) {
-                if (!sideNav.contains(event.target) && !menuIcon.contains(event.target) && !(menuIcon1 && menuIcon1.contains(event.target))) {
-                    closeSideNav();
-                }
             });
         });
     </script>

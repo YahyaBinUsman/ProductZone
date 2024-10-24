@@ -6,494 +6,122 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terms and Conditions - Product Zone</title>
     <style>
-        html, body {
-            overflow-x: hidden; /* Prevent horizontal scrolling */
-        }
+        /* General Styling */
         body {
-            font-family: 'Roboto', sans-serif; /* Apply Roboto font */
-            background-color: #222;
-            color: #fff;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5; /* Light background */
+            color: #333; /* Darker text */
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
-        #header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            background-color: hsla(0, 0%, 100%, 0.308);
-            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-        }
-    
-        #header-text {
-            font-family: 'Playfair Display', serif; /* Apply Playfair Display font */
-            font-size: 64px;
+        h2 {
+            font-size: 2em;
+            color: #0056b3; /* Matching blue for headers */
             text-align: center;
-            margin: 0;
-            padding: 20px;
-            text-transform: uppercase;
-            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-            letter-spacing: 2px;
-            line-height: 1.2;
-            color: #000;
+            margin: 30px 0;
         }
-        
-        
-        #header-text #by {
-            font-size: 0.8em; /* Make "by" smaller */
-            text-transform: lowercase; /* Make "by" lowercase */
-            color: black;
+        p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #555; /* Slightly muted text for paragraphs */
         }
-        
-        #header-text #ampersand {
-            font-family: 'Arial', sans-serif; /* Ensure the ampersand uses the default font family */
-            font-weight: normal; /* Ensure the ampersand does not apply any font weight */
-            color: black;
-        }
-        
-      
-        #logo {
-            width: 200px;
-            height: auto;
-        }
-    
-        #round-logo {
-            width: 230px;
-            height: 200px;
-            border-radius: 50%;
-        }
-    
-        #navbar {
-            background-color: #000;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-        }
-        #navbar1 {
-            background-color: #000;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-        }
-    
-        #menu-cart-wrapper {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            width: auto; /* Adjusted width */
-        }
-    
-        #menu-icon {
-            font-size: 28px;
-            cursor: pointer;
-            padding: 10px 20px; /* Added padding */
-        }
-        #menu-icon1 {
-            font-size: 28px;
-            cursor: pointer;
-            padding: 10px 20px; /* Added padding */
-        }
-    
-        #cart-button {
-            font-size: 30px;
-            padding: 5px;
-            margin-left: 20px; /* Added margin for separation */
-        }
-    
-        /* Sidebar Navigation */
-        #side-nav {
-            height: 100%;
-            width: 0;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background-color: rgba(0, 0, 0, 0.9);
-            overflow-x: hidden;
-            transition: 0.5s;
-            padding-top: 60px;
-            z-index: 2;
-        }
-    
-        #side-nav a {
-            padding: 10px 15px;
-            text-decoration: none;
-            font-size: 22px;
-            color: #fff;
-            display: block;
-            transition: 0.3s;
-        }
-    
-        #side-nav a:hover {
-            background-color: #575757;
-        }
-    
-        #close-btn {
-            position: absolute;
-            top: 20px;
-            right: 25px;
-            font-size: 36px;
-        }
-    
-        #search-bar-container {
-            display: flex;
-            align-items: center;
-            flex: 1;
-            justify-content: center;
-        }
-        
-        #search-bar {
-            margin: 0 5px;
-            padding: 15px;
-            border: none;
-            border-radius: 5px;
-            width: 100%;
-            max-width: 400px;
-        }
-        
-        #search-button {
-            cursor: pointer;
-            padding: 10px;
-            border: none;
-            background-color: #000;
-            color: #fff;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-        }
-        
-        #search-button i {
-            margin-right: 5px;
-        }
-    
-        #categories {
-            background-color: rgba(255, 255, 255, 0.3);
-            padding: 40px 20px;
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
+        #terms-content {
+            background-color: #fff; /* White content background */
+            padding: 40px;
+            border-radius: 10px;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 1000px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
         }
 
-        .category-card-link {
-            text-decoration: none;
-            width: 400px;
-        }
-
-        .category-card {
-            background-color: #000;
-            color: #ddd;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-
-        .category-card:hover {
-            transform: scale(1.05);
-        }
-
-        .category-card h2 {
+        #terms-content h3 {
+            color: #333; /* Darker headings */
+            font-size: 1.5em;
             margin-bottom: 10px;
         }
 
-        .category-card button {
-            padding: 10px 20px;
-            background-color: #6a0dad;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        } 
-        /* Grid layout for featured products */
-#featured-products {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    padding: 20px;
-}
+        #terms-content ol {
+            list-style-type: decimal;
+            padding-left: 20px;
+        }
 
-/* Featured product card styling */
-.featured-product {
-    background-color: #000;
-    color: #fff;
-    padding: 20px;
-    border-radius: 15px;
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    height: 350px;
-    width: 230px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.featured-product:hover {
-    transform: scale(1.05);
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5);
-}
-
-.featured-product img {
-    width: 100%;
-    height: auto;
-    max-height: 150px;
-    border-radius: 10px;
-    object-fit: cover;
-    margin-bottom: 15px;
-}
-
-.featured-product h3 {
-    margin-bottom: 10px;
-    font-size: 1.2em;
-}
-
-.view-product-button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-}
-
-.view-product-button:hover {
-    background-color: #0056b3;
-}
-
-/* Responsive design adjustments */
-@media screen and (max-width: 1024px) {
-    #featured-products {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 15px;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    #featured-products {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-    }
-
-    .featured-product {
-        height: auto;
-        width: 100%;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    #featured-products {
-        grid-template-columns: 1fr;
-        gap: 10px;
-    }
-
-    .featured-product {
-        height: auto;
-        width: 80%;
-    }
-}
-
+        #terms-content ol li {
+            margin: 10px 0;
+            color: #555;
+        }
 
         #text-section {
-            background-color: #000;
+            background-color: #f5f5f5;
             padding: 20px;
-            font-family: 'Roboto', sans-serif; /* Apply Roboto font */
+            text-align: center;
+            margin-top: 40px;
         }
     
         #text-section a {
-            color: #ddd;
-            margin: 10px 0;
+            color: #0056b3; /* Matching link color */
             text-decoration: none;
+            margin: 10px 0;
             display: block;
         }
-    
-        #cash-navbar {
-            background-color: #555;
-            padding: 10px;
-            text-align: center;
-            font-size: 18px;
-            color: #fff;
-            animation: fadeInUp 1.5s ease;
+
+        #text-section a:hover {
+            text-decoration: underline; /* Simple hover effect */
         }
-    
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    
+
         @media screen and (max-width: 768px) {
-            #header {
-                flex-direction: column;
-                align-items: center;
-            }
-    
-            #navbar {
-                flex-direction: column;
-                align-items: stretch;
-                padding: 10px 0;
-            }
-            #navbar1 {
-                flex-direction: column;
-                align-items: stretch;
-                padding: 10px 0;
-            }
-    
-            #menu-cart-wrapper {
-                justify-content: space-between;
-                width: 100%; /* Adjusted width for full width */
-                padding: 0 20px; /* Added padding */
-            }
-    
-            #menu-icon {
-                order: -1;
-                align-self: flex-start;
-                padding: 10px 0; /* Adjusted padding */
-            }
-            #menu-icon1 {
-                order: -1;
-                align-self: flex-start;
-                padding: 10px 0; /* Adjusted padding */
-            }
-    
-            #cart-button {
-                order: -1;
-                align-self: flex-end;
-                padding: 5px;
-                margin-left: 0; /* Removed margin */
-            }
-    
-            #search-bar-container {
-                flex-direction: row;
-                align-items: center;
-                justify-content: center;
-                width: 100%;
-                padding: 10px 0;
-            }
-    
-            #search-bar,
-            #search-button {
-                width: auto;
-                margin: 0 5px;
-                padding: 15px;
-            }
-    
-            .category-card {
-                width: 45%;
-                margin-bottom: 20px;
-            }
-    
-            #text-section {
-                display: flex;
-                flex-direction: column;
-            }
-    
-            #text-section a {
-                margin-bottom: 10px;
-            }
-    
-            #header-text,
-            #round-logo {
-                display: none;
-            }
-    
-            #logo {
-                width: 80%;
-                height: 200px;
+            #terms-content {
+                width: 95%;
+                padding: 20px;
             }
         }
-    
-        @media screen and (max-width: 480px) {
-            #navbar {
-                padding: 5px;
-                display: none;
-            }
-            #navbar1 {
-                padding: 5px;
-            }
-    
-            #menu-icon {
-                font-size: 24px;
-            }
-            #menu-icon1 {
-                font-size: 24px;
-            }
-    
-            #menu-cart-wrapper {
-                justify-content: space-between;
-                padding: 0 5px; /* Adjusted padding */
-            }
-    
-            #search-bar-container {
-                margin-right: 0;
-            }
-    
-            #search-bar,
-            #search-button {
-                padding: 10px;
-            }
-    
-            #cart-button {
-                font-size: 32px;
-                padding: 10px;
-                margin-bottom: 10px;
-            }
-    
-            .category-card {
-                padding: 10px;
-                width: 90%;
-                height: auto;
-                border-radius: 10px;
-            }
-            
-        }
-        @media screen and (min-width: 488px) {
-            #navbar {
-                padding: 5px;
-                
-            }
-            #navbar1 {
-                padding: 5px;
-                display: none;
-            }
-            
-        }
-        
     </style>
 </head>
 <body>
-    <div id="header">
-        <img id="logo" src="{% static 'product zone.jpg' %}" alt="Product Zone Logo">
-        <h1 id="header-text">
-            <i>Product Zone&nbsp;&nbsp;&nbsp;<span id="by">&nbsp;&nbsp;by&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;V.C. <span id="ampersand">&amp;</span> S.</i>
-        </h1>
-        <img id="round-logo" src="{% static '09fa5653-c54b-43a6-817a-5c0300fc60db.webp' %}" alt="Round Logo">
-    </div>
+   {% include 'navbar.html' %}
 
     <div id="terms-content">
         <h2>Terms and Conditions</h2>
-        <p>Welcome to Product Zone. By accessing or using our website, you agree to comply with and be bound by the following terms and conditions...</p>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit sint exercitationem ullam cum voluptates fugit officiis, odit provident, ipsa minus cupiditate aspernatur, dignissimos molestiae voluptate illum ducimus numquam fugiat animi architecto. Veniam maxime ea fuga soluta ut necessitatibus nesciunt, adipisci cum incidunt exercitationem, alias quaerat atque molestiae mollitia ex voluptates, reprehenderit iure facilis totam ullam. Temporibus quam mollitia id magnam. Impedit, sit laudantium perferendis asperiores minima enim facere, vitae sequi odio dicta omnis quod corrupti repudiandae at incidunt doloribus. Maiores, inventore. Iusto maiores culpa iure id quaerat ad omnis ullam, nisi perspiciatis. Iure nihil delectus corrupti sint aspernatur officia ad harum excepturi eligendi facilis, quibusdam rem magni dolorem fugit repudiandae explicabo nostrum qui quae. Animi quae aliquid cum ullam ad tempore eum a corporis unde! Molestias consequatur laborum veniam quis ratione quos delectus quod! Eum, animi facere fuga dolore nesciunt dolorem nam magni maxime! Nisi totam molestiae quae tempora quia non eos similique, dicta reprehenderit consequuntur corporis cum tenetur, laboriosam, dolorum numquam animi ipsa! Quaerat voluptate repellendus doloribus tempora, quibusdam asperiores labore cupiditate possimus consequatur dolor excepturi enim a dicta. Facere, molestias nulla laborum voluptate provident animi quae ratione hic ipsa deleniti repellendus itaque velit non explicabo distinctio neque quibusdam pariatur! Ipsam delectus tempora quos corrupti dolor voluptatibus deserunt reprehenderit, sed iure iste porro explicabo autem laudantium tempore velit ea sapiente optio repellat, quia fugiat rem earum, voluptatum voluptate. Eligendi perferendis quos vitae error harum nemo labore debitis sequi soluta, ut rerum rem officiis impedit recusandae a ratione eos tempora sed, sapiente, distinctio sit. Vero blanditiis est at aperiam tempore soluta dignissimos, nihil culpa eos reprehenderit eligendi, ratione tempora. Atque vel beatae itaque voluptatum illo facilis reprehenderit placeat cumque, vero nemo quae! Ducimus vel eaque labore, neque suscipit repudiandae eveniet ipsam mollitia. Iusto dolore fugiat magni ad corrupti cupiditate blanditiis alias labore. Iusto modi consequuntur repudiandae reprehenderit quisquam a asperiores suscipit aut mollitia dolores ducimus ratione eveniet eum quas, dolore nisi, in placeat? Non, dolores eaque aliquid sequi, ratione voluptatem animi consequuntur recusandae nemo tenetur aut vitae accusantium velit. Magnam, voluptas ratione! Laborum corrupti itaque minus cum libero. Iste itaque odit officiis nihil amet! Libero delectus error aperiam maiores dolor quas sint voluptatum deleniti, eveniet quae quisquam modi quos sequi vel nisi, reiciendis repellendus. Tenetur consequatur voluptate atque, reiciendis numquam omnis sed delectus odio, maiores fugit quidem quae. Laborum ad fuga est sed nesciunt, magni voluptate facilis rerum a quo reprehenderit neque pariatur rem veritatis libero eligendi natus doloribus unde nobis minima quis modi. Obcaecati debitis ea cumque nostrum et quisquam laborum exercitationem blanditiis saepe aliquid quasi ex fuga rem possimus totam quod sed molestiae asperiores vero earum deserunt, reiciendis vel recusandae? Mollitia ipsam explicabo minus laboriosam excepturi, impedit esse quis neque a natus porro. Reprehenderit culpa minima velit voluptatibus ipsa ad, voluptas alias expedita perferendis suscipit eveniet eligendi sed, sapiente illo ipsum laborum harum facilis nobis molestiae? Quas aperiam minima perferendis animi veniam quod, adipisci possimus quia fuga minus hic nihil accusamus aspernatur corrupti consequuntur facilis dolorem blanditiis omnis ipsum alias porro. Porro, enim aspernatur fugit quasi totam perferendis est natus aut quo provident repudiandae qui numquam debitis nemo minus eligendi ex, vitae doloremque ullam cumque! Molestias commodi quo cumque? Aliquid eligendi ullam ea dolorem ipsum aperiam explicabo velit quidem! Architecto neque quis sint culpa explicabo! Pariatur qui, hic, tempora obcaecati error, impedit iusto excepturi modi saepe fugiat harum ipsum deserunt accusantium vero doloremque totam quia. Et, dolor. Quia, quasi, ratione praesentium corrupti sed perspiciatis obcaecati iure modi consequatur fuga itaque, distinctio repudiandae qui ipsam! Dicta amet ullam dolorum suscipit explicabo eaque placeat ducimus? Recusandae non beatae incidunt ipsa repellat qui rem consequatur, deleniti ab! Perspiciatis deleniti minima eveniet eaque, cum eum, sunt dolorum obcaecati, sed officia ipsum vero aspernatur aut hic ipsa soluta corrupti odit natus harum a corporis reiciendis excepturi quis! Dolor incidunt animi nam? Eum provident suscipit recusandae dolorum perspiciatis sunt quae, officiis pariatur tempore quam itaque voluptatibus quidem error quos. In amet placeat pariatur deserunt alias ex eius quam ducimus sunt enim adipisci non facere soluta, temporibus, at veniam laboriosam, cupiditate iure aspernatur porro ratione voluptatem rerum facilis deleniti? Libero possimus non sequi ipsum sapiente deserunt voluptates, delectus perferendis consectetur commodi quae. Officia minima nihil numquam aliquid deleniti ducimus beatae quae cupiditate iusto, voluptatem molestias ipsum quas suscipit, ipsam facere, saepe illum harum vel ut tempore natus mollitia? Quo maxime iure laudantium quibusdam laboriosam distinctio quam deserunt provident! Dicta quam exercitationem tenetur deleniti at aspernatur atque corporis rem obcaecati natus itaque quaerat iusto ex possimus eos, animi accusantium est earum? Illo, repudiandae! Voluptas commodi maiores dolore repellat placeat ab esse, vero natus exercitationem illo, et aliquam sunt magni voluptatum. Cum in fugiat, laborum ullam laudantium omnis et fugit quis laboriosam accusantium minima voluptatem, dolorem corrupti aliquid recusandae earum provident quam voluptate culpa mollitia aut delectus, amet sed modi. Amet consectetur commodi, excepturi officiis ipsum sed deleniti consequuntur optio veniam repellat magni! Nulla possimus, at beatae qui amet ullam quisquam officia asperiores, nobis facilis quos laudantium? Excepturi, necessitatibus iure rerum recusandae quae dolor animi nostrum, esse est non nam enim odio explicabo eaque magnam consequuntur rem voluptate et similique facere vitae nihil at nulla laboriosam! Distinctio libero quam numquam, minus dolores commodi laborum voluptatem hic vel iusto velit explicabo eveniet laboriosam omnis dicta enim quas. Laboriosam, in doloribus. Velit rerum voluptates dicta corrupti illo quibusdam, quas aliquam labore perspiciatis omnis praesentium eum earum cumque eius aliquid tempora porro deserunt illum officia veniam quasi temporibus amet itaque. Cumque, reiciendis pariatur fugiat, placeat dolores quisquam quam quibusdam cupiditate dignissimos, autem a eos nihil eum quaerat maxime temporibus voluptatum quo laudantium quod. Quas illo minima soluta tenetur impedit corrupti voluptas aliquid veniam molestiae in fuga, nostrum nam id, fugiat explicabo quibusdam necessitatibus omnis nihil commodi voluptate! Neque exercitationem aliquam quibusdam quaerat. Perspiciatis consectetur error accusantium, itaque voluptates cumque iure odio dicta nemo officiis saepe laborum iste. Eligendi rerum soluta reiciendis expedita. Nulla velit quam accusamus impedit ducimus ex officia voluptate doloremque cumque similique? Voluptatum dignissimos ad animi quam omnis.</p>
-        <!-- Continue adding more paragraphs as needed -->
+
+        <h3>1. Introduction</h3>
+        <p>These terms and conditions outline the rules and regulations for the use of Product Zone's website, located at productzone.com.</p>
+
+        <h3>2. Intellectual Property Rights</h3>
+        <p>All content, including logos, text, graphics, and data on this website, are owned by Product Zone and protected under copyright laws.</p>
+
+        <h3>3. License to Use Website</h3>
+        <p>We grant you a limited license to access and make personal use of this site, but not to download or modify it.</p>
+
+        <h3>4. User Content</h3>
+        <p>Users are responsible for the content they share on the website. Product Zone reserves the right to remove any content deemed inappropriate or harmful.</p>
+
+        <h3>5. Termination of Use</h3>
+        <p>We may terminate or suspend your access to our site immediately, without prior notice, for any reason, including if you breach the terms.</p>
+
+        <h3>6. Limitation of Liability</h3>
+        <p>Product Zone is not liable for any indirect, incidental, or consequential damages arising from the use or inability to use our website.</p>
+
+        <h3>7. Modifications to Service</h3>
+        <p>We reserve the right to modify or discontinue the service (or any part thereof) at any time, without notice.</p>
+
+        <h3>8. Governing Law</h3>
+        <p>These terms will be governed by and construed in accordance with the laws of the jurisdiction of Product Zone's headquarters.</p>
+
+        <h3>9. Privacy Policy</h3>
+        <p>Your privacy is important to us. Please review our privacy policy for more details on how we collect, use, and protect your data.</p>
+
+        <h3>10. Contact Us</h3>
+        <p>If you have any questions about these terms, please contact us at support@productzone.com.</p>
     </div>
 
     <div id="text-section">
-        <a href="{% url 'terms'%}">Terms and Conditions</a><br>
-        <a href="{% url 'faqs'%}">FAQs</a><br>
-        <a href="{% url 'contact'%}">Contact Us</a>
+        <a href="{% url 'terms' %}">Terms and Conditions</a><br>
+        <a href="{% url 'faqs' %}">FAQs</a><br>
+        <a href="{% url 'contact' %}">Contact Us</a>
     </div>
 </body>
 </html>

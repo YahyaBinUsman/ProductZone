@@ -16,7 +16,6 @@ urlpatterns = [
     path('error/', views.error_page, name='error_page'),
     path('success/', views.order_success, name='order_success'),
     path('products/', views.products_view, name='products_view'),
-    path('product/<slug:category>/<int:product_id>/', views.product_redirect, name='product_redirect'),
     path('products/add/', views.add_product, name='add_product'),
     path('products/edit/<int:product_id>/', views.edit_product, name='edit_product'),
     path('products/delete/<int:product_id>/', views.delete_product, name='delete_product'),

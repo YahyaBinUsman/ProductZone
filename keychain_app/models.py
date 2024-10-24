@@ -3,6 +3,7 @@ from django.db import models
 class Category(models.Model):
     name = models.CharField(max_length=100)
     url_name = models.SlugField(unique=True, default='none')  # Specify a default value
+    image = models.ImageField(upload_to='category_images/', blank=True, null=True)  # Add image field
 
     description = models.TextField(blank=True)
 

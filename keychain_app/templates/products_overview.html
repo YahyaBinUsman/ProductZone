@@ -6,11 +6,10 @@
     <title>Products Overview</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
     <style>
-        html, body {
-            overflow-x: hidden;
+        /* General Styles */
+        body {
             margin: 0;
-            padding: 0;
-            font-family: "Arial", sans-serif;
+            font-family: 'Roboto', sans-serif;
             background-color: #222;
             color: #fff;
             display: flex;
@@ -18,125 +17,36 @@
             min-height: 100vh;
         }
 
-        #navbar {
-            background-color: #000;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-        }
-
-        #menu-icon, #cart-button {
-            font-size: 28px;
-            cursor: pointer;
-            padding: 10px;
-        }
-
-        #menu-icon {
-            font-size: 24px;
-        }
-
-        #cart-button {
-            font-size: 30px;
-        }
-
-        #search-bar-container {
-            display: flex;
-            align-items: center;
-            flex: 1;
-            justify-content: center;
-            margin: 0 10px;
-        }
-
-        #search-bar {
-            margin: 0;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            width: 100%;
-            max-width: 400px;
-        }
-
-        #search-button {
-            cursor: pointer;
-            padding: 10px;
-            border: none;
-            background-color: #000;
-            color: #fff;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            margin-left: 10px;
-        }
-
-        #search-button i {
-            margin-right: 5px;
-        }
-
-        #side-nav {
-            height: 100%;
-            width: 0;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background-color: rgba(0, 0, 0, 0.9);
-            overflow-x: hidden;
-            transition: 0.3s;
-            padding-top: 60px;
-            z-index: 2;
-        }
-
-        #side-nav a {
-            padding: 15px 25px;
-            text-decoration: none;
-            font-size: 22px;
-            color: #fff;
-            display: block;
-            transition: 0.3s;
-        }
-
-        #side-nav a:hover {
-            background-color: #575757;
-        }
-
-        #close-btn {
-            position: absolute;
-            top: 20px;
-            right: 25px;
-            font-size: 36px;
-            color: #fff;
-            cursor: pointer;
-        }
-
-        h1, h2 {
-            text-align: left;
-            margin: 20px;
-            text-transform: uppercase;
-        }
-
         h1 {
-            font-size: 2em;
+            font-size: 2.5em;
+            font-family: 'Playfair Display', serif;
+            color: orange;
+            margin-top: 1.5em;
         }
 
         h2 {
-            font-size: 1.5em;
-            border-bottom: 2px solid #444;
-            padding-bottom: 5px;
+            font-size: 1.7em;
+            color: orange;
+            margin: 20px 0;
+            text-align: left;
+            padding-left: 10%;
+            text-transform: uppercase;
         }
 
+        /* Table Styles */
         table {
             width: 90%;
             margin: 20px auto;
             border-collapse: collapse;
-            border: 2px solid #000;
-            background-color: #333;
-            color: #fff;
+            background-color: #fff;
+            color: #333;
+            border-radius: 10px;
+            overflow: hidden;
         }
 
         th, td {
             padding: 12px;
-            border-bottom: 1px solid #444;
+            border-bottom: 1px solid #ddd;
             text-align: center;
         }
 
@@ -146,21 +56,40 @@
         }
 
         tbody tr:nth-child(even) {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: #f9f9f9;
         }
 
+        /* Action Buttons */
+        button {
+            padding: 0.6em 1.2em;
+            background-color: orange;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: darkorange;
+        }
+
+        /* Summary Styling */
         .summary {
-            text-align: left;
+            width: 90%;
+            margin: 30px auto;
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             font-size: 1.2em;
             font-weight: bold;
-            margin: 30px auto;
-            width: 90%;
+            color: orange;
         }
 
-        @media screen and (max-width: 768px) {
+        /* Responsive */
+        @media (max-width: 768px) {
             table {
                 width: 100%;
-                font-size: 14px;
             }
 
             th, td {
@@ -173,31 +102,9 @@
             }
         }
 
-        @media screen and (max-width: 480px) {
+        @media (max-width: 480px) {
             #navbar {
                 display: none;
-            }
-
-            #menu-icon {
-                font-size: 24px;
-            }
-
-            #cart-button {
-                font-size: 32px;
-            }
-
-            #search-bar-container {
-                flex-direction: row;
-                margin: 0;
-            }
-
-            #search-bar {
-                padding: 10px;
-            }
-
-            #search-button {
-                padding: 8px;
-                margin-left: 0;
             }
 
             #side-nav {
@@ -207,76 +114,58 @@
     </style>
 </head>
 <body>
-    <div id="navbar">
-        <div id="menu-icon">&#9776; Menu</div>
-        <form method="get" action="{% url 'products_overview' %}" id="search-bar-container">
-            <input type="text" name="search" placeholder="Search Products" id="search-bar">
-            <button type="submit" id="search-button"><i class="fas fa-search"></i> Search</button>
-        </form>
-        <div id="cart-button">
-            <a href="{% url 'view_cart' %}" class="fas fa-shopping-cart"></a>
-        </div>
-    </div>
-
-    <div id="side-nav">
-        <div id="close-btn">&times;</div>
-        <a href="{% url 'products_view' %}">Products</a>
-        <a href="{% url 'add_product' %}">Add Product</a>
-        <a href="{% url 'products_overview' %}">Products Overview</a>
-        <a href="{% url 'order_details' %}">Order Details</a>
-    </div>
+    {% include 'navbar.html' %}
 
     <h1>Products Overview</h1>
-<!-- Clothes -->
-{% for data in categories %}
-    <h2>{{ data.category.name }}</h2>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Action</th>
-        </tr>
-        {% for product in data.products %}
-        <tr>
-            <td>{{ product.id }}</td>
-            <td>{{ product.name }}</td>
-            <td>{{ product.description }}</td>
-            <td>${{ product.price }}</td>
-            <td>{{ product.quantity }}</td>
-            <td>
-                <form method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="product_id" value="{{ product.id }}">
-                    {% if product.is_featured %}
-                    <button type="submit" name="action" value="remove">Remove from Featured</button>
-                    {% else %}
-                    <button type="submit" name="action" value="feature">Add to Featured</button>
-                    {% endif %}
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
 
-    <!-- Category Summary -->
-    <div class="summary">
-        <p>Total Items: {{ data.products.count }}</p> <!-- Number of items in this category -->
-        <p>Total Quantity: {{ data.total_quantity }}</p> <!-- Total quantity in this category -->
-        <p>Total Value: ${{ data.total_price }}</p> <!-- Total value in this category -->
+    <!-- Categories and Products -->
+    {% for data in categories %}
+        <h2>{{ data.category.name }}</h2>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Action</th>
+            </tr>
+            {% for product in data.products %}
+            <tr>
+                <td>{{ product.id }}</td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.description }}</td>
+                <td>${{ product.price }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                        {% if product.is_featured %}
+                        <button type="submit" name="action" value="remove">Remove from Featured</button>
+                        {% else %}
+                        <button type="submit" name="action" value="feature">Add to Featured</button>
+                        {% endif %}
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <div class="summary">
+            <p>Total Items: {{ data.products.count }}</p>
+            <p>Total Quantity: {{ data.total_quantity }}</p>
+            <p>Total Value: ${{ data.total_price }}</p>
+        </div>
+    {% endfor %}
+
+    <!-- Overall Summary -->
+    <div class="summary overall-summary">
+        <h2>Overall Summary</h2>
+        <p>Total Items: {{ total_items }}</p>
+        <p>Total Quantity: {{ total_quantity }}</p>
+        <p>Total Value: ${{ total_price_sum }}</p>
     </div>
-{% endfor %}
-
-<!-- Overall Summary -->
-<div class="summary overall-summary">
-    <h2>Overall Summary</h2>
-    <p>Total Items: {{ total_items }}</p> <!-- Overall total items -->
-    <p>Total Quantity: {{ total_quantity }}</p> <!-- Overall total quantity -->
-    <p>Total Value: ${{ total_price_sum }}</p> <!-- Overall total value -->
-</div>
-
 
     <script>
         const menuIcon = document.getElementById("menu-icon");
@@ -284,11 +173,7 @@
         const closeBtn = document.getElementById("close-btn");
 
         menuIcon.addEventListener("click", function() {
-            if (sideNav.style.width === "0px" || sideNav.style.width === "") {
-                sideNav.style.width = "250px";
-            } else {
-                sideNav.style.width = "0";
-            }
+            sideNav.style.width = (sideNav.style.width === "250px" || sideNav.style.width === "") ? "0" : "250px";
         });
 
         closeBtn.addEventListener("click", function() {

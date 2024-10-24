@@ -3,42 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
-
     <title>Error Page</title>
     <style>
+        /* General Styling to match existing design */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            color: #333;
+            font-family: 'Roboto', sans-serif;
+            background-color: #222;
+            color: #fff;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-        }
-        .error-container {
             text-align: center;
         }
 
         h1 {
-            font-size: 2em;
+            font-size: 3em;
+            color: #f0e68c; /* Match header color from other pages */
             margin-bottom: 20px;
         }
 
         p {
             font-size: 1.2em;
             margin-bottom: 20px;
+            color: #ddd; /* Matching paragraph text color */
         }
 
         a {
-            color: #007bff;
+            color: orange; /* Consistent with buttons and links from previous design */
             text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2em;
         }
 
         a:hover {
             text-decoration: underline;
+        }
+
+        .button1 {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: orange;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.2em;
+            text-align: center;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+
+        .button1:hover {
+            background-color: darkorange;
+        }
+
+        /* Responsive Styling */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            p {
+                font-size: 1em;
+            }
+
+            .button1 {
+                font-size: 1em;
+            }
         }
     </style>
 </head>
@@ -46,7 +80,7 @@
     <div class="error-container">
         <h1>Oops! Something went wrong.</h1>
         <p>We're sorry, but an error occurred while processing your request.</p>
-        <p>Please <a href="/">click here</a> to return to the homepage.</p>
+        <a href="/" class="button1">Return to Homepage</a>
     </div>
 </body>
 </html>

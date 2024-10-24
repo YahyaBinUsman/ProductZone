@@ -3,13 +3,13 @@ from django.shortcuts import render, redirect
 from .models import Category, Product
 from .forms import CategoryForm, ProductForm  # Create forms in forms.py
 
-# View for adding a new category
+
 def add_category(request):
     if request.method == 'POST':
-        form = CategoryForm(request.POST)
+        form = CategoryForm(request.POST, request.FILES)  # Handle file uploads
         if form.is_valid():
             form.save()
-            return redirect('add_category')  # Redirect to the add category page or another page
+            return redirect('add_category')  # Redirect to the same page or another one
     else:
         form = CategoryForm()
     return render(request, 'add_category.html', {'form': form})
@@ -48,7 +48,7 @@ def home(request):
         # Filter products by category and that are featured
         featured_products_by_category[category.name] = featured_products.filter(category=category)
     
-    return render(request, 'home.html', {
+    return render(request, 'index.html', {
         'featured_products_by_category': featured_products_by_category,
         'categories': categories,
     })

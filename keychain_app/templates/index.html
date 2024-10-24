@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-Commerce Homepage</title>
     <style>
-     /* General Styles */
+/* General Styles */
 
 marquee{
     display: flex;
@@ -388,7 +388,11 @@ p {
         {% for category in categories %}
             <a href="{% url 'category_detail' url_name=category.url_name %}" class="category-card-link">
                 <div class="category-card">
-                    <img src="{{ category.image.url }}" alt="{{ category.name }}">
+                    {% if category.image %}
+                        <img src="{{ category.image.url }}" alt="{{ category.name }}">
+                    {% else %}
+                        <img src="{% static 'images/default-placeholder.png' %}" alt="No image available">  <!-- Fallback image -->
+                    {% endif %}
                     <h3>{{ category.name }}</h3>
                     <p>Explore our stylish {{ category.name | lower }} collection.</p>
                     <button>Shop Now</button>
@@ -396,6 +400,7 @@ p {
             </a>
         {% endfor %}
     </section>
+    
     <!-- Featured Products Section -->
      <br>
     <h2>Featured Products</h2>

@@ -7,41 +7,80 @@
     <title>Navbar</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        marquee{
+        /* General Styles */
+
+        marquee {
             display: flex;
             align-items: center;
         }
-        
-        ::selection{
+
+        ::selection {
             background-color: #252525;
             color: white;
         }
-        /* Navbar Styles */
-        .navbar {
+
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Funny Headings */
+        .super-duper-h1 {
+            font-size: 3em;
+            color: #ff6347; /* Tomato */
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .silly-h2 {
+            font-size: 2.5em;
+            margin-bottom: 0.5em;
+            color: #4682b4; /* Steel Blue */
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .quirky-h3 {
+            font-size: 1.5em;
+            color: #6a5acd; /* Slate Blue */
+            text-align: center;
+        }
+
+        .skill p {
+            font-size: 1.2em;
+            text-align: center;
+        }
+
+        /* Navbar */
+        .navbar-goofy {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 1em;
-            background-color: peachpuff;
+            background-color: peachpuff; 
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
-        .logo {
+        .logo-fun {
             font-size: 1.8em;
             font-weight: bold;
         }
 
-        .nav-links {
+        .nav-links-goofy {
+            position: relative;
             list-style: none;
             display: flex;
             gap: 20px;
             letter-spacing: 3px;
         }
 
-        .nav-links li a {
+        .nav-links-goofy li a {
             text-decoration: none;
             color: #555;
             font-weight: 500;
@@ -49,53 +88,57 @@
             font-size: 0.9em;
         }
 
-        .nav-links li a:hover {
+        .nav-links-goofy li a:hover {
             color: white;
         }
 
-        .nav-icons i {
+        .nav-icons-goofy i {
             margin-left: 1em;
             font-size: 1.5em;
             transition: transform 0.3s;
         }
 
-        .nav-icons i:hover {
+        .nav-icons-goofy i:hover {
             transform: scale(1.2);
         }
 
-        /* Search Bar Container */
-        .search-bar-container {
+        /* Search Bar */
+        .search-bar-funny {
             display: flex;
-            align-items: center;
-            gap: 10px;
+            justify-content: center;
+            padding: 1em 0;
+            background-color: #FDFCFB;
         }
 
-        .search-bar-container input {
-            width: 250px;
-            padding: 0.5em;
-            border-radius: 5px;
+        .search-bar-funny input {
+            width: 50%;
+            padding: 1em;
             border: 1px solid #ddd;
+            border-radius: 25px;
         }
 
-        .search-bar-container button {
-            padding: 0.5em 1em;
-            background-color: orange;
+        .search-bar-funny button {
+            padding: 1em 2em;
+            margin-left: 1em;
+            background-color: orange; 
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 25px;
             cursor: pointer;
+            height: 50px;
         }
 
-        .search-bar-container button:hover {
+        .search-bar-funny button:hover {
             background-color: darkorange;
         }
+
     </style>
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar">
-        <div class="logo">Product Zone</div>
-        <ul class="nav-links">
+    <nav class="navbar-goofy">
+        <div class="logo-fun">Product Zone</div>
+        <ul class="nav-links-goofy">
             <li><a href="#categories">CATEGORIES</a></li>
             <li><a href="#featured-products">FEATURED</a></li>
             <li><a href="#popular-products">POPULAR</a></li>
@@ -104,7 +147,7 @@
             <li><a href="#blog">BLOG</a></li>
             <li><a href="#newsletter">NEWSLETTER</a></li>
         </ul>
-        <div class="nav-icons">
+        <div class="nav-icons-goofy">
             <i class="fas fa-search"></i>
             <a href="{% url 'view_cart' %}"><i class="fas fa-shopping-cart"></i></a>
         </div>
@@ -114,7 +157,7 @@
     <marquee>GET EXCLUSIVE DISCOUNTS ON LATEST ARRIVALS -- | -- GET EXCLUSIVE DISCOUNTS ON LATEST ARRIVALS </marquee>
 
     <!-- Search Bar -->
-    <div class="search-bar">
+    <div class="search-bar-funny">
         <input id="search-bar" type="text" placeholder="Search products...">
         <button id="search-button">Search</button>
     </div>

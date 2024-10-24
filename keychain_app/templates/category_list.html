@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,83 +6,191 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Categories</title>
     <style>
+        /* General Styles */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
             margin: 0;
             padding: 20px;
-            background-color: #f4f4f4;
         }
+
         h2 {
             text-align: center;
-            color: #333;
+            font-family: 'Playfair Display', serif;
+            color: #222;
+            margin-bottom: 1.5em;
         }
+
+        /* Category List Styling */
         ul {
             list-style-type: none;
             padding: 0;
+            margin: 0;
         }
-        li {
-            background: #fff;
-            margin: 10px 0;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+        .category-card {
+            background-color: transparent;
+            margin: 1.5em auto;
+            padding: 0;
+            max-width: 1200px;
+            border-radius: 0;
         }
+
         h3 {
+            font-size: 2em;
+            color: #222;  /* Dark text color */
             margin: 0 0 10px;
-            color: #007BFF;
+            border-bottom: 2px solid #222;  /* Dark border */
+            padding-bottom: 10px;
+            text-align: center;
         }
+
         p {
-            margin: 5px 0;
+            font-size: 1em;
             color: #555;
+            text-align: center;
         }
+
+        /* Product List Styling */
+        .product-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;  /* Center cards in the row */
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        .product-card {
+            background-color: white;
+            width: 300px;  /* Fixed width for each card */
+            margin: 10px;  /* Spacing between cards */
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;  /* Added box-shadow transition */
+            display: flex;
+            flex-direction: column;  /* Stack elements vertically */
+            height: 500px;  /* Fixed height for a balanced look */
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);  /* Enhanced shadow on hover */
+        }
+
+        .product-card img {
+            width: 100%;  /* Fixed width */
+            height: 200px;  /* Fixed height */
+            object-fit: cover;  /* Ensures image covers the area without distortion */
+            border-radius: 10px 10px 0 0;  /* Rounded top corners */
+        }
+
+        h4 {
+            font-size: 1.5em;  /* Increased font size */
+            margin: 0.5em 0;  /* Added margin for better spacing */
+            color: #333;
+            text-align: center;  /* Centered text */
+        }
+
         .product-details {
-            margin-top: 10px;
-            border-top: 1px solid #eee;
-            padding-top: 10px;
+            margin-top: auto;  /* Push details to the bottom */
+            text-align: center;  /* Centered details */
         }
+
+        /* Add to Cart Button Styling */
         .add-to-cart {
             display: flex;
             align-items: center;
             margin-top: 10px;
+            justify-content: center;  /* Centered button */
         }
+
         .add-to-cart input {
             width: 60px;
+            padding: 0.5em;
             margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
         }
+
+        .add-to-cart input:focus {
+            border-color: orange;
+        }
+
         .add-to-cart button {
-            background-color: #28a745;
+            padding: 0.7em 1.2em;
+            background-color: orange;  /* Button color */
             color: white;
             border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
+            border-radius: 20px;
             cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            text-align: center;
+            transition: background-color 0.3s ease;  /* Added transition for button */
         }
+
         .add-to-cart button:hover {
-            background-color: #218838;
+            background-color: darkorange;  /* Darker shade on hover */
+        }
+
+        /* Reduce space between Price and Available Quantity */
+        .product-card p {
+            margin: 2px 0;  /* Further reduced margin to minimize space */
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .product-card {
+                flex: 1 1 calc(45% - 20px);  /* Two cards in smaller screens */
+                margin: 10px;
+            }
+
+            h3, h4 {
+                text-align: center;
+            }
+
+            .add-to-cart {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .product-card {
+                flex: 1 1 100%;  /* One card on extra small screens */
+                margin: 10px 0;
+            }
         }
     </style>
 </head>
 <body>
+
+    {% include 'navbar.html' %}
+
     <h2>Categories</h2>
+
     <ul>
         {% for category in categories %}
-            <li>
+            <li class="category-card">
                 <h3>{{ category.name }}</h3>
                 <p>{{ category.description }}</p>
-                <ul>
+
+                <ul class="product-list">
                     {% for product in category.products.all %}
-                        <li>
-                            <div>
-                                <h4>{{ product.name }}</h4>
-                                <p>Price: {{ product.price }}</p>
-                                <div class="product-details">
-                                    <p>Available Quantity: {{ product.quantity }}</p>
-                                    <form method="post" action="{% url 'add_product_to_cart' product.id %}" class="add-to-cart">
-                                        {% csrf_token %}
-                                        <input type="number" name="quantity_{{ product.id }}" value="1" min="1" max="{{ product.quantity }}">
-                                        <button type="submit">Add to Cart</button>
-                                    </form>
-                                </div>
+                        <li class="product-card">
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}">  <!-- Added image -->
+                            <h4>{{ product.name }}</h4>
+                            <p>Price: ${{ product.price }}</p>
+
+                            <div class="product-details">
+                                <p><strong>Available Quantity:</strong> {{ product.quantity }}</p>
+
+                                <form method="post" action="{% url 'add_product_to_cart' product.id %}" class="add-to-cart">
+                                    {% csrf_token %}
+                                    <input type="number" name="quantity_{{ product.id }}" value="1" min="1" max="{{ product.quantity }}">
+                                    <button type="submit">Add to Cart</button>
+                                </form>
                             </div>
                         </li>
                     {% endfor %}
@@ -89,5 +198,6 @@
             </li>
         {% endfor %}
     </ul>
+
 </body>
 </html>
