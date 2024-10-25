@@ -327,9 +327,15 @@ from django.db.models import Max
 from .models import Product  # Ensure you're importing the unified Product model
 
 @staff_member_required
+
 def products_view(request):
-    # Retrieve all products from the unified Product model
-    products = Product.objects.all()
+    query = request.GET.get('search')
+    
+    if query:
+        products = Product.objects.filter(name__icontains=query)
+    else:
+        products = Product.objects.all()
+    
     return render(request, 'products.html', {'products': products})
 
 def generate_unique_id():

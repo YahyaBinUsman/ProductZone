@@ -19,32 +19,103 @@
             min-height: 100vh;
         }
 
-        h1 {
-            font-size: 3em;
-            text-align: center;
-            margin-top: 40px;
-            color: #222;
+        /* Navbar Styles */
+        .navbar-goofy {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1em;
+            background-color: peachpuff; 
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        a.add-product {
-            display: inline-block;
-            background-color: #e60f0f;
-            color: #fff;
-            padding: 12px 25px;
-            margin: 20px auto;
-            text-decoration: none;
-            text-align: center;
-            border-radius: 5px;
+        .logo-fun {
+            font-size: 1.8em;
             font-weight: bold;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        a.add-product:hover {
-            background-color: #c50c0c;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        .nav-links-goofy {
+            position: relative;
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            letter-spacing: 3px;
         }
 
+        .nav-links-goofy li a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 0.9em;
+        }
+
+        .nav-links-goofy li a:hover {
+            color: white;
+        }
+
+        .nav-icons-goofy i {
+            margin-left: 1em;
+            font-size: 1.5em;
+            transition: transform 0.3s;
+        }
+
+        .nav-icons-goofy i:hover {
+            transform: scale(1.2);
+        }
+
+        /* Search Bar */
+        .search-bar-funny {
+            display: flex;
+            justify-content: center;
+            padding: 1em 0;
+            background-color: #FDFCFB;
+        }
+
+        .search-bar-funny form {
+            width: 100%; /* Ensure the form takes full width */
+            display: flex; /* Use flex to align items */
+            justify-content: center; /* Center the input and button */
+        }
+
+        .search-bar-funny input {
+            width: 40%; /* Keep input at 40% width */
+            padding: 1em;
+            border: 1px solid #ddd;
+            border-radius: 25px; /* Rounded corners for input */
+            border-right: none; /* No right border to connect with button */
+        }
+        
+        .search-bar-funny button {
+            padding: 1em 2em;
+            background-color: orange; 
+            color: white;
+            border: 1px solid #ddd; /* Match button border with input */
+            border-radius: 25px; /* Rounded corners for button */
+            cursor: pointer;
+            height: 50px;
+            margin-left: 1em; /* Add space between input and button */
+        }
+        
+        .search-bar-funny button:hover {
+            background-color: darkorange;
+        }
+        .add-product {
+            padding: 1em 2em;
+            background-color: orange; 
+            color: white;
+            border: 1px solid #ddd; /* Match button border with input */
+            border-radius: 25px; /* Rounded corners for button */
+            cursor: pointer;
+            height: 50px;
+            margin-left: 1em; /* Add space between input and button */
+        }
+        
+
+        /* Table Styles */
         table {
             width: 90%;
             margin: 40px auto;
@@ -83,6 +154,33 @@
             text-decoration: underline;
         }
 
+        /* Search Results Styles */
+        #search-results {
+            position: absolute;
+            z-index: 100;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            width: 50%;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .search-result-item {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .search-result-item a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .search-result-item:hover {
+            background-color: #f5f5f5;
+        }
+
         /* Responsive Adjustments */
         @media (max-width: 768px) {
             table {
@@ -92,6 +190,10 @@
 
             th, td {
                 padding: 10px;
+            }
+
+            #search-results {
+                width: 100%;
             }
         }
 
@@ -112,12 +214,39 @@
 </head>
 <body>
 
-    <!-- Include the universal navbar -->
-    {% include 'navbar.html' %}
+    <!-- Navbar -->
+    <nav class="navbar-goofy">
+        <div class="logo-fun">FASH.ICON</div>
+        <ul class="nav-links-goofy">
+            <li><a href="#categories">CATEGORIES</a></li>
+            <li><a href="#featured-products">FEATURED</a></li>
+            <li><a href="#popular-products">POPULAR</a></li>
+            <li><a href="#discounted-items">DISCOUNTED</a></li>
+            <li><a href="#testimonials">TESTIMONIALS</a></li>
+            <li><a href="#blog">BLOG</a></li>
+            <li><a href="#newsletter">NEWSLETTER</a></li>
+        </ul>
+        <div class="nav-icons-goofy">
+            <i class="fas fa-search"></i>
+            <a href="{% url 'view_cart' %}"><i class="fas fa-shopping-cart"></i></a>
+        </div>
+    </nav>
+
+    <!-- Search Bar -->
+    <div class="search-bar-funny">
+        <form method="GET" action="">
+            <input type="text" name="search" placeholder="Search for products..." value="{{ request.GET.search }}">
+            <button id="search-button" type="submit">Search</button>
+        </form>
+    </div>
+    
+    <!-- Search results container -->
+    <div id="search-results"></div>
 
     <div class="container">
         <h1>Products</h1>
-        <a href="{% url 'add_product' %}" class="add-product">Add New Product</a>
+        <button class="add-product"><a href="{% url 'add_product' %}" >Add New Product</a></button>
+
         <table>
             <tr>
                 <th>Name</th>
@@ -136,6 +265,10 @@
                     <a href="{% url 'edit_product' product.id %}">Edit</a> | 
                     <a href="{% url 'delete_product' product.id %}">Delete</a>
                 </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No products found.</td>
             </tr>
             {% endfor %}
         </table>
