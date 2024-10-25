@@ -1,40 +1,17 @@
 
-from django.shortcuts import render, redirect
-from .models import Category, Product
+from django.shortcuts import render, get_object_or_404,redirect
+from .models import Category, Product,Order
 from .forms import CategoryForm, ProductForm  # Create forms in forms.py
-
-
-def add_category(request):
-    if request.method == 'POST':
-        form = CategoryForm(request.POST, request.FILES)  # Handle file uploads
-        if form.is_valid():
-            form.save()
-            return redirect('add_category')  # Redirect to the same page or another one
-    else:
-        form = CategoryForm()
-    return render(request, 'add_category.html', {'form': form})
-
-# View for adding a new product
-def add_product(request):
-    if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES)  # Ensure to handle file uploads
-        if form.is_valid():
-            form.save()
-            return redirect('add_product')  # Redirect after saving
-    else:
-        form = ProductForm()
-    return render(request, 'add_product.html', {'form': form})
-
-# View for displaying categories and their products
-def category_list(request):
-    categories = Category.objects.all()
-    return render(request, 'category_list.html', {'categories': categories})
-
-# views.py
-from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.admin.views.decorators import staff_member_required
+from django.core.mail import send_mail
+from decimal import Decimal
+from django.conf import settings
+from django.db import transaction
+from django.http import JsonResponse
+from django.db.models import Max,Q,Sum
 from django.contrib import messages
-from .models import Product, Category  # Adjust based on your models.py
-from django.http import HttpResponseRedirect
+
+
 def home(request):
     # Fetch all featured products
     featured_products = Product.objects.filter(is_featured=True)
@@ -52,6 +29,13 @@ def home(request):
         'featured_products_by_category': featured_products_by_category,
         'categories': categories,
     })
+
+
+# View for displaying categories and their products
+def category_list(request):
+    categories = Category.objects.all()
+    return render(request, 'category_list.html', {'categories': categories})
+
 def add_product_to_cart(request, product_id):
     if request.method == 'POST':
         quantity = int(request.POST.get(f'quantity_{product_id}', 1))
@@ -80,17 +64,10 @@ def add_product_to_cart(request, product_id):
 
     return redirect(request.META.get('HTTP_REFERER', 'home'))  # Adjust redirection accordingly
 
-from django.shortcuts import render, get_object_or_404
-from .models import Product
 def product_redirect(request, category, product_id):
     product = get_object_or_404(Product, id=product_id, category__name=category)
     return render(request, 'product_detail.html', {'product': product})
 
-
-
-from django.shortcuts import render, redirect
-from django.core.mail import send_mail
-from django.contrib import messages
 
 def contact(request):
     if request.method == 'POST':
@@ -113,11 +90,8 @@ def contact(request):
             return redirect('contact')
 
     return render(request, 'contact.html')
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from decimal import Decimal
-from django.conf import settings
-from .models import Product  # Ensure you import your Product model
+
+
 
 def view_cart(request):
     cart = request.session.get('cart', {})
@@ -161,6 +135,8 @@ def view_cart(request):
         'total_quantity': total_quantity,
         'subtotal': subtotal,
     })
+
+
 def remove_from_cart(request):
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
@@ -188,25 +164,22 @@ def remove_from_cart(request):
             messages.error(request, "Product is not in your cart.")
 
     return redirect('view_cart')
+
+
 def checkout(request):
     cart_items = request.session.get('cart_items', [])
     total_price = request.session.get('total_price', Decimal(0))
 
     return render(request, 'checkout.html', {'cart_items': cart_items, 'total_price': total_price})
  
+
 def error_page(request):
     return render(request,'error.html')
+
 
 def order_success(request):
     return render(request, 'order_success.html')
 
-
-from django.shortcuts import redirect
-from django.core.mail import send_mail
-from django.conf import settings
-from decimal import Decimal
-from .models import Order, Product  # Ensure to import your models
-from django.db import transaction
 
 def process_order(request):
     if request.method == 'POST':
@@ -316,18 +289,102 @@ def process_order(request):
     else:
         # If the request method is not POST, return a bad request response
         return JsonResponse({'error': 'Invalid request method.'}, status=400)
-    
 
 
-from django.contrib.admin.views.decorators import staff_member_required
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.utils.text import slugify
-from django.db.models import Max
-from .models import Product  # Ensure you're importing the unified Product model
+def generate_unique_id():
+    # Get the maximum ID from the Product model
+    max_id = Product.objects.aggregate(Max('id'))['id__max'] or 0
+    return max_id + 1
+
+
+def search(request):
+    query = request.GET.get('query', '')
+    results = []
+
+    if query:
+        # Fetch products with a name or description matching the query and with quantity > 0
+        products = Product.objects.filter(
+            (Q(name__icontains=query) | Q(description__icontains=query)) & Q(quantity__gt=0)
+        )
+
+        # Check if it's an AJAX request using headers
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            results = [
+                {
+                    'id': p.id,
+                    'name': p.name,
+                    'description': p.description,
+                    'price': p.price,
+                    'category': p.category.name,  # Assuming category has a 'name' field
+                    'image_url': p.image.url if p.image else ''  # Include the product image URL
+                } for p in products
+            ]
+            return JsonResponse({'results': results})
+
+        # For form submissions (when the user presses enter or clicks the search button)
+        else:
+            context = {
+                'query': query,
+                'products': products,  # Pass the filtered products to the template
+            }
+            return render(request, 'search_results.html', context)
+
+    return render(request, 'search_results.html', {'query': query, 'products': []})
+
+
+def faqs(request):
+    return render(request, 'faqs.html')
+
+
+def terms(request):
+    return render(request, 'terms.html')
+
+
+def category_detail(request, url_name):
+    category = get_object_or_404(Category, url_name=url_name)  # Assuming your Category model has a `url_name` field
+    products = category.products.all()  # Fetch all products related to this category
+    context = {
+        'category': category,
+        'products': products,
+    }
+    return render(request, 'category_detail.html', context)  # Render your category detail template
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @staff_member_required
+def add_category(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST, request.FILES)  # Handle file uploads
+        if form.is_valid():
+            form.save()
+            return redirect('add_category')  # Redirect to the same page or another one
+    else:
+        form = CategoryForm()
+    return render(request, 'add_category.html', {'form': form})
 
+@staff_member_required
+def add_product(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)  # Ensure to handle file uploads
+        if form.is_valid():
+            form.save()
+            return redirect('add_product')  # Redirect after saving
+    else:
+        form = ProductForm()
+    return render(request, 'add_product.html', {'form': form})
+
+@staff_member_required
 def products_view(request):
     query = request.GET.get('search')
     
@@ -338,53 +395,6 @@ def products_view(request):
     
     return render(request, 'products.html', {'products': products})
 
-def generate_unique_id():
-    # Get the maximum ID from the Product model
-    max_id = Product.objects.aggregate(Max('id'))['id__max'] or 0
-    return max_id + 1
-
-from django.contrib.admin.views.decorators import staff_member_required
-from django.http import Http404
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib import messages
-from .models import Product  # Ensure you're importing the unified Product model
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib import messages
-from .models import Product, Category
-from django.contrib.admin.views.decorators import staff_member_required
-
-@staff_member_required
-def edit_product(request, product_id):
-    # Retrieve the product
-    product = get_object_or_404(Product, pk=product_id)
-
-    # Fetch all categories from the database
-    categories = Category.objects.all()
-
-    if request.method == 'POST':
-        product.name = request.POST['name']
-        product.description = request.POST['description']
-        product.price = request.POST['price']
-        product.quantity = request.POST['quantity']
-
-        # Handle file upload for the product image
-        if request.FILES.get('image'):
-            product.image = request.FILES['image']
-
-        # Update the product's category based on the form selection
-        category_id = request.POST.get('category')
-        if category_id:
-            product.category = Category.objects.get(id=category_id)
-        
-        product.save()
-        messages.success(request, 'Product updated successfully.')
-        return redirect('products_view')
-
-    return render(request, 'product_form.html', {
-        'product': product,
-        'categories': categories  # Pass the categories to the template
-    })
-
 
 @staff_member_required
 def delete_product(request, product_id):
@@ -394,9 +404,6 @@ def delete_product(request, product_id):
     product.delete()
     messages.success(request, 'Product deleted successfully.')
     return redirect('products_view')
-from django.contrib.admin.views.decorators import staff_member_required
-from django.shortcuts import render
-from django.db.models import Q
 
 @staff_member_required
 def order_details(request):
@@ -431,9 +438,6 @@ def order_details(request):
         'potential_sales': potential_sales,
         'search_query': search_query,
     })
-from django.contrib.admin.views.decorators import staff_member_required
-from django.shortcuts import get_object_or_404, redirect
-from django.contrib import messages
 
 @staff_member_required
 def mark_order_complete(request, order_id):
@@ -449,23 +453,19 @@ def mark_order_complete(request, order_id):
         messages.warning(request, f"Order #{order.id} is already marked as complete.")
 
     return redirect('order_details')
-from django.contrib.admin.views.decorators import staff_member_required
-from django.shortcuts import render
-from django.contrib import messages
-from django.db.models import Sum, Count
-from django.db.models import Sum
 
 @staff_member_required
 def products_overview(request):
-    search_query = request.GET.get('search', '')
+    search_query = request.GET.get('search', '').strip()
 
     # Retrieve all categories with their products
     categories = Category.objects.all()
 
-    # Apply search filter to products if search query is provided
-    products = Product.objects.all()
+    # Apply search filter to products if a search query is provided
     if search_query:
-        products = products.filter(name__icontains=search_query)
+        products = Product.objects.filter(name__icontains=search_query)
+    else:
+        products = Product.objects.all()  # Set to all products if no search query
 
     # Handle feature toggle
     if request.method == 'POST':
@@ -513,75 +513,39 @@ def products_overview(request):
         'total_quantity': total_quantity,
         'total_price_sum': total_price_sum,
         'search_query': search_query,
+        'filtered_products': products,
     })
 
-from django.http import JsonResponse
-from django.db.models import Q
-from .models import Product  # Import the unified Product model
-from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse
-from django.db.models import Q
-from .models import Product, Category
-from django.http import JsonResponse
-from django.shortcuts import render
-from django.db.models import Q
-from .models import Product
 
-def search(request):
-    query = request.GET.get('query', '')
-    results = []
+@staff_member_required
+def edit_product(request, product_id):
+    # Retrieve the product
+    product = get_object_or_404(Product, pk=product_id)
 
-    if query:
-        # Fetch products with a name or description matching the query and with quantity > 0
-        products = Product.objects.filter(
-            (Q(name__icontains=query) | Q(description__icontains=query)) & Q(quantity__gt=0)
-        )
+    # Fetch all categories from the database
+    categories = Category.objects.all()
 
-        # Check if it's an AJAX request using headers
-        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            results = [
-                {
-                    'id': p.id,
-                    'name': p.name,
-                    'description': p.description,
-                    'price': p.price,
-                    'category': p.category.name,  # Assuming category has a 'name' field
-                    'image_url': p.image.url if p.image else ''  # Include the product image URL
-                } for p in products
-            ]
-            return JsonResponse({'results': results})
+    if request.method == 'POST':
+        product.name = request.POST['name']
+        product.description = request.POST['description']
+        product.price = request.POST['price']
+        product.quantity = request.POST['quantity']
 
-        # For form submissions (when the user presses enter or clicks the search button)
-        else:
-            context = {
-                'query': query,
-                'products': products,  # Pass the filtered products to the template
-            }
-            return render(request, 'search_results.html', context)
+        # Handle file upload for the product image
+        if request.FILES.get('image'):
+            product.image = request.FILES['image']
 
-    return render(request, 'search_results.html', {'query': query, 'products': []})
+        # Update the product's category based on the form selection
+        category_id = request.POST.get('category')
+        if category_id:
+            product.category = Category.objects.get(id=category_id)
+        
+        product.save()
+        messages.success(request, 'Product updated successfully.')
+        return redirect('products_view')
 
+    return render(request, 'product_form.html', {
+        'product': product,
+        'categories': categories  # Pass the categories to the template
+    })
 
-from django.shortcuts import render
-
-def faqs(request):
-    return render(request, 'faqs.html')
-
-def terms(request):
-    return render(request, 'terms.html')
-
-from django.shortcuts import render, get_object_or_404
-from .models import Category
-# In keychain_app/views.py
-
-from django.shortcuts import render, get_object_or_404
-from .models import Category  # Ensure you import your Category model
-
-def category_detail(request, url_name):
-    category = get_object_or_404(Category, url_name=url_name)  # Assuming your Category model has a `url_name` field
-    products = category.products.all()  # Fetch all products related to this category
-    context = {
-        'category': category,
-        'products': products,
-    }
-    return render(request, 'category_detail.html', context)  # Render your category detail template

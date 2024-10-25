@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome -->
+
     <title>Add Product</title>
     <style>
         /* General Styles */
@@ -21,6 +23,56 @@
             font-family: 'Playfair Display', serif;
             color: #222;
             margin-top: 1em;
+        }
+        .navbar-goofy {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1em;
+            background-color: peachpuff; 
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-fun {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .nav-links-goofy {
+            position: relative;
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            letter-spacing: 3px;
+        }
+
+        .nav-links-goofy li a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 0.9em;
+        }
+
+        .nav-links-goofy li a:hover {
+            color: white;
+        }
+
+        .nav-icons-goofy i {
+            margin-left: 1em;
+            font-size: 1.5em;
+            transition: transform 0.3s;
+        }
+
+        .nav-icons-goofy i:hover {
+            transform: scale(1.2);
+        }
+.logo-fun img {
+            height: 60px; /* Adjust height to fit well */
+            width: auto; /* Maintain aspect ratio */
         }
 
         /* Form Container */
@@ -85,7 +137,24 @@
 </head>
 <body>
 
-  {% include 'navbar.html' %}
+    <nav class="navbar-goofy">
+        <div class="logo-fun">            <img src="{% static 'images/logo.png' %}" alt="Logo">
+        </div>
+        <ul class="nav-links-goofy">
+            <li><a href="{% url 'products_view' %}">Products</a></li>
+
+            <li><a href="{% url 'products_overview' %}">Products Overview</a></li>
+            <li><a href="{% url 'add_product' %}">Add Product</a></li>
+            <li><a href="{% url 'add_category' %}">Add Category</a></li>
+            <li><a href="{% url 'order_details' %}">Order Details</a></li>
+        </ul>
+        <div class="nav-icons-goofy">
+            <i class="fas fa-search"></i>
+            <a href="{% url 'view_cart' %}"><i class="fas fa-shopping-cart"></i></a>
+        </div>
+    </nav>
+
+
 
     <h1>Add Product</h1>
 

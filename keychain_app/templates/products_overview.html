@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,15 +8,103 @@
     <title>Products Overview</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
     <style>
+        .logo-fun img {
+            height: 60px; /* Adjust height to fit well */
+            width: auto; /* Maintain aspect ratio */
+        }
         /* General Styles */
         body {
             margin: 0;
             font-family: 'Roboto', sans-serif;
-            background-color: #222;
+            background-color: #f7f7f7;
             color: #fff;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+        }
+        /* Navbar Styles */
+        .navbar-goofy {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1em;
+            background-color: peachpuff; 
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-fun {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .nav-links-goofy {
+            position: relative;
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            letter-spacing: 3px;
+        }
+
+        .nav-links-goofy li a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 0.9em;
+        }
+
+        .nav-links-goofy li a:hover {
+            color: white;
+        }
+
+        .nav-icons-goofy i {
+            margin-left: 1em;
+            font-size: 1.5em;
+            transition: transform 0.3s;
+        }
+
+        .nav-icons-goofy i:hover {
+            transform: scale(1.2);
+        }
+
+        /* Search Bar */
+        .search-bar-funny {
+            display: flex;
+            justify-content: center;
+            padding: 1em 0;
+            background-color: #FDFCFB;
+        }
+
+        .search-bar-funny form {
+            width: 100%; /* Ensure the form takes full width */
+            display: flex; /* Use flex to align items */
+            justify-content: center; /* Center the input and button */
+        }
+
+        .search-bar-funny input {
+            width: 40%; /* Keep input at 40% width */
+            padding: 1em;
+            border: 1px solid #ddd;
+            border-radius: 25px; /* Rounded corners for input */
+            border-right: none; /* No right border to connect with button */
+        }
+        
+        .search-bar-funny button {
+            padding: 1em 2em;
+            background-color: orange; 
+            color: white;
+            border: 1px solid #ddd; /* Match button border with input */
+            border-radius: 25px; /* Rounded corners for button */
+            cursor: pointer;
+            height: 50px;
+            margin-left: 1em; /* Add space between input and button */
+        }
+        
+        .search-bar-funny button:hover {
+            background-color: darkorange;
         }
 
         h1 {
@@ -114,13 +204,33 @@
     </style>
 </head>
 <body>
-    {% include 'navbar.html' %}
+    <nav class="navbar-goofy">
+        <div class="logo-fun">            <img src="{% static 'images/logo.png' %}" alt="Logo">
+        </div>
+        <ul class="nav-links-goofy">
+            <li><a href="{% url 'products_view' %}">Products</a></li>
 
+            <li><a href="{% url 'products_overview' %}">Products Overview</a></li>
+            <li><a href="{% url 'add_product' %}">Add Product</a></li>
+            <li><a href="{% url 'add_category' %}">Add Category</a></li>
+            <li><a href="{% url 'order_details' %}">Order Details</a></li>
+        </ul>
+        <div class="nav-icons-goofy">
+            <i class="fas fa-search"></i>
+            <a href="{% url 'view_cart' %}"><i class="fas fa-shopping-cart"></i></a>
+        </div>
+    </nav>
+    <!-- Search Bar -->
+    <div class="search-bar-funny">
+        <form method="GET" action="">
+            <input type="text" name="search" placeholder="Search for products..." value="{{ request.GET.search }}">
+            <button id="search-button" type="submit">Search</button>
+        </form>
+    </div>
     <h1>Products Overview</h1>
 
-    <!-- Categories and Products -->
-    {% for data in categories %}
-        <h2>{{ data.category.name }}</h2>
+    {% if search_query %}
+        <h2>Search Results for "{{ search_query }}"</h2>
         <table>
             <tr>
                 <th>ID</th>
@@ -130,7 +240,7 @@
                 <th>Quantity</th>
                 <th>Action</th>
             </tr>
-            {% for product in data.products %}
+            {% for product in filtered_products %}
             <tr>
                 <td>{{ product.id }}</td>
                 <td>{{ product.name }}</td>
@@ -151,34 +261,55 @@
             </tr>
             {% endfor %}
         </table>
+    {% else %}
+        <!-- Categories and Products -->
+        {% for data in categories %}
+            <h2>{{ data.category.name }}</h2>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Action</th>
+                </tr>
+                {% for product in data.products %}
+                <tr>
+                    <td>{{ product.id }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.description }}</td>
+                    <td>${{ product.price }}</td>
+                    <td>{{ product.quantity }}</td>
+                    <td>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            {% if product.is_featured %}
+                            <button type="submit" name="action" value="remove">Remove from Featured</button>
+                            {% else %}
+                            <button type="submit" name="action" value="feature">Add to Featured</button>
+                            {% endif %}
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
 
-        <div class="summary">
-            <p>Total Items: {{ data.products.count }}</p>
-            <p>Total Quantity: {{ data.total_quantity }}</p>
-            <p>Total Value: ${{ data.total_price }}</p>
+            <div class="summary">
+                <p>Total Items: {{ data.products.count }}</p>
+                <p>Total Quantity: {{ data.total_quantity }}</p>
+                <p>Total Value: ${{ data.total_price }}</p>
+            </div>
+        {% endfor %}
+
+        <!-- Overall Summary -->
+        <div class="summary overall-summary">
+            <h2>Overall Summary</h2>
+            <p>Total Items: {{ total_items }}</p>
+            <p>Total Quantity: {{ total_quantity }}</p>
+            <p>Total Value: ${{ total_price_sum }}</p>
         </div>
-    {% endfor %}
-
-    <!-- Overall Summary -->
-    <div class="summary overall-summary">
-        <h2>Overall Summary</h2>
-        <p>Total Items: {{ total_items }}</p>
-        <p>Total Quantity: {{ total_quantity }}</p>
-        <p>Total Value: ${{ total_price_sum }}</p>
-    </div>
-
-    <script>
-        const menuIcon = document.getElementById("menu-icon");
-        const sideNav = document.getElementById("side-nav");
-        const closeBtn = document.getElementById("close-btn");
-
-        menuIcon.addEventListener("click", function() {
-            sideNav.style.width = (sideNav.style.width === "250px" || sideNav.style.width === "") ? "0" : "250px";
-        });
-
-        closeBtn.addEventListener("click", function() {
-            sideNav.style.width = "0";
-        });
-    </script>
+    {% endif %}
 </body>
 </html>

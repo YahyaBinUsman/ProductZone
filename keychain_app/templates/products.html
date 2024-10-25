@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <style>
+        .logo-fun img {
+            height: 60px; /* Adjust height to fit well */
+            width: auto; /* Maintain aspect ratio */
+        }
         body {
             font-family: "Arial", sans-serif;
             background-color: #f5f5f5;
@@ -216,15 +220,15 @@
 
     <!-- Navbar -->
     <nav class="navbar-goofy">
-        <div class="logo-fun">FASH.ICON</div>
+        <div class="logo-fun">            <img src="{% static 'images/logo.png' %}" alt="Logo">
+        </div>
         <ul class="nav-links-goofy">
-            <li><a href="#categories">CATEGORIES</a></li>
-            <li><a href="#featured-products">FEATURED</a></li>
-            <li><a href="#popular-products">POPULAR</a></li>
-            <li><a href="#discounted-items">DISCOUNTED</a></li>
-            <li><a href="#testimonials">TESTIMONIALS</a></li>
-            <li><a href="#blog">BLOG</a></li>
-            <li><a href="#newsletter">NEWSLETTER</a></li>
+            <li><a href="{% url 'products_view' %}">Products</a></li>
+
+            <li><a href="{% url 'products_overview' %}">Products Overview</a></li>
+            <li><a href="{% url 'add_product' %}">Add Product</a></li>
+            <li><a href="{% url 'add_category' %}">Add Category</a></li>
+            <li><a href="{% url 'order_details' %}">Order Details</a></li>
         </ul>
         <div class="nav-icons-goofy">
             <i class="fas fa-search"></i>
