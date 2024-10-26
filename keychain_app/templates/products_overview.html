@@ -256,6 +256,18 @@
                         {% else %}
                         <button type="submit" name="action" value="feature">Add to Featured</button>
                         {% endif %}
+                        
+                        {% if product.is_discounted %}
+                        <button type="submit" name="action" value="remove_discount">Remove Discount</button>
+                        {% else %}
+                        <button type="submit" name="action" value="discount">Add to Discounted</button>
+                        {% endif %}
+    
+                        {% if product.is_best_seller %}
+                        <button type="submit" name="action" value="remove_best_seller">Remove Best Seller</button>
+                        {% else %}
+                        <button type="submit" name="action" value="best_seller">Add to Best Sellers</button>
+                        {% endif %}
                     </form>
                 </td>
             </tr>
@@ -289,6 +301,18 @@
                             <button type="submit" name="action" value="remove">Remove from Featured</button>
                             {% else %}
                             <button type="submit" name="action" value="feature">Add to Featured</button>
+                            {% endif %}
+                            
+                            {% if product.is_discounted %}
+                            <button type="submit" name="action" value="remove_discount">Remove Discount</button>
+                            {% else %}
+                            <button type="submit" name="action" value="discount">Add to Discounted</button>
+                            {% endif %}
+        
+                            {% if product.is_best_seller %}
+                            <button type="submit" name="action" value="remove_best_seller">Remove Best Seller</button>
+                            {% else %}
+                            <button type="submit" name="action" value="best_seller">Add to Best Sellers</button>
                             {% endif %}
                         </form>
                     </td>

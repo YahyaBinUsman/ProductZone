@@ -1,4 +1,5 @@
 from django.db import models
+from decimal import Decimal
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -14,11 +15,36 @@ class Product(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    original_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
     quantity = models.PositiveIntegerField()
     image = models.ImageField(upload_to='products/')
     is_featured = models.BooleanField(default=False)
+    is_discounted = models.BooleanField(default=False)  # New field for discounted items
+    is_best_seller = models.BooleanField(default=False)  # New field for best sellers
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
 
+    def discounted_price(self):
+        """Calculates a 15% discounted price if the product is marked as discounted."""
+        if self.is_discounted:
+            return self.price * Decimal('0.85')  # 15% discount
+        return self.price
+    
+    def save(self, *args, **kwargs):
+        if self.is_discounted:
+            if not self.original_price:
+                self.original_price = self.price
+            # Convert 0.85 to a Decimal
+            self.price = round(self.original_price * Decimal('0.85'), 2)
+        else:
+            if self.original_price:
+                self.price = self.original_price
+                self.original_price = None
+
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
     def __str__(self):
         return self.name
 

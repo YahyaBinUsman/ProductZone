@@ -167,24 +167,22 @@
       </tbody>
       <tfoot>
         <tr>
-          <td><b>TOTAL</b></td>
-          <td>Rs {{ total_price_before_gst }}</td>
-          <!-- Sum of price before GST -->
-          <td>Rs {{ total_gst|floatformat:"2" }}</td>
-          <!-- Sum of GST -->
-          <td>Rs {{ subtotal|floatformat:"2" }}</td>
-          <td>{{ total_quantity }}</td>
-          <!-- Sum of all quantities -->
-
-          <td>Rs {{ total_price_after_gst }}</td>
-          <td>
-            <form method="post" action="{% url 'checkout' %}">
-              {% csrf_token %}
-              <button type="submit">Checkout</button>
-            </form>
-          </td>
+            <td><b>TOTAL</b></td>
+            <td>Rs {{ total_price_before_gst|floatformat:"2" }}</td>
+            <td>Rs {{ total_gst|floatformat:"2" }}</td>
+            <td>Rs {{ subtotal|floatformat:"2" }}</td>
+            <td>{{ total_quantity }}</td>
+            <td>Rs {{ total_price_after_gst|floatformat:"2" }}</td>
+            <td>
+                <form method="post" action="{% url 'checkout' %}">
+                    {% csrf_token %}
+                    <button type="submit" {% if total_quantity == 0 %}disabled{% endif %}>Checkout</button>
+                </form>
+            </td>
         </tr>
-      </tfoot>
+    </tfoot>
+    
+    
     </table>
     
     
@@ -230,24 +228,22 @@
       </tbody>
       <tfoot>
         <tr>
-          <td><b>TOTAL</b></td>
-          <td>Rs {{ total_price_before_gst }}</td>
-          <!-- Sum of price before GST -->
-          <td>Rs {{ total_gst|floatformat:"2" }}</td>
-          <!-- Sum of GST -->
-          <td>Rs {{ subtotal|floatformat:"2" }}</td>
-          <td>{{ total_quantity }}</td>
-          <!-- Sum of all quantities -->
-
-          <td>Rs {{ total_price_after_gst }}</td>
-          <td>
-            <form method="post" action="{% url 'checkout' %}">
-              {% csrf_token %}
-              <button type="submit" disabled>Checkout</button>
-            </form>
-          </td>
+            <td><b>TOTAL</b></td>
+            <td>Rs {{ total_price_before_gst|floatformat:"2" }}</td>
+            <td>Rs {{ total_gst|floatformat:"2" }}</td>
+            <td>Rs {{ subtotal|floatformat:"2" }}</td>
+            <td>{{ total_quantity }}</td>
+            <td>Rs {{ total_price_after_gst|floatformat:"2" }}</td>
+            <td>
+                <form method="post" action="{% url 'checkout' %}">
+                    {% csrf_token %}
+                    <button type="submit" {% if total_quantity == 0 %}disabled{% endif %}>Checkout</button>
+                </form>
+            </td>
         </tr>
-      </tfoot>
+    </tfoot>
+    
+    
     </table>    {% endif %}
     
     

@@ -10,24 +10,23 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.db.models import Max,Q,Sum
 from django.contrib import messages
-
-
+from django.shortcuts import render
+from .models import Product, Category
 def home(request):
-    # Fetch all featured products
+    # Fetch all featured products, discounted products, and best sellers
     featured_products = Product.objects.filter(is_featured=True)
+    discounted_products = Product.objects.filter(is_discounted=True)
+    best_sellers = Product.objects.filter(is_best_seller=True)
     
-    # Fetch all categories
-    categories = Category.objects.all()  # Fetch all categories
-    
-    # Create a dictionary for featured products by category
-    featured_products_by_category = {}
-    for category in categories:
-        # Filter products by category and that are featured
-        featured_products_by_category[category.name] = featured_products.filter(category=category)
-    
+    # Fetch all categories (if needed in the template)
+    categories = Category.objects.all()
+
+    # Render the home template with simplified context
     return render(request, 'index.html', {
-        'featured_products_by_category': featured_products_by_category,
+        'featured_products': featured_products,
         'categories': categories,
+        'discounted_products': discounted_products,
+        'best_sellers': best_sellers,
     })
 
 
@@ -35,34 +34,6 @@ def home(request):
 def category_list(request):
     categories = Category.objects.all()
     return render(request, 'category_list.html', {'categories': categories})
-
-def add_product_to_cart(request, product_id):
-    if request.method == 'POST':
-        quantity = int(request.POST.get(f'quantity_{product_id}', 1))
-        
-        # Fetch the product by ID
-        product = get_object_or_404(Product, pk=product_id)
-        
-        # Check for sufficient stock
-        if quantity > product.quantity:
-            messages.error(request, "Quantity entered is greater than available stock.")
-            return redirect(request.META.get('HTTP_REFERER', 'home'))  # Adjust redirection accordingly
-
-        # Deduct the quantity from the original stock
-        product.quantity -= quantity
-        product.save()
-
-        # Add item to cart
-        cart = request.session.get('cart', {})
-        if str(product_id) in cart:
-            cart[str(product_id)] += quantity
-        else:
-            cart[str(product_id)] = quantity
-        request.session['cart'] = cart
-
-        messages.success(request, f"{quantity} {product.name}(s) added to your cart.")
-
-    return redirect(request.META.get('HTTP_REFERER', 'home'))  # Adjust redirection accordingly
 
 def product_redirect(request, category, product_id):
     product = get_object_or_404(Product, id=product_id, category__name=category)
@@ -90,9 +61,6 @@ def contact(request):
             return redirect('contact')
 
     return render(request, 'contact.html')
-
-
-
 def view_cart(request):
     cart = request.session.get('cart', {})
     cart_items = []
@@ -101,32 +69,42 @@ def view_cart(request):
     total_price_after_gst = Decimal(0)
     total_quantity = 0
 
-    for product_id, quantity in cart.items():
+    for product_id, item_data in cart.items():
+        quantity = item_data.get('quantity', 0)
+        if quantity < 1:
+            continue  # Skip items with zero quantity or less
+
         product = get_object_or_404(Product, pk=product_id)
-        
         gst_rate = Decimal(settings.GST_RATE)
-        price_before_gst = product.price * (Decimal(1) - gst_rate)
-        gst_amount = product.price - price_before_gst
-        total_price_before_gst += price_before_gst * quantity
-        total_gst += gst_amount * quantity
-        total_price_after_gst += product.price * Decimal(quantity)
+        price_before_gst = Decimal(item_data['price']) / (1 + gst_rate)
+        gst_amount = Decimal(item_data['price']) - price_before_gst
+
+        # Calculate totals for each item
+        item_total_before_gst = price_before_gst * quantity
+        item_gst_total = gst_amount * quantity
+        item_total_after_gst = Decimal(item_data['price']) * quantity
+
+        # Update cart totals
+        total_price_before_gst += item_total_before_gst
+        total_gst += item_gst_total
+        total_price_after_gst += item_total_after_gst
         total_quantity += quantity
 
+        # Append item details to cart items
         cart_items.append({
             'id': product_id,
-            'name': f"{product.name} ({quantity})",
-            'price_before_gst': str(price_before_gst),
-            'gst_amount': str(gst_amount),
-            'price': str(product.price),
+            'name': product.name,
+            'price_before_gst': price_before_gst,
+            'gst_amount': gst_amount,
+            'price': item_data['price'],
             'quantity': quantity,
-            'total': str(product.price * Decimal(quantity)),  # Calculate total for the current item
+            'total': item_total_after_gst,
         })
 
-    subtotal = total_price_before_gst + total_gst  # Calculate subtotal
+    # Calculate subtotal
+    subtotal = total_price_before_gst + total_gst
 
-    request.session['total_price'] = str(subtotal)
-    request.session['cart_items'] = cart_items
-
+    # Pass totals to template
     return render(request, 'view_cart.html', {
         'cart_items': cart_items,
         'total_price_before_gst': total_price_before_gst,
@@ -137,25 +115,59 @@ def view_cart(request):
     })
 
 
+def add_product_to_cart(request, product_id):
+    if request.method == 'POST':
+        quantity = int(request.POST.get(f'quantity_{product_id}', 1))
+        product = get_object_or_404(Product, pk=product_id)
+        
+        if quantity > product.quantity:
+            messages.error(request, "Quantity entered is greater than available stock.")
+            return redirect(request.META.get('HTTP_REFERER', 'home'))
+
+        product.quantity -= quantity
+        product.save()
+
+        cart = request.session.get('cart', {})
+
+        # Check if the item is already in the cart
+        if str(product_id) in cart:
+            cart[str(product_id)]['quantity'] += quantity
+        else:
+            # Apply discounted price if applicable
+            price = product.discounted_price() if product.is_discounted else product.price
+            cart[str(product_id)] = {
+                'quantity': quantity,
+                'price': str(price)
+            }
+        
+        request.session['cart'] = cart
+        messages.success(request, f"{quantity} {product.name}(s) added to your cart.")
+
+    return redirect(request.META.get('HTTP_REFERER', 'home'))
+
+
 def remove_from_cart(request):
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
-
         cart = request.session.get('cart', {})
+
         if product_id in cart:
-            quantity_in_cart = cart[product_id]
+            quantity_in_cart = cart[product_id]['quantity']
+
             if quantity_in_cart > 0:
-                # Retrieve the product and add the quantity back to stock
                 product = get_object_or_404(Product, pk=product_id)
+                
+                # Increase product stock
                 product.quantity += 1
                 product.save()
 
-                # Update the quantity in the cart
-                cart[product_id] -= 1
-                if cart[product_id] <= 0:
+                # Decrement the quantity in the cart
+                cart[product_id]['quantity'] -= 1
+
+                # Remove item if quantity falls to zero
+                if cart[product_id]['quantity'] <= 0:
                     del cart[product_id]
 
-                # Save the updated cart in the session
                 request.session['cart'] = cart
                 messages.success(request, "Product quantity reduced in your cart.")
             else:
@@ -164,7 +176,6 @@ def remove_from_cart(request):
             messages.error(request, "Product is not in your cart.")
 
     return redirect('view_cart')
-
 
 def checkout(request):
     cart_items = request.session.get('cart_items', [])
@@ -468,6 +479,7 @@ def mark_order_complete(request, order_id):
 
     return redirect('order_details')
 
+
 @staff_member_required
 def products_overview(request):
     search_query = request.GET.get('search', '').strip()
@@ -481,7 +493,7 @@ def products_overview(request):
     else:
         products = Product.objects.all()  # Set to all products if no search query
 
-    # Handle feature toggle
+    # Handle feature, discount, and best-seller toggles
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
         action = request.POST.get('action')
@@ -490,6 +502,7 @@ def products_overview(request):
             product = Product.objects.get(id=product_id)
 
             if action == 'feature':
+                # Feature toggle logic
                 if Product.objects.filter(is_featured=True).count() < 12:
                     product.is_featured = True
                     product.save()
@@ -500,6 +513,24 @@ def products_overview(request):
                 product.is_featured = False
                 product.save()
                 messages.success(request, f"{product.name} has been unfeatured.")
+            elif action == 'discount':
+                # Discount toggle logic
+                product.is_discounted = True
+                product.save()
+                messages.success(request, f"{product.name} has been added to discounted items.")
+            elif action == 'remove_discount':
+                product.is_discounted = False
+                product.save()
+                messages.success(request, f"{product.name} has been removed from discounted items.")
+            elif action == 'best_seller':
+                # Best-seller toggle logic
+                product.is_best_seller = True
+                product.save()
+                messages.success(request, f"{product.name} has been added to best sellers.")
+            elif action == 'remove_best_seller':
+                product.is_best_seller = False
+                product.save()
+                messages.success(request, f"{product.name} has been removed from best sellers.")
         except Product.DoesNotExist:
             messages.error(request, "Product not found.")
 
@@ -529,7 +560,6 @@ def products_overview(request):
         'search_query': search_query,
         'filtered_products': products,
     })
-
 
 @staff_member_required
 def edit_product(request, product_id):

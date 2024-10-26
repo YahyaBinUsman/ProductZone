@@ -405,112 +405,65 @@ p {
      <br>
     <h2>Featured Products</h2>
     <section id="featured-products" class="product-grid">
-        {% for category, products in featured_products_by_category.items %}
-            {% for product in products %}
+        {% for product in featured_products %}
                 <div class="product-card" data-product-id="{{ product.id }}">
                     <img src="{{ product.image.url }}" alt="{{ product.name }}">
                     <h3>{{ product.name }}</h3>
                     <p>{{ product.description }}</p>
                     <p>Rs.{{ product.price }}</p>
-                    <button><a href="{% url 'product_redirect' category=category product_id=product.id %}" class="view-product-button" onclick="saveProductID('{{ product.id }}')">View Product</a></button>
-                </div>
-            {% endfor %}
+                    <form method="post" action="{% url 'add_product_to_cart' product.id %}" class="add-to-cart">
+                        {% csrf_token %}
+                        <input type="number" name="quantity_{{ product.id }}" value="1" min="1" max="{{ product.quantity }}">
+                        <button type="submit">Add to Cart</button>
+                    </form>                       </div>
         {% endfor %}
     </section>
 
 
     <!-- Discounted Items Section -->
      <br>
-    <h2>Discounted Items</h2>
-    <section id="discounted-items" class="product-grid">
-        
-        <div class="product-card">
-            <img src="images/accessories.png" alt="Discounted Product 1">
-            <h3>Discounted Product 1</h3>
-            <p class="old-price"><del>Rs.49.99</del></p>
-            <p class="new-price">Rs.29.99</p>
-            <button>Add to Cart</button>
-        </div>
-        <div class="product-card">
-            <img src="images/footwear-removebg-preview.png" alt="Discounted Product 2">
-            <h3>Discounted Product 2</h3>
-            <p class="old-price"><del>Rs.39.99</del></p>
-            <p class="new-price">Rs.24.99</p>
-            <button>Add to Cart</button>
-        </div>
-        <div class="product-card">
-            <img src="images/gpt.png" alt="Discounted Product 3">
-            <h3>Discounted Product 3</h3>
-            <p class="old-price"><del>Rs.59.99</del></p>
-            <p class="new-price">Rs.39.99</p>
-            <button>Add to Cart</button>
-        </div>
-        <div class="product-card">
-            <img src="images/imgbin-smart-casual-male-shirt-clothing-vip-card-shading-vZTgggBkEhCT9YiQsNBPdbhUf-removebg-preview.png" alt="Discounted Product 4">
-            <h3>Discounted Product 4</h3>
-            <p class="old-price"><del>Rs.69.99</del></p>
-            <p class="new-price">Rs.49.99</p>
-            <button>Add to Cart</button>
-        </div>
-        <div class="product-card">
-            <img src="images/pngtree-gold-necklace-set-png-image_3269316-removebg-preview.png" alt="Discounted Product 5">
-            <h3>Discounted Product 5</h3>
-            <p class="old-price"><del>Rs.79.99</del></p>
-            <p class="new-price">Rs.59.99</p>
-            <button>Add to Cart</button>
-        </div>
-        <div class="product-card">
-            <img src="images/png-transparent-wrist-watch-thumbnail-removebg-preview.png" alt="Discounted Product 6">
-            <h3>Discounted Product 6</h3>
-            <p class="old-price"><del>Rs.89.99</del></p>
-            <p class="new-price">Rs.69.99</p>
-            <button>Add to Cart</button>
-        </div>
-    </section>
+     <h2>Discounted Items</h2>
+     <section id="discounted-items" class="product-grid">
+         {% for product in discounted_products %}
+             <div class="product-card">
+                 <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                 <h3>{{ product.name }}</h3>
+                 {% if product.original_price %}
+                     <p class="old-price"><del>Rs.{{ product.original_price|floatformat:2 }}</del></p>
+                 {% endif %}
+                 <p class="new-price">Rs.{{ product.price|floatformat:2 }}</p>
+                 <form method="post" action="{% url 'add_product_to_cart' product.id %}" class="add-to-cart">
+                    {% csrf_token %}
+                    <input type="number" name="quantity_{{ product.id }}" value="1" min="1" max="{{ product.quantity }}">
+                    <button type="submit">Add to Cart</button>
+                </form>             </div>
+         {% empty %}
+             <p>No discounted products available at the moment.</p>
+         {% endfor %}
+     </section>
+     
+     <br>
+     
+     <h2>Best Sellers</h2>
+     <section id="best-sellers" class="product-grid">
+         {% for product in best_sellers %}
+             <div class="product-card">
+                 <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                 <h3>{{ product.name }}</h3>
+                 <p>Rs.{{ product.price|floatformat:2 }}</p>
+                 <p>{{ product.quantity }}</p>
 
-    <!-- Best Sellers Section -->
-<br>
-    <h2>Best Sellers</h2>
-    <section id="best-sellers" class="product-grid">
-        
-        <div class="product-card">
-            <img src="images/e.png" alt="Best Seller 1">
-            <h3>Best Seller 1</h3>
-            <p>Rs.24.99</p>
-            <button>Add to Cart</button>
-        </div>
-        <div class="product-card">
-            <img src="images/gpt.png" alt="Best Seller 2">
-            <h3>Best Seller 2</h3>
-            <p>Rs.34.99</p>
-            <button>Add to Cart</button>
-        </div>
-        <div class="product-card">
-            <img src="images/png-transparent-wrist-watch-thumbnail-removebg-preview.png" alt="Best Seller 3">
-            <h3>Best Seller 3</h3>
-            <p>Rs.44.99</p>
-            <button>Add to Cart</button>
-        </div>
-        <div class="product-card">
-            <img src="images/imgbin-smart-casual-male-shirt-clothing-vip-card-shading-vZTgggBkEhCT9YiQsNBPdbhUf-removebg-preview.png" alt="Best Seller 4">
-            <h3>Best Seller 4</h3>
-            <p>Rs.54.99</p>
-            <button>Add to Cart</button>
-        </div>
-        <div class="product-card">
-            <img src="images/accessories.png" alt="Best Seller 5">
-            <h3>Best Seller 5</h3>
-            <p>Rs.64.99</p>
-            <button>Add to Cart</button>
-        </div>
-        <div class="product-card">
-            <img src="images/footwear-removebg-preview.png" alt="Best Seller 6">
-            <h3>Best Seller 6</h3>
-            <p>Rs.74.99</p>
-            <button>Add to Cart</button>
-        </div>
-    </section>
-
+                 
+                 <form method="post" action="{% url 'add_product_to_cart' product.id %}" class="add-to-cart">
+                    {% csrf_token %}
+                    <input type="number" name="quantity_{{ product.id }}" value="1" min="1" max="{{ product.quantity }}">
+                    <button type="submit">Add to Cart</button>
+                </form>             </div>
+         {% empty %}
+             <p>No best-seller products available at the moment.</p>
+         {% endfor %}
+     </section>
+     
     <!-- Featured Brands Section -->
      <br>
     <h2>Featured Brands</h2>
