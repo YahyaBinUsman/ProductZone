@@ -61,6 +61,7 @@ def contact(request):
             return redirect('contact')
 
     return render(request, 'contact.html')
+
 def view_cart(request):
     cart = request.session.get('cart', {})
     cart_items = []
@@ -114,37 +115,52 @@ def view_cart(request):
         'subtotal': subtotal,
     })
 
-
+from decimal import Decimal
 def add_product_to_cart(request, product_id):
     if request.method == 'POST':
         quantity = int(request.POST.get(f'quantity_{product_id}', 1))
         product = get_object_or_404(Product, pk=product_id)
-        
+
         if quantity > product.quantity:
             messages.error(request, "Quantity entered is greater than available stock.")
             return redirect(request.META.get('HTTP_REFERER', 'home'))
 
-        product.quantity -= quantity
-        product.save()
-
+        # Get the cart from the session
         cart = request.session.get('cart', {})
 
-        # Check if the item is already in the cart
+        # Update cart with product quantity and price
         if str(product_id) in cart:
             cart[str(product_id)]['quantity'] += quantity
         else:
-            # Apply discounted price if applicable
-            price = product.discounted_price() if product.is_discounted else product.price
             cart[str(product_id)] = {
                 'quantity': quantity,
-                'price': str(price)
+                'price': str(product.price)  # Use the stored price directly
+                # Ensure you save the name as well
             }
-        
+
+        # Update the session with the new cart data
         request.session['cart'] = cart
+        
+        # Update product stock after adding to the cart
+        product.quantity -= quantity
+        product.save()
+
+        # Update cart items in the session
+        request.session['cart_items'] = [
+            {
+                'id': product_id,
+                'name': product.name,  # Ensure correct product name is captured
+                'price': str(product.price),
+                'quantity': item['quantity'],
+                'total': str(Decimal(item['price']) * item['quantity'])
+            }
+            for product_id, item in cart.items()
+            for product in [get_object_or_404(Product, pk=product_id)]  # Fetch product to get the correct name
+        ]
+
         messages.success(request, f"{quantity} {product.name}(s) added to your cart.")
-
+    
     return redirect(request.META.get('HTTP_REFERER', 'home'))
-
 
 def remove_from_cart(request):
     if request.method == 'POST':
@@ -593,3 +609,95 @@ def edit_product(request, product_id):
         'categories': categories  # Pass the categories to the template
     })
 
+from decimal import Decimal
+from django.conf import settings
+from django.db.models import Q
+from django.shortcuts import render, get_object_or_404
+from .models import Order, Product
+from django.shortcuts import get_object_or_404, render
+from django.utils.decorators import method_decorator
+from django.contrib.admin.views.decorators import staff_member_required
+from django.conf import settings
+from decimal import Decimal
+from .models import Order, Product
+
+@staff_member_required
+def order_detail_view(request, order_id):
+    # Retrieve the order
+    order = get_object_or_404(Order, id=order_id)
+    search_query = request.GET.get('search', '')
+
+    # Initialize variables for totals and cart items
+    cart_items = []
+    total_price_before_gst = Decimal(0)
+    total_gst = Decimal(0)
+    total_price_after_gst = Decimal(0)
+    total_quantity = 0
+
+    # Parse each product in the order
+    for item in order.parsed_products():
+        product_id = item['id']
+        quantity = item['quantity']
+
+        if quantity < 1:
+            continue  # Skip items with zero or negative quantity
+
+        # Retrieve product details
+        product = get_object_or_404(Product, pk=product_id)
+        gst_rate = Decimal(settings.GST_RATE)
+
+        # Calculate price breakdown
+        price_before_gst = product.price / (1 + gst_rate)
+        gst_amount = product.price - price_before_gst
+        item_total_before_gst = price_before_gst * quantity
+        item_gst_total = gst_amount * quantity
+        item_total_after_gst = product.price * quantity
+
+        # Update order totals
+        total_price_before_gst += item_total_before_gst
+        total_gst += item_gst_total
+        total_price_after_gst += item_total_after_gst
+        total_quantity += quantity
+
+        # Append each item's details to cart items
+        cart_items.append({
+            'id': product_id,
+            'name': product.name,
+            'image_url': product.image.url if product.image else "",
+            'quantity': quantity,
+            'price_before_gst': price_before_gst,
+            'gst_amount': gst_amount,
+            'price': product.price,
+            'total': item_total_after_gst,
+        })
+
+    # Calculate subtotal
+    subtotal = total_price_before_gst + total_gst
+
+    # Render template with context data
+    return render(request, 'order_detail.html', {
+        'order': order,
+        'cart_items': cart_items,
+        'total_price_before_gst': total_price_before_gst,
+        'total_gst': total_gst,
+        'total_price_after_gst': total_price_after_gst,
+        'total_quantity': total_quantity,
+        'subtotal': subtotal,
+        'search_query': search_query,
+    })
+
+
+@staff_member_required
+def completed_orders_view(request):
+    search_query = request.GET.get('search', '')
+    completed_orders = Order.objects.filter(is_complete=True)
+
+    if search_query:
+        completed_orders = completed_orders.filter(
+            Q(id__icontains=search_query) | Q(name__icontains=search_query)
+        )
+
+    return render(request, 'completed_orders.html', {
+        'completed_orders': completed_orders,
+        'search_query': search_query,
+    })

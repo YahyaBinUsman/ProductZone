@@ -1,5 +1,6 @@
 from django.db import models
 from decimal import Decimal
+from django.core.exceptions import ObjectDoesNotExist
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -50,7 +51,6 @@ class Product(models.Model):
 
 from django.db import models
 import json
-
 class Order(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
@@ -62,7 +62,8 @@ class Order(models.Model):
     payment = models.CharField(max_length=100)
     total_price_after_gst = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
-    products = models.TextField(default='[]')  # Default value set to an empty list
+    updated_at = models.DateTimeField(auto_now=True)  # Track last update time
+    products = models.TextField(default='[]')  # JSON of products
     is_complete = models.BooleanField(default=False)
 
     def __str__(self):
@@ -72,5 +73,42 @@ class Order(models.Model):
         self.products = json.dumps(products)
 
     def get_products(self):
-        return json.loads(self.products)
+        try:
+            products_data = json.loads(self.products)
+            product_list = []
 
+            for item in products_data:
+                product_id = item.get("product_id")
+                quantity = item.get("quantity", 1)
+
+                try:
+                    product = Product.objects.get(id=product_id)
+                    product_list.append({
+                        "name": product.name,
+                        "image_url": product.image.url if product.image else "",
+                        "quantity": quantity,
+                        "price": product.price,
+                        "tax": product.price * Decimal('0.18'),
+                        "total_price_with_tax": (product.price + product.price * Decimal('0.18')) * quantity
+                    })
+                except ObjectDoesNotExist:
+                    continue
+
+            return product_list
+
+        except json.JSONDecodeError:
+            return []
+
+    def parsed_products(self):
+        product_list = []
+        products_str = self.products
+        for item in products_str.split(','):
+            if '(' in item and ')' in item:
+                name = item.split('(')[0].strip()
+                quantity = int(item.split('(')[1].replace(')', '').strip())
+                try:
+                    product = Product.objects.get(name=name)
+                    product_list.append({'id': product.id, 'name': name, 'quantity': quantity})
+                except Product.DoesNotExist:
+                    continue
+        return product_list  # Return after the loop completes

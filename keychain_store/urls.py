@@ -27,11 +27,12 @@ urlpatterns = [
     path('faqs/', views.faqs, name='faqs'),
     path('terms/', views.terms, name='terms'),
     path('contact/', views.contact, name='contact'),
-path('category/<str:category>/product/<int:product_id>/', views.product_redirect, name='product_redirect'),
+    path('category/<str:category>/product/<int:product_id>/', views.product_redirect, name='product_redirect'),
     path('category/<str:url_name>/', views.category_detail, name='category_detail'),
- path('search/', views.search, name='search'),
- path('edit-category/<int:pk>/', views.edit_category, name='edit_category'),
-
+    path('search/', views.search, name='search'),
+    path('edit-category/<int:pk>/', views.edit_category, name='edit_category'),
+    path('order/<int:order_id>/', views.order_detail_view, name='order_detail'),
+    path('completed_orders/', views.completed_orders_view, name='completed_orders'),
 
 ]
 

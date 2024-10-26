@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FASH.ICON - Order Details</title>
+    <title>Completed Orders</title>
     <style>
         /* General Styles */
         body {
@@ -176,40 +176,30 @@
                 width: 90%;
             }
         }
-    </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome -->
-
-</head>
+    </style></head>
 <body>
 
-    <nav class="navbar-goofy">
-        <div class="logo-fun">            <img src="{% static 'images/logo.png' %}" alt="Logo">
-        </div>
-        <ul class="nav-links-goofy">
-            <li><a href="{% url 'products_view' %}">Products</a></li>
-
-            <li><a href="{% url 'products_overview' %}">Products Overview</a></li>
-            <li><a href="{% url 'add_product' %}">Add Product</a></li>
-            <li><a href="{% url 'add_category' %}">Add Category</a></li>
-            <li><a href="{% url 'order_details' %}">Order Details</a></li>
-        </ul>
-        <div class="nav-icons-goofy">
-            <i class="fas fa-search"></i>
-            <a href="{% url 'view_cart' %}"><i class="fas fa-shopping-cart"></i></a>
-        </div>
-    </nav>
-
-    <h1>Order Details</h1>
-
-    <!-- Summary Section -->
-    <div class="summary-container">
-        <p>Total Sales (Completed Orders): <span>Rs.{{ total_sales }}</span></p>
-        <p>Potential Sales (Pending Orders): <span>Rs.{{ potential_sales }}</span></p>
-        <p>Total Orders: <span>{{ total_orders }}</span></p>
-        <p>Pending Orders: <span>{{ total_pending_orders }}</span></p>
+<!-- Navbar -->
+<nav class="navbar-goofy">
+    <div class="logo-fun">
+        <img src="{% static 'images/logo.png' %}" alt="Logo">
     </div>
+    <ul class="nav-links-goofy">
+        <li><a href="{% url 'products_view' %}">Products</a></li>
+        <li><a href="{% url 'products_overview' %}">Products Overview</a></li>
+        <li><a href="{% url 'order_details' %}">Order Details</a></li>
+        <li><a href="{% url 'completed_orders' %}">Completed Orders</a></li>
+    </ul>
+</nav>
 
-    <!-- Table Section -->
+<div class="page-content">
+    <h1>Completed Orders</h1>
+
+    <form method="GET" action="{% url 'completed_orders' %}" class="search-form">
+        <input type="text" name="search" placeholder="Search by Order ID or Customer Name" value="{{ search_query }}">
+        <button type="submit">Search</button>
+    </form>
+
     <div class="table-container">
         <table>
             <thead>
@@ -218,43 +208,27 @@
                     <th>Customer Name</th>
                     <th>Email</th>
                     <th>Phone</th>
-                    <th>Address</th>
-                    <th>Products</th>
                     <th>Total Price</th>
-                    <th>Actions</th>
+                    <th>Order Start Date</th>
+                    <th>Completion Date</th>
                 </tr>
             </thead>
             <tbody>
-                {% for order in pending_orders %}
+                {% for order in completed_orders %}
                 <tr>
                     <td>{{ order.id }}</td>
                     <td>{{ order.name }}</td>
                     <td>{{ order.email }}</td>
                     <td>{{ order.phone }}</td>
-                    <td>{{ order.address }}</td>
-                    <td>{{ order.products }}</td>
                     <td>Rs.{{ order.total_price_after_gst }}</td>
-                    <td>
-                        {% if not order.is_complete %}
-                        <form action="{% url 'mark_order_complete' order.id %}" method="POST">
-                            {% csrf_token %}
-                            <button type="submit">Mark Complete</button>
-                        </form>
-                        {% else %}
-                        Completed
-                        {% endif %}
-                    </td>
+                    <td>{{ order.created_at|date:"d-m-Y" }}</td>
+                    <td>{{ order.updated_at|date:"d-m-Y" }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-
-    <div class="text-section">
-        <a href="{% url 'terms' %}">Terms and Conditions</a><br>
-        <a href="{% url 'faqs' %}">FAQs</a><br>
-        <a href="{% url 'contact' %}">Contact Us</a>
-    </div>
+</div>
 
 </body>
 </html>
