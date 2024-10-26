@@ -203,8 +203,8 @@
 
     <!-- Summary Section -->
     <div class="summary-container">
-        <p>Total Sales (Completed Orders): <span>${{ total_sales }}</span></p>
-        <p>Potential Sales (Pending Orders): <span>${{ potential_sales }}</span></p>
+        <p>Total Sales (Completed Orders): <span>Rs.{{ total_sales }}</span></p>
+        <p>Potential Sales (Pending Orders): <span>Rs.{{ potential_sales }}</span></p>
         <p>Total Orders: <span>{{ total_orders }}</span></p>
         <p>Pending Orders: <span>{{ total_pending_orders }}</span></p>
     </div>
@@ -233,7 +233,7 @@
                     <td>{{ order.phone }}</td>
                     <td>{{ order.address }}</td>
                     <td>{{ order.products }}</td>
-                    <td>${{ order.total_price_after_gst }}</td>
+                    <td>Rs.{{ order.total_price_after_gst }}</td>
                     <td>
                         {% if order.status == 'Pending' %}
                         <form action="{% url 'mark_order_complete' order.id %}" method="POST">

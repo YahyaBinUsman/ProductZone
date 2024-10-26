@@ -245,7 +245,7 @@ def process_order(request):
                     f"Postal Code: {postal_code}\n"
                     f"City: {city}\n\n"
                     f"Ordered Products:\n" + "\n".join(f"- {product}" for product in products) +
-                    f"\nTotal Price: ${total_price_after_gst}"
+                    f"\nTotal Price: Rs.{total_price_after_gst}"
                 )
 
                 # Send email notification to the owner
@@ -266,7 +266,7 @@ def process_order(request):
                     f"Postal Code: {postal_code}\n"
                     f"City: {city}\n\n"
                     f"Ordered Products:\n" + "\n".join(f"- {product}" for product in products) +
-                    f"\nTotal Price: ${total_price_after_gst}\n\n"
+                    f"\nTotal Price: Rs.{total_price_after_gst}\n\n"
                     f"Your order will be delivered soon. Thank you for shopping with us!\n\n"
                     f"Best regards,\nYour Company Name"
                 )
@@ -372,6 +372,20 @@ def add_category(request):
     else:
         form = CategoryForm()
     return render(request, 'add_category.html', {'form': form})
+
+from django.shortcuts import get_object_or_404
+
+@staff_member_required
+def edit_category(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+    if request.method == 'POST':
+        form = CategoryForm(request.POST, request.FILES, instance=category)
+        if form.is_valid():
+            form.save()
+            return redirect('edit_category', pk=pk)  # Redirect to the same page
+    else:
+        form = CategoryForm(instance=category)
+    return render(request, 'edit_category.html', {'form': form})
 
 @staff_member_required
 def add_product(request):

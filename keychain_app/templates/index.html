@@ -411,7 +411,7 @@ p {
                     <img src="{{ product.image.url }}" alt="{{ product.name }}">
                     <h3>{{ product.name }}</h3>
                     <p>{{ product.description }}</p>
-                    <p>${{ product.price }}</p>
+                    <p>Rs.{{ product.price }}</p>
                     <button><a href="{% url 'product_redirect' category=category product_id=product.id %}" class="view-product-button" onclick="saveProductID('{{ product.id }}')">View Product</a></button>
                 </div>
             {% endfor %}
@@ -427,43 +427,43 @@ p {
         <div class="product-card">
             <img src="images/accessories.png" alt="Discounted Product 1">
             <h3>Discounted Product 1</h3>
-            <p class="old-price"><del>$49.99</del></p>
-            <p class="new-price">$29.99</p>
+            <p class="old-price"><del>Rs.49.99</del></p>
+            <p class="new-price">Rs.29.99</p>
             <button>Add to Cart</button>
         </div>
         <div class="product-card">
             <img src="images/footwear-removebg-preview.png" alt="Discounted Product 2">
             <h3>Discounted Product 2</h3>
-            <p class="old-price"><del>$39.99</del></p>
-            <p class="new-price">$24.99</p>
+            <p class="old-price"><del>Rs.39.99</del></p>
+            <p class="new-price">Rs.24.99</p>
             <button>Add to Cart</button>
         </div>
         <div class="product-card">
             <img src="images/gpt.png" alt="Discounted Product 3">
             <h3>Discounted Product 3</h3>
-            <p class="old-price"><del>$59.99</del></p>
-            <p class="new-price">$39.99</p>
+            <p class="old-price"><del>Rs.59.99</del></p>
+            <p class="new-price">Rs.39.99</p>
             <button>Add to Cart</button>
         </div>
         <div class="product-card">
             <img src="images/imgbin-smart-casual-male-shirt-clothing-vip-card-shading-vZTgggBkEhCT9YiQsNBPdbhUf-removebg-preview.png" alt="Discounted Product 4">
             <h3>Discounted Product 4</h3>
-            <p class="old-price"><del>$69.99</del></p>
-            <p class="new-price">$49.99</p>
+            <p class="old-price"><del>Rs.69.99</del></p>
+            <p class="new-price">Rs.49.99</p>
             <button>Add to Cart</button>
         </div>
         <div class="product-card">
             <img src="images/pngtree-gold-necklace-set-png-image_3269316-removebg-preview.png" alt="Discounted Product 5">
             <h3>Discounted Product 5</h3>
-            <p class="old-price"><del>$79.99</del></p>
-            <p class="new-price">$59.99</p>
+            <p class="old-price"><del>Rs.79.99</del></p>
+            <p class="new-price">Rs.59.99</p>
             <button>Add to Cart</button>
         </div>
         <div class="product-card">
             <img src="images/png-transparent-wrist-watch-thumbnail-removebg-preview.png" alt="Discounted Product 6">
             <h3>Discounted Product 6</h3>
-            <p class="old-price"><del>$89.99</del></p>
-            <p class="new-price">$69.99</p>
+            <p class="old-price"><del>Rs.89.99</del></p>
+            <p class="new-price">Rs.69.99</p>
             <button>Add to Cart</button>
         </div>
     </section>
@@ -476,37 +476,37 @@ p {
         <div class="product-card">
             <img src="images/e.png" alt="Best Seller 1">
             <h3>Best Seller 1</h3>
-            <p>$24.99</p>
+            <p>Rs.24.99</p>
             <button>Add to Cart</button>
         </div>
         <div class="product-card">
             <img src="images/gpt.png" alt="Best Seller 2">
             <h3>Best Seller 2</h3>
-            <p>$34.99</p>
+            <p>Rs.34.99</p>
             <button>Add to Cart</button>
         </div>
         <div class="product-card">
             <img src="images/png-transparent-wrist-watch-thumbnail-removebg-preview.png" alt="Best Seller 3">
             <h3>Best Seller 3</h3>
-            <p>$44.99</p>
+            <p>Rs.44.99</p>
             <button>Add to Cart</button>
         </div>
         <div class="product-card">
             <img src="images/imgbin-smart-casual-male-shirt-clothing-vip-card-shading-vZTgggBkEhCT9YiQsNBPdbhUf-removebg-preview.png" alt="Best Seller 4">
             <h3>Best Seller 4</h3>
-            <p>$54.99</p>
+            <p>Rs.54.99</p>
             <button>Add to Cart</button>
         </div>
         <div class="product-card">
             <img src="images/accessories.png" alt="Best Seller 5">
             <h3>Best Seller 5</h3>
-            <p>$64.99</p>
+            <p>Rs.64.99</p>
             <button>Add to Cart</button>
         </div>
         <div class="product-card">
             <img src="images/footwear-removebg-preview.png" alt="Best Seller 6">
             <h3>Best Seller 6</h3>
-            <p>$74.99</p>
+            <p>Rs.74.99</p>
             <button>Add to Cart</button>
         </div>
     </section>

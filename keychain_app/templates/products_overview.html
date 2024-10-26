@@ -245,7 +245,7 @@
                 <td>{{ product.id }}</td>
                 <td>{{ product.name }}</td>
                 <td>{{ product.description }}</td>
-                <td>${{ product.price }}</td>
+                <td>Rs.{{ product.price }}</td>
                 <td>{{ product.quantity }}</td>
                 <td>
                     <form method="post">
@@ -279,7 +279,7 @@
                     <td>{{ product.id }}</td>
                     <td>{{ product.name }}</td>
                     <td>{{ product.description }}</td>
-                    <td>${{ product.price }}</td>
+                    <td>Rs.{{ product.price }}</td>
                     <td>{{ product.quantity }}</td>
                     <td>
                         <form method="post">
@@ -299,7 +299,7 @@
             <div class="summary">
                 <p>Total Items: {{ data.products.count }}</p>
                 <p>Total Quantity: {{ data.total_quantity }}</p>
-                <p>Total Value: ${{ data.total_price }}</p>
+                <p>Total Value: Rs.{{ data.total_price }}</p>
             </div>
         {% endfor %}
 
@@ -308,7 +308,7 @@
             <h2>Overall Summary</h2>
             <p>Total Items: {{ total_items }}</p>
             <p>Total Quantity: {{ total_quantity }}</p>
-            <p>Total Value: ${{ total_price_sum }}</p>
+            <p>Total Value: Rs.{{ total_price_sum }}</p>
         </div>
     {% endif %}
 </body>
