@@ -523,10 +523,13 @@ p {
     <!-- Newsletter Signup Section -->
     <section id="newsletter" class="newsletter-section">
         <h2>Subscribe to Our Newsletter</h2>
-        <input type="email" placeholder="Enter your email">
-        <button>Subscribe</button>
+        <form action="{% url 'subscribe_newsletter' %}" method="post">
+            {% csrf_token %}
+            <input type="email" name="email" placeholder="Enter your email" required>
+            <button type="submit">Subscribe</button>
+        </form>
     </section>
-
+    
     <!-- Footer -->
     <footer class="footer">
         <p>&copy; 2024 FASH.ICON. All rights reserved.</p>

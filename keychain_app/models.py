@@ -112,3 +112,12 @@ class Order(models.Model):
                 except Product.DoesNotExist:
                     continue
         return product_list  # Return after the loop completes
+    
+from django.db import models
+
+class NewsletterSubscriber(models.Model):
+    email = models.EmailField(unique=True)
+    subscribed_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email

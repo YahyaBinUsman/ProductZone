@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Newsletter</title>
+</head>
+<body>
+    <h2>Send a Newsletter</h2>
+<form method="post">
+    {% csrf_token %}
+    <label for="subject">Subject:</label>
+    <input type="text" name="subject" id="subject" required><br><br>
+
+    <label for="message">Message:</label>
+    <textarea name="message" id="message" rows="5" required></textarea><br><br>
+
+    <label for="product">Include a Product Alert (optional):</label>
+    <select name="product_id" id="product">
+        <option value="">None</option>
+        {% for product in products %}
+            <option value="{{ product.id }}">{{ product.name }} - Rs.{{ product.price }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <button type="submit">Send Newsletter</button>
+</form>
+</body>
+</html>

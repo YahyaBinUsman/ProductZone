@@ -33,6 +33,8 @@ urlpatterns = [
     path('edit-category/<int:pk>/', views.edit_category, name='edit_category'),
     path('order/<int:order_id>/', views.order_detail_view, name='order_detail'),
     path('completed_orders/', views.completed_orders_view, name='completed_orders'),
+    path('subscribe-newsletter/', views.subscribe_newsletter, name='subscribe_newsletter'),
+    path('send-newsletter/', views.send_newsletter, name='send_newsletter'),
 
 ]
 

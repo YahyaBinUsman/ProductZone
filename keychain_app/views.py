@@ -11,7 +11,7 @@ from django.http import JsonResponse
 from django.db.models import Max,Q,Sum
 from django.contrib import messages
 from django.shortcuts import render
-from .models import Product, Category
+from .models import Product, Category,NewsletterSubscriber
 def home(request):
     # Fetch all featured products, discounted products, and best sellers
     featured_products = Product.objects.filter(is_featured=True)
@@ -28,6 +28,19 @@ def home(request):
         'discounted_products': discounted_products,
         'best_sellers': best_sellers,
     })
+
+def subscribe_newsletter(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        if email:
+            if NewsletterSubscriber.objects.filter(email=email).exists():
+                messages.warning(request, 'You are already subscribed to our newsletter!')
+            else:
+                NewsletterSubscriber.objects.create(email=email)
+                messages.success(request, 'Successfully subscribed to the newsletter!')
+        else:
+            messages.error(request, 'Please enter a valid email address.')
+    return redirect('home')  # Redirect to home or any other page
 
 
 # View for displaying categories and their products
@@ -701,3 +714,39 @@ def completed_orders_view(request):
         'completed_orders': completed_orders,
         'search_query': search_query,
     })
+
+@staff_member_required
+def send_newsletter(request):
+    if request.method == 'POST':
+        subject = request.POST.get('subject')
+        message = request.POST.get('message')
+        product_id = request.POST.get('product_id')  # Optional product alert
+
+        # Get the optional product to include in the message
+        product = None
+        if product_id:
+            try:
+                product = Product.objects.get(id=product_id)
+            except Product.DoesNotExist:
+                pass
+
+        # Send email to all subscribers
+        subscribers = NewsletterSubscriber.objects.all()
+        for subscriber in subscribers:
+            # If there's a product, append its details
+            final_message = f"{message}\n\n"
+            if product:
+                final_message += f"Check out our new product: {product.name} - Rs.{product.price}.\n\n"
+
+            send_mail(
+                subject=subject,
+                message=final_message,
+                from_email='yahyabinusman7@gmail.com',
+                recipient_list=[subscriber.email],
+                fail_silently=False,
+            )
+
+        messages.success(request, 'Newsletter sent successfully!')
+
+    products = Product.objects.all()
+    return render(request, 'send_newsletter.html', {'products': products})
