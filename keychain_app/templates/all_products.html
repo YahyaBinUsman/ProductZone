@@ -1,0 +1,122 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
+    />
+    <title>All Products</title>
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: #222;
+            text-align: center;
+            margin: 1em 0;
+        }
+
+        /* Products List */
+        .product-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            list-style-type: none;
+            padding: 0;
+            margin: 2em 0;
+        }
+
+        .product-item {
+            background-color: white;
+            margin: 1em;
+            flex: 1 1 calc(30% - 2em);
+            border-radius: 15px;
+            padding: 1.5em;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 300px;
+        }
+
+        .product-item img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        h3 {
+            font-size: 1.8em;
+            margin-bottom: 0.5em;
+            color: #222;
+        }
+
+        .product-info p {
+            margin: 0.5em 0;
+            font-size: 1em;
+            color: #555;
+        }
+
+        /* Add to Cart Button */
+        button[type="submit"] {
+            padding: 0.7em 1.5em;
+            background-color: orange;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 1em;
+        }
+
+        button[type="submit"]:hover {
+            background-color: darkorange;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .product-item {
+                width: 90%;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <h1>All Products</h1>
+
+    <ul class="product-list">
+        {% for product in products %}
+            <li class="product-item">
+                <img src="{{ product.image.url }}" alt="Product Image">
+                <h3>{{ product.name }}</h3>
+                <div class="product-info">
+                    <p><strong>Price:</strong> Rs.{{ product.price }}</p>
+                    <p>{{ product.description }}</p>
+                    <p><strong>In Stock:</strong> {{ product.quantity }}</p>
+                </div>
+
+                <form method="post" action="{% url 'add_product_to_cart' product.id %}">
+                    {% csrf_token %}
+                    <input type="number" name="quantity_{{ product.id }}" value="1" min="1" max="{{ product.quantity }}">
+                    <button type="submit">Add to Cart</button>
+                </form>
+            </li>
+        {% empty %}
+            <p>No products available at the moment.</p>
+        {% endfor %}
+    </ul>
+
+</body>
+</html>

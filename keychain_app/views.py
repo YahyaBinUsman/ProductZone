@@ -389,19 +389,6 @@ def category_detail(request, url_name):
     }
     return render(request, 'category_detail.html', context)  # Render your category detail template
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 @staff_member_required
 def add_category(request):
     if request.method == 'POST':
@@ -750,3 +737,17 @@ def send_newsletter(request):
 
     products = Product.objects.all()
     return render(request, 'send_newsletter.html', {'products': products})
+
+# View for displaying categories and their products
+def all_categories_products(request):
+    categories = Category.objects.all()
+    return render(request, 'all_categories_products.html', {'categories': categories})
+
+from django.shortcuts import render
+from .models import Product
+import random
+
+def all_products_view(request):
+    products = list(Product.objects.all())
+    random.shuffle(products)  # Shuffle the products randomly
+    return render(request, 'all_products.html', {'products': products})

@@ -4,250 +4,291 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Navbar</title>
+    <title>Two Navbars</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* General Styles */
-
-        marquee {
-            display: flex;
-            align-items: center;
-        }
-
-        ::selection {
-            background-color: #252525;
-            color: white;
-        }
-
         body {
             margin: 0;
             font-family: 'Roboto', sans-serif;
-            background-color: #f7f7f7;
-            color: #333;
-            line-height: 1.6;
         }
 
-        /* Funny Headings */
-        .super-duper-h1 {
-            font-size: 3em;
-            color: #ff6347; /* Tomato */
-            text-align: center;
-            font-family: 'Playfair Display', serif;
-        }
-
-        .silly-h2 {
-            font-size: 2.5em;
-            margin-bottom: 0.5em;
-            color: #4682b4; /* Steel Blue */
-            text-align: center;
-            font-family: 'Playfair Display', serif;
-        }
-
-        .quirky-h3 {
-            font-size: 1.5em;
-            color: #6a5acd; /* Slate Blue */
-            text-align: center;
-        }
-
-        .skill p {
-            font-size: 1.2em;
-            text-align: center;
-        }
-
-        /* Navbar */
-        .navbar-goofy {
+        /* Desktop Navbar */
+        .navbar-desktop {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 1em;
-            background-color: rgb(255, 187, 1); 
+            background-color: rgb(255, 187, 1);
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
         }
 
-        .logo-fun {
-            font-size: 1.8em;
-            font-weight: bold;
+        .navbar-desktop .logo img {
+            height: 50px;
         }
 
-        .nav-links-goofy {
-            position: relative;
-            list-style: none;
+        .navbar-desktop .nav-links {
             display: flex;
+            list-style: none;
             gap: 20px;
-            letter-spacing: 3px;
         }
 
-        .nav-links-goofy li a {
+        .navbar-desktop .nav-links li a {
             text-decoration: none;
             color: #555;
             font-weight: 500;
-            transition: color 0.3s;
             font-size: 0.9em;
+            transition: color 0.3s;
         }
 
-        .nav-links-goofy li a:hover {
+        .navbar-desktop .nav-links li a:hover {
             color: white;
         }
 
-        .nav-icons-goofy i {
+        .navbar-desktop .nav-icons i {
             margin-left: 1em;
             font-size: 1.5em;
-            transition: transform 0.3s;
         }
 
-        .nav-icons-goofy i:hover {
-            transform: scale(1.2);
-        }
-
-        /* Search Bar */
-        .search-bar-funny {
+        .search-bar-desktop {
             display: flex;
             justify-content: center;
             padding: 1em 0;
-            background-color: #FDFCFB;
+            background-color: #fdfcfb;
         }
 
-        .search-bar-funny input {
+        .search-bar-desktop input {
             width: 50%;
             padding: 1em;
             border: 1px solid #ddd;
             border-radius: 25px;
         }
 
-        .search-bar-funny button {
+        .search-bar-desktop button {
             padding: 1em 2em;
             margin-left: 1em;
-            background-color: orange; 
+            background-color: orange;
             color: white;
             border: none;
             border-radius: 25px;
             cursor: pointer;
-            height: 50px;
         }
 
-        .search-bar-funny button:hover {
-            background-color: darkorange;
-        }
-        .logo-fun img {
-            height: 60px; /* Adjust height to fit well */
-            width: auto; /* Maintain aspect ratio */
+        /* Mobile Navbar */
+        .navbar-mobile {
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1em;
+            background-color: rgb(255, 187, 1);
         }
 
+        .navbar-mobile .logo img {
+            height: 40px;
+        }
+
+        .navbar-mobile .menu-icon,
+        .navbar-mobile .cart-icon {
+            font-size: 1.8em;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            height: 100%;
+            width: 250px;
+            background-color: orange;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            padding: 1em;
+            transition: right 0.3s ease;
+        }
+
+        .sidebar.open {
+            right: 0;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin: 1em 0;
+        }
+
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #333;
+            font-size: 1.2em;
+        }
+
+        .sidebar .close-icon {
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+
+        .search-bar-mobile {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5em;
+            padding: 1em;
+            background-color: #f7f7f7;
+        }
+
+        .search-bar-mobile input {
+            padding: 0.5em;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        .search-bar-mobile button {
+            padding: 0.5em;
+            border: none;
+            background-color: orange;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .navbar-desktop, .search-bar-desktop {
+                display: none;
+            }
+
+            .navbar-mobile {
+                display: flex;
+            }
+
+            .search-bar-mobile {
+                display: flex;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .navbar-mobile, .search-bar-mobile {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar-goofy">
-        <div class="logo-fun">
-            <img src="{% static 'images/logo.png' %}" alt="Logo">
-        </div>        <ul class="nav-links-goofy">
-            <li><a href="/">Home</a></li>
 
+    <!-- Desktop Navbar -->
+    <nav class="navbar-desktop">
+        <div class="logo">
+            <img src="{% static 'images/logo.png' %}" alt="Logo">
+        </div>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
             <li><a href="/categories/">Categories</a></li>
             <li><a href="/#featured-products">Featured</a></li>
             <li><a href="/faqs/">FAQs</a></li>
             <li><a href="/terms/">Terms</a></li>
             <li><a href="/contact/">Contact</a></li>
         </ul>
-        <div class="nav-icons-goofy">
+        <div class="nav-icons">
             <i class="fas fa-search"></i>
             <a href="{% url 'view_cart' %}"><i class="fas fa-shopping-cart"></i></a>
         </div>
     </nav>
 
-    <!-- Marquee -->
-    <marquee>GET EXCLUSIVE DISCOUNTS ON LATEST ARRIVALS -- | -- GET EXCLUSIVE DISCOUNTS ON LATEST ARRIVALS </marquee>
-
-    <!-- Search Bar -->
-    <div class="search-bar-funny">
-        <input id="search-bar" type="text" placeholder="Search products...">
-        <button id="search-button">Search</button>
+    <!-- Desktop Search Bar -->
+    <div class="search-bar-desktop">
+        <input id="search-bar-desktop" type="text" placeholder="Search products...">
+        <button id="search-button-desktop">Search</button>
     </div>
 
-    <!-- Search results container (initially hidden) -->
-    <div id="search-results" style="display:none;"></div>
+    <!-- Mobile Navbar -->
+    <nav class="navbar-mobile">
+        <div class="logo">
+            <img src="{% static 'images/logo.png' %}" alt="Logo">
+        </div>
+        <i class="fas fa-shopping-cart cart-icon"></i>
+        <i class="fas fa-bars menu-icon" id="menu-icon"></i>
+    </nav>
+
+    <!-- Mobile Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <i class="fas fa-times close-icon" id="close-icon"></i>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/categories/">Categories</a></li>
+            <li><a href="/#featured-products">Featured</a></li>
+            <li><a href="/faqs/">FAQs</a></li>
+            <li><a href="/terms/">Terms</a></li>
+            <li><a href="/contact/">Contact</a></li>
+        </ul>
+    </div>
+
+    <!-- Mobile Search Bar -->
+    <div class="search-bar-mobile">
+        <input id="search-bar-mobile" type="text" placeholder="Search products...">
+        <button id="search-button-mobile">Search</button>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Handle form submissions for Enter key and button click
-            const searchForms = ['search-bar'];  // Only the desktop search input for now
+            // Handle desktop search
+            const desktopSearchBar = document.getElementById('search-bar-desktop');
+            const desktopSearchButton = document.getElementById('search-button-desktop');
 
-            searchForms.forEach((searchFormId) => {
-                const searchBar = document.getElementById(searchFormId);
-
-                searchBar.addEventListener('keypress', (e) => {
+            if (desktopSearchBar && desktopSearchButton) {
+                desktopSearchBar.addEventListener('keypress', (e) => {
                     if (e.key === 'Enter') {
                         e.preventDefault();
-                        const query = searchBar.value.trim();
+                        const query = desktopSearchBar.value.trim();
                         if (query) {
-                            // Redirect to the search results page
                             window.location.href = `/search/?query=${encodeURIComponent(query)}`;
                         }
                     }
                 });
-            });
 
-            const searchButton = document.getElementById('search-button');
-            searchButton.addEventListener('click', () => {
-                const query = document.getElementById('search-bar').value.trim();
-                if (query) {
-                    // Redirect to the search results page
-                    window.location.href = `/search/?query=${encodeURIComponent(query)}`;
-                }
-            });
-
-            // Function to handle search result display and fetch
-            const handleSearch = (searchBarId, resultsContainerId) => {
-                const searchBar = document.getElementById(searchBarId);
-                const resultsContainer = document.getElementById(resultsContainerId);
-        
-                searchBar.addEventListener('input', () => {
-                    const query = searchBar.value;
-                    if (query.trim() === '') {
-                        resultsContainer.innerHTML = ''; // Clear results if query is empty
-                        resultsContainer.style.display = 'none'; // Hide the results container
-                        return;
-                    }
-        
-                    fetch(`/search/?query=${encodeURIComponent(query)}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            const results = data.results;
-                            resultsContainer.innerHTML = ''; // Clear previous results
-        
-                            if (results.length > 0) {
-                                results.forEach(product => {
-                                    const resultItem = document.createElement('div');
-                                    resultItem.classList.add('search-result-item');
-                                    resultItem.innerHTML = `
-                                        <a href="/${product.category}/product/${product.id}/">
-                                            <strong>${product.name}</strong> - ${product.price} <br>
-                                            ${product.description}
-                                        </a>
-                                    `;
-                                    resultsContainer.appendChild(resultItem);
-                                });
-                                resultsContainer.style.display = 'block'; // Show the results container
-                            } else {
-                                resultsContainer.innerHTML = '<p>No results found.</p>';
-                                resultsContainer.style.display = 'block'; // Show the results container
-                            }
-                        });
-                });
-        
-                // Hide the search results when clicking outside
-                document.addEventListener('click', (e) => {
-                    if (!searchBar.contains(e.target) && !resultsContainer.contains(e.target)) {
-                        resultsContainer.style.display = 'none';
+                desktopSearchButton.addEventListener('click', () => {
+                    const query = desktopSearchBar.value.trim();
+                    if (query) {
+                        window.location.href = `/search/?query=${encodeURIComponent(query)}`;
                     }
                 });
-            };
+            }
 
-            // Initialize search functionality
-            handleSearch('search-bar', 'search-results');
+            // Handle mobile search
+            const mobileSearchBar = document.getElementById('search-bar-mobile');
+            const mobileSearchButton = document.getElementById('search-button-mobile');
+
+            if (mobileSearchBar && mobileSearchButton) {
+                mobileSearchBar.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const query = mobileSearchBar.value.trim();
+                        if (query) {
+                            window.location.href = `/search/?query=${encodeURIComponent(query)}`;
+                        }
+                    }
+                });
+
+                mobileSearchButton.addEventListener('click', () => {
+                    const query = mobileSearchBar.value.trim();
+                    if (query) {
+                        window.location.href = `/search/?query=${encodeURIComponent(query)}`;
+                    }
+                });
+            }
+        });
+    </script>
+    <script>
+        // Mobile Sidebar Toggle
+        const menuIcon = document.getElementById('menu-icon');
+        const sidebar = document.getElementById('sidebar');
+        const closeIcon = document.getElementById('close-icon');
+
+        menuIcon.addEventListener('click', () => {
+            sidebar.classList.add('open');
+        });
+
+        closeIcon.addEventListener('click', () => {
+            sidebar.classList.remove('open');
         });
     </script>
 </body>
