@@ -77,6 +77,23 @@
             height: 500px;  /* Fixed height for a balanced look */
         }
 
+         /* Links Section */
+         .text-section {
+            text-align: left;
+            margin-top: 2em;
+        }
+
+        .text-section a {
+            color: orange;
+            font-size: 1.1em;
+            text-decoration: none;
+            margin: 0.5em 0;
+            display: inline-block;
+        }
+
+        .text-section a:hover {
+            text-decoration: underline;
+        }
         .product-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);  /* Enhanced shadow on hover */
@@ -201,6 +218,10 @@
             </li>
         {% endfor %}
     </ul>
-
+    <div class="text-section">
+        <a href="{% url 'terms' %}">Terms and Conditions</a><br>
+        <a href="{% url 'faqs' %}">FAQs</a><br>
+        <a href="{% url 'contact' %}">Contact Us</a>
+    </div>
 </body>
 </html>

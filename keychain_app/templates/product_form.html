@@ -61,6 +61,23 @@
         input:focus, textarea:focus, select:focus {
             border-color: orange;
         }
+         /* Links Section */
+         .text-section {
+            text-align: left;
+            margin-top: 2em;
+        }
+
+        .text-section a {
+            color: orange;
+            font-size: 1.1em;
+            text-decoration: none;
+            margin: 0.5em 0;
+            display: inline-block;
+        }
+
+        .text-section a:hover {
+            text-decoration: underline;
+        }
 
         button[type="submit"] {
             padding: 1em 2em;
@@ -131,6 +148,10 @@
             <button type="submit">{% if product %}Update{% else %}Add{% endif %} Product</button>
         </form>
     </div>
-
+    <div class="text-section">
+        <a href="{% url 'terms' %}">Terms and Conditions</a><br>
+        <a href="{% url 'faqs' %}">FAQs</a><br>
+        <a href="{% url 'contact' %}">Contact Us</a>
+    </div>
 </body>
 </html>

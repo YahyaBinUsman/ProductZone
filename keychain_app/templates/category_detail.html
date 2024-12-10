@@ -58,6 +58,14 @@
     text-align: center;
     max-width: 300px;      /* Optional: Set a max width for cards */
 }
+.product-item img {
+    max-width: 100%;       /* Ensure the image doesn't exceed the card's width */
+    max-height: 200px;     /* Set a reasonable maximum height */
+    object-fit: cover;     /* Maintain aspect ratio and crop the image if necessary */
+    border-radius: 10px;   /* Optional: Add rounded corners for consistency */
+    display: block;        /* Ensure the image behaves as a block-level element */
+    margin: 0 auto 1em;    /* Center the image and add spacing below */
+}
 
         h3 {
             font-size: 1.8em;
@@ -87,6 +95,23 @@
             border-color: orange;
         }
 
+         /* Links Section */
+         .text-section {
+            text-align: left;
+            margin-top: 2em;
+        }
+
+        .text-section a {
+            color: orange;
+            font-size: 1.1em;
+            text-decoration: none;
+            margin: 0.5em 0;
+            display: inline-block;
+        }
+
+        .text-section a:hover {
+            text-decoration: underline;
+        }
         /* Add to Cart Button */
         button[type="submit"] {
             padding: 0.7em 1.5em;
@@ -143,6 +168,10 @@
             <p>No products available in this category.</p>
         {% endfor %}
     </ul>
-
+    <div class="text-section">
+        <a href="{% url 'terms' %}">Terms and Conditions</a><br>
+        <a href="{% url 'faqs' %}">FAQs</a><br>
+        <a href="{% url 'contact' %}">Contact Us</a>
+    </div>
 </body>
 </html>

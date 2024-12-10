@@ -158,6 +158,23 @@
             text-decoration: underline;
         }
 
+         /* Links Section */
+         .text-section {
+            text-align: left;
+            margin-top: 2em;
+        }
+
+        .text-section a {
+            color: orange;
+            font-size: 1.1em;
+            text-decoration: none;
+            margin: 0.5em 0;
+            display: inline-block;
+        }
+
+        .text-section a:hover {
+            text-decoration: underline;
+        }
         /* Search Results Styles */
         #search-results {
             position: absolute;
@@ -277,6 +294,10 @@
             {% endfor %}
         </table>
     </div>
-
+    <div class="text-section">
+        <a href="{% url 'terms' %}">Terms and Conditions</a><br>
+        <a href="{% url 'faqs' %}">FAQs</a><br>
+        <a href="{% url 'contact' %}">Contact Us</a>
+    </div>
 </body>
 </html>

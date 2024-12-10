@@ -59,24 +59,23 @@
             color: #555;
         }
 
-        #text-section {
-            background-color: #f5f5f5;
-            padding: 20px;
-            text-align: center;
-            margin-top: 40px;
+        /* Links Section */
+        .text-section {
+            text-align: left;
+            margin-top: 2em;
         }
-    
-        #text-section a {
-            color: #0056b3; /* Matching link color */
+
+        .text-section a {
+            color: orange;
+            font-size: 1.1em;
             text-decoration: none;
-            margin: 10px 0;
-            display: block;
+            margin: 0.5em 0;
+            display: inline-block;
         }
 
-        #text-section a:hover {
-            text-decoration: underline; /* Simple hover effect */
+        .text-section a:hover {
+            text-decoration: underline;
         }
-
         @media screen and (max-width: 768px) {
             #terms-content {
                 width: 95%;
@@ -127,5 +126,6 @@
         <a href="{% url 'faqs' %}">FAQs</a><br>
         <a href="{% url 'contact' %}">Contact Us</a>
     </div>
+  
 </body>
 </html>

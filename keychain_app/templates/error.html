@@ -64,6 +64,23 @@
         .button1:hover {
             background-color: darkorange;
         }
+         /* Links Section */
+         .text-section {
+            text-align: left;
+            margin-top: 2em;
+        }
+
+        .text-section a {
+            color: orange;
+            font-size: 1.1em;
+            text-decoration: none;
+            margin: 0.5em 0;
+            display: inline-block;
+        }
+
+        .text-section a:hover {
+            text-decoration: underline;
+        }
 
         /* Responsive Styling */
         @media (max-width: 768px) {
@@ -86,6 +103,11 @@
         <h1>Oops! Something went wrong.</h1>
         <p>We're sorry, but an error occurred while processing your request.</p>
         <a href="/" class="button1">Return to Homepage</a>
+    </div>
+    <div class="text-section">
+        <a href="{% url 'terms' %}">Terms and Conditions</a><br>
+        <a href="{% url 'faqs' %}">FAQs</a><br>
+        <a href="{% url 'contact' %}">Contact Us</a>
     </div>
 </body>
 </html>

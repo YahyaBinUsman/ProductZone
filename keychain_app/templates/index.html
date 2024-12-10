@@ -282,24 +282,31 @@ p {
 }
 
 /* Newsletter Section */
+.blog-card {
+    text-align: center;
+    margin-bottom: 20px;
+}
 
-
-.blog-button{
+.blog-button {
+    display: inline-block;
     border-radius: 25px;
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding: 10px 20px;
     background-color: orange;
     color: white;
     border: none;
+    font-size: 16px;
 }
 
-.blog-button:hover{
+.blog-button:hover {
     background-color: darkorange;
     cursor: pointer;
 }
 
+.hidden-text {
+    display: none;
+    margin-top: 10px;
+    color: #333;
+}
 
 .newsletter-section {
     background-color: peachpuff;
@@ -378,8 +385,10 @@ p {
         <div class="hero-content">
             <h2>WELCOME TO FASH.ICON</h2>
             <p>Your one-stop shop for the best products!</p>
-            <button class="hero-btn">Shop Now</button>
-        </div>
+            <a href="/categories/">
+                <button class="hero-btn">Shop Now</button>
+            </a>
+                    </div>
     </section>
 
     <!-- Categories Section -->
@@ -506,20 +515,23 @@ p {
         <div class="blog-card">
             <h3>Blog Post Title 1</h3>
             <p>Short description of the blog post.</p>
+            <p class="hidden-text">This is the additional line of text for Blog Post 1.</p>
             <button class="blog-button">Read More</button>
         </div>
         <div class="blog-card">
             <h3>Blog Post Title 2</h3>
             <p>Short description of the blog post.</p>
+            <p class="hidden-text">This is the additional line of text for Blog Post 2.</p>
             <button class="blog-button">Read More</button>
         </div>
         <div class="blog-card">
             <h3>Blog Post Title 3</h3>
             <p>Short description of the blog post.</p>
+            <p class="hidden-text">This is the additional line of text for Blog Post 3.</p>
             <button class="blog-button">Read More</button>
         </div>
     </section>
-
+    
     <!-- Newsletter Signup Section -->
     <section id="newsletter" class="newsletter-section">
         <h2>Subscribe to Our Newsletter</h2>
@@ -529,11 +541,26 @@ p {
             <button type="submit">Subscribe</button>
         </form>
     </section>
-    
+  
     <!-- Footer -->
     <footer class="footer">
         <p>&copy; 2024 FASH.ICON. All rights reserved.</p>
     </footer>
+<script>
+    // Select all blog buttons
+document.querySelectorAll('.blog-button').forEach(button => {
+    button.addEventListener('click', function () {
+        const hiddenText = this.previousElementSibling;
+        if (hiddenText.style.display === 'block') {
+            hiddenText.style.display = 'none';
+            this.textContent = 'Read More';
+        } else {
+            hiddenText.style.display = 'block';
+            this.textContent = 'Read Less';
+        }
+    });
+});
 
+</script>
 </body>
 </html>
