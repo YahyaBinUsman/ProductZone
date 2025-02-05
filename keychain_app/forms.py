@@ -6,7 +6,15 @@ class CategoryForm(forms.ModelForm):
         model = Category
         fields = ['name', 'description','url_name','image']
 
+from django import forms
+from .models import Product
+
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'description', 'price', 'quantity', 'image', 'is_featured', 'category']
+        fields = [
+            'name', 'description', 'price', 'gross_price', 'quantity', 'image',
+            'is_featured', 'is_discounted', 'is_best_seller', 'category', 'rack_number',
+            'barcode'  # ✅ Include barcode in the form
+        ]
+       

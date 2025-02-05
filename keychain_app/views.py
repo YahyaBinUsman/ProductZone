@@ -414,15 +414,31 @@ def edit_category(request, pk):
         form = CategoryForm(instance=category)
     return render(request, 'edit_category.html', {'form': form})
 
+from django.shortcuts import render, redirect
+from django.contrib.admin.views.decorators import staff_member_required
+from .forms import ProductForm
 @staff_member_required
 def add_product(request):
     if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES)  # Ensure to handle file uploads
+        form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('add_product')  # Redirect after saving
+            try:
+                product = form.save(commit=False)  # Get product instance without saving immediately
+                if not product.barcode:
+                    messages.error(request, "Barcode is required.")
+                    return render(request, 'add_product.html', {'form': form})
+
+                product.save()  # Save product with provided barcode
+                messages.success(request, 'Product added successfully!')
+                return redirect('products_view')  # Redirect to product list view
+            except Exception as e:
+                messages.error(request, f"Error adding product: {e}")
+        else:
+            messages.error(request, f"Form is invalid: {form.errors}")
+
     else:
         form = ProductForm()
+
     return render(request, 'add_product.html', {'form': form})
 
 @staff_member_required
@@ -600,6 +616,11 @@ def edit_product(request, product_id):
         if category_id:
             product.category = Category.objects.get(id=category_id)
         
+        # Handle barcode input (now editable)
+        barcode = request.POST.get('barcode')
+        if barcode:
+            product.barcode = barcode  # Set the barcode to the manually entered value
+        
         product.save()
         messages.success(request, 'Product updated successfully.')
         return redirect('products_view')
@@ -608,6 +629,7 @@ def edit_product(request, product_id):
         'product': product,
         'categories': categories  # Pass the categories to the template
     })
+
 
 from decimal import Decimal
 from django.conf import settings
@@ -751,3 +773,546 @@ def all_products_view(request):
     products = list(Product.objects.all())
     random.shuffle(products)  # Shuffle the products randomly
     return render(request, 'all_products.html', {'products': products})
+
+
+from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
+from django.db.models import Sum
+from django.utils.dateparse import parse_date
+from django.db import transaction
+from decimal import Decimal
+from django.shortcuts import render
+from django.http import JsonResponse
+from django.db import transaction
+from django.contrib.admin.views.decorators import staff_member_required
+import json
+from decimal import Decimal
+from .models import Product, BillingRecord
+
+
+@staff_member_required
+def billing_page(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            items = data.get('items', [])
+            cash_received = Decimal(data.get('cash_received', 0))
+            discount_type = data.get('discount_type', 'Rs')  # Default to Rs
+            discount_value = Decimal(data.get('discount_value', 0))
+
+            if not items:
+                return JsonResponse({'success': False, 'error': 'No items in the cart!'}, status=400)
+
+            with transaction.atomic():
+                total_amount = Decimal('0.0')
+                updated_items = []
+
+                for item in items:
+                    barcode = item.get('barcode')
+                    quantity = int(item.get('quantity', 0))
+
+                    if not barcode or quantity <= 0:
+                        return JsonResponse({'success': False, 'error': 'Invalid item data!'}, status=400)
+
+                    try:
+                        product = Product.objects.get(barcode=barcode)
+
+                        if product.quantity < quantity:
+                            return JsonResponse({
+                                'success': False,
+                                'error': f'Insufficient stock for {product.name} (Only {product.quantity} left)'
+                            }, status=400)
+
+                        product.quantity -= quantity
+                        product.save()
+
+                        total_amount += Decimal(product.price) * quantity
+                        updated_items.append({
+                            'name': product.name,
+                            'price': str(product.price),
+                            'quantity': quantity,
+                        })
+
+                    except Product.DoesNotExist:
+                        return JsonResponse({'success': False, 'error': f'Product with barcode {barcode} not found!'}, status=400)
+
+                # Apply discount
+                if discount_type == "%":
+                    discount_amount = (total_amount * discount_value) / 100
+                else:
+                    discount_amount = discount_value
+
+                discounted_total = max(total_amount - discount_amount, 0)  # Ensure it doesn't go negative
+
+                if cash_received < discounted_total:
+                    return JsonResponse({
+                        'success': False,
+                        'error': 'Insufficient cash received!'
+                    }, status=400)
+
+                change = cash_received - discounted_total
+
+                # Save billing record with discount details and final total
+                billing_record = BillingRecord.objects.create(
+                    items=json.dumps(updated_items),
+                    total_amount=total_amount,
+                    discount_type=discount_type,
+                    discount_value=discount_value,
+                    discounted_total=discounted_total,  # <-- Storing total after discount
+                    cash_received=cash_received,
+                    change=change,
+                )
+
+                return JsonResponse({
+                    'success': True,
+                    'receipt_id': billing_record.id,
+                    'total_amount': float(total_amount),
+                    'discount_type': discount_type,
+                    'discount_value': float(discount_value),
+                    'discounted_total': float(discounted_total),  # <-- Returning corrected value
+                    'cash_received': float(cash_received),
+                    'change': float(change),
+                })
+
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON data!'}, status=400)
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+    return render(request, 'billing.html', {})
+
+
+# Billing History Page
+@staff_member_required
+def billing_history(request):
+    search_date = request.GET.get('date')
+    records = BillingRecord.objects.all()
+
+    if search_date:
+        try:
+            date = parse_date(search_date)
+            records = records.filter(created_at__date=date)
+        except ValueError:
+            pass  # Ignore invalid dates
+
+    return render(request, 'billing_history.html', {'records': records})
+
+
+
+@staff_member_required
+def generate_receipt(request, receipt_id):
+    billing_record = get_object_or_404(BillingRecord, id=receipt_id)
+    items = json.loads(billing_record.items)
+
+    context = {
+        'items': [{
+            'name': item['name'],
+            'quantity': item['quantity'],
+            'price': Decimal(item['price']),
+            'total': Decimal(item['price']) * int(item['quantity']),
+        } for item in items],
+        'total_amount': Decimal(billing_record.total_amount),
+        'cash_received': Decimal(billing_record.cash_received),
+        'change': Decimal(billing_record.change),
+    }
+
+    return render(request, 'receipt.html', context)
+
+
+@staff_member_required
+def get_product_by_barcode(request, barcode):
+    try:
+        product = Product.objects.get(barcode=barcode)
+        return JsonResponse({
+            'success': True,
+            'id': product.id,
+            'name': product.name,
+            'description': product.description,
+            'price': str(product.price),
+            'quantity': product.quantity,
+            'image': product.image.url if product.image else None,
+        })
+    except Product.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Product not found.'}, status=404)
+
+@staff_member_required
+def deduct_stock(request, barcode):
+    if request.method == 'POST':
+        try:
+            product = Product.objects.select_for_update().get(barcode=barcode)
+            quantity = int(json.loads(request.body).get('quantity', 1))
+
+            # Check stock availability
+            if product.quantity < quantity:
+                return JsonResponse({'success': False, 'error': 'Insufficient stock!'}, status=400)
+
+            # Deduct stock
+            product.quantity -= quantity
+            product.save()
+
+            return JsonResponse({'success': True, 'quantity': product.quantity})
+        except Product.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Product not found!'}, status=404)
+# Restore stock when item is removed from the cart
+@staff_member_required
+def restore_stock(request, barcode):
+    if request.method == 'POST':
+        try:
+            product = Product.objects.select_for_update().get(barcode=barcode)
+            quantity = int(json.loads(request.body).get('quantity', 1))
+
+            # Restore stock
+            product.quantity += quantity
+            product.save()
+
+            return JsonResponse({'success': True, 'quantity': product.quantity})
+        except Product.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Product not found!'}, status=404)
+
+
+from io import BytesIO
+from base64 import b64encode
+import barcode
+from barcode.writer import ImageWriter
+from django.shortcuts import render
+from django.contrib.admin.views.decorators import staff_member_required
+
+
+@staff_member_required
+def barcode_generation_page(request):
+    if request.method == 'POST':
+        product_name = request.POST.get('name')
+        barcode_number = request.POST.get('barcode')
+        quantity = int(request.POST.get('quantity', 1))
+
+        # Generate barcode images
+        barcodes = []
+        for _ in range(quantity):
+            code128 = barcode.get('code128', barcode_number, writer=ImageWriter())
+            buffer = BytesIO()
+            code128.write(buffer, options={"write_text": False})  # Generate image without text
+            image_data = b64encode(buffer.getvalue()).decode('utf-8')  # Convert to base64
+            barcodes.append({'name': product_name, 'barcode_number': barcode_number, 'image': image_data})
+
+        return render(request, 'print_barcodes.html', {'barcodes': barcodes, 'name': product_name})
+
+    return render(request, 'barcode_generation.html', {})
+
+@staff_member_required
+def sales_overview(request):
+    order_profits = []
+    total_order_profit = Decimal('0.00')
+    total_order_gross_price = Decimal('0.00')
+    total_order_total_price = Decimal('0.00')
+
+    completed_orders = Order.objects.filter(is_complete=True)
+
+    for order in completed_orders:
+        order_gross_price = Decimal('0.00')
+        order_total_price = Decimal('0.00')
+        order_profit = Decimal('0.00')
+        order_products = []
+
+        products_data = []
+        if order.products and isinstance(order.products, str):
+            try:
+                # Attempt to parse as JSON
+                products_data = json.loads(order.products)
+            except json.JSONDecodeError:
+                print(f"Error decoding JSON for order {order.id}: {order.products}")
+
+                # Fallback: Manually parse non-JSON product format (e.g., "watch7 (1), watch1 (3)")
+                products_data = []
+                for item in order.products.split(","):
+                    item = item.strip()
+                    if "(" in item and ")" in item:
+                        try:
+                            name = item.split("(")[0].strip()
+                            quantity = int(item.split("(")[1].replace(")", "").strip())
+                            products_data.append({"name": name, "quantity": quantity})
+                        except ValueError:
+                            print(f"Skipping invalid format in order {order.id}: {item}")
+
+                # Convert to JSON and save it properly to the database
+                if products_data:
+                    order.products = json.dumps(products_data)
+                    order.save(update_fields=["products"])
+
+        for item in products_data:
+            product_name = item.get("name")
+            quantity = Decimal(item.get("quantity", 1))
+
+            if not product_name:
+                print(f"Missing product name in order {order.id}: {item}")
+                continue  # Skip if product name is missing
+
+            product = Product.objects.filter(name=product_name).first()
+
+            if not product:
+                print(f"Product '{product_name}' not found in order {order.id}")
+                continue
+
+            gross_price = Decimal(product.gross_price) * quantity
+            total_price = Decimal(product.price) * quantity
+            profit_per_item = Decimal(product.price) - Decimal(product.gross_price)
+            total_profit = profit_per_item * quantity
+
+            order_profit += total_profit
+            order_gross_price += gross_price
+            order_total_price += total_price
+
+            order_products.append({
+                "product_id": product.id,
+                "name": product.name,
+                "quantity": quantity,
+                "profit_per_item": profit_per_item,
+                "total_profit": total_profit,
+                "gross_price": gross_price,
+                "total_price": total_price
+            })
+
+        order_profits.append({
+            "order": order,
+            "products": order_products,
+            "profit": order_profit,
+            "gross_price": order_gross_price,
+            "total_price": order_total_price
+        })
+        total_order_profit += order_profit
+        total_order_gross_price += order_gross_price
+        total_order_total_price += order_total_price
+
+    # --- Billing Sales Processing ---
+    billing_profits = []
+    total_billing_profit = Decimal('0.00')
+    total_billing_gross_price = Decimal('0.00')
+    total_billing_total_price = Decimal('0.00')
+
+    billing_records = BillingRecord.objects.all()
+
+    for record in billing_records:
+        billing_profit = Decimal('0.00')
+        billing_gross_price = Decimal('0.00')
+        billing_total_price = Decimal('0.00')
+        sold_products = []
+
+        items_data = []
+        if record.items and isinstance(record.items, str):
+            try:
+                items_data = json.loads(record.items)
+            except json.JSONDecodeError:
+                print(f"Error decoding JSON for billing record {record.id}: {record.items}")
+                continue  # Skip this record
+
+        for item in items_data:
+            product_name = item.get("name")
+            quantity = Decimal(item.get("quantity", 1))
+
+            if not product_name:
+                print(f"Missing product name in billing record {record.id}: {item}")
+                continue
+
+            product = Product.objects.filter(name=product_name).first()
+
+            if not product:
+                print(f"Product '{product_name}' not found in billing record {record.id}")
+                continue
+
+            gross_price = Decimal(product.gross_price) * quantity
+            total_price = Decimal(product.price) * quantity
+            profit_per_item = Decimal(product.price) - Decimal(product.gross_price)
+            total_profit = profit_per_item * quantity
+
+            billing_profit += total_profit
+            billing_gross_price += gross_price
+            billing_total_price += total_price
+
+            sold_products.append({
+                "product_id": product.id,
+                "name": product.name,
+                "quantity": quantity,
+                "profit_per_item": profit_per_item,
+                "total_profit": total_profit,
+                "gross_price": gross_price,
+                "total_price": total_price
+            })
+
+        billing_profits.append({
+            "record": record,
+            "products": sold_products,
+            "profit": billing_profit,
+            "gross_price": billing_gross_price,
+            "total_price": billing_total_price
+        })
+        total_billing_profit += billing_profit
+        total_billing_gross_price += billing_gross_price
+        total_billing_total_price += billing_total_price
+
+    return render(request, 'sales_overview.html', {
+        "order_profits": order_profits,
+        "total_order_profit": total_order_profit,
+        "total_order_gross_price": total_order_gross_price,
+        "total_order_total_price": total_order_total_price,
+        "billing_profits": billing_profits,
+        "total_billing_profit": total_billing_profit,
+        "total_billing_gross_price": total_billing_gross_price,
+        "total_billing_total_price": total_billing_total_price,
+    })
+
+import re
+import json
+from datetime import datetime
+from decimal import Decimal
+from django.http import HttpResponse
+from django.shortcuts import render
+from reportlab.lib.pagesizes import A4
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from .models import Order, BillingRecord, Product  # Assuming models are correctly imported
+
+def parse_product_data(product_data):
+    """
+    Handles both JSON and plain string formats:
+    - JSON Example: [{"name": "watch", "quantity": 2}]
+    - String Example: "triple keychain (1), watch1 (1)"
+    """
+    try:
+        return json.loads(product_data)  # Try parsing as JSON
+    except (json.JSONDecodeError, TypeError):
+        # Fallback to parsing plain string format
+        pattern = r'([\w\s-]+?)\s*\((\d+)\)'  # Matches "Product Name (Quantity)"
+        matches = re.findall(pattern, product_data)
+        return [{'name': name.strip(), 'quantity': int(quantity)} for name, quantity in matches]
+
+def generate_sales_report(request):
+    selected_date = request.GET.get('date')
+
+    if not selected_date:
+        return render(request, 'sales_report.html', {"error": "Please select a date."})
+
+    try:
+        date_obj = datetime.strptime(selected_date, "%d/%m/%Y")
+    except ValueError:
+        return render(request, 'sales_report.html', {"error": "Invalid date format."})
+
+    # Fetch data
+    orders = Order.objects.filter(created_at__date=date_obj, is_complete=True)
+    billing_records = BillingRecord.objects.filter(created_at__date=date_obj)
+
+    # Prepare PDF response
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="sales_report_{selected_date.replace("/", "-")}.pdf"'
+
+    doc = SimpleDocTemplate(response, pagesize=A4)
+    styles = getSampleStyleSheet()
+
+    # Styling for the tables
+    style = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.darkblue),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.lightgrey),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.black),
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ('TOPPADDING', (0, 1), (-1, -1), 8),
+    ])
+
+    # Elements to add to the PDF
+    elements = [Paragraph(f"Sales Report for {selected_date}", styles['Title']), Spacer(1, 12)]
+
+    # --- Orders Section ---
+    elements.append(Paragraph("Orders", styles['Heading2']))
+    order_data = [['Order ID', 'Product Name', 'Quantity', 'Total Price', 'Profit']]
+
+    total_order_sales = Decimal('0.00')
+    total_order_profit = Decimal('0.00')
+
+    for order in orders:
+        products = parse_product_data(order.products)
+        for item in products:
+            product = Product.objects.filter(name=item['name']).first()
+            if product:
+                quantity = Decimal(item['quantity'])
+                total_price = product.price * quantity
+                profit = (product.price - product.gross_price) * quantity
+
+                total_order_sales += total_price
+                total_order_profit += profit
+
+                order_data.append([
+                    order.id,
+                    product.name,
+                    f"x{quantity}",
+                    f"${total_price:.2f}",
+                    f"${profit:.2f}"
+                ])
+
+    if len(order_data) > 1:
+        order_table = Table(order_data)
+        order_table.setStyle(style)
+        elements.append(order_table)
+    else:
+        elements.append(Paragraph("No orders found.", styles['Normal']))
+
+    elements.append(Spacer(1, 20))  # Add space between sections
+
+    # --- Billing Records Section ---
+    elements.append(Paragraph("Billing Records", styles['Heading2']))
+    billing_data = [['Billing ID', 'Product Name', 'Quantity', 'Total Price', 'Profit']]
+
+    total_billing_sales = Decimal('0.00')
+    total_billing_profit = Decimal('0.00')
+
+    for record in billing_records:
+        items = parse_product_data(record.items)
+        for item in items:
+            product = Product.objects.filter(name=item['name']).first()
+            if product:
+                quantity = Decimal(item['quantity'])
+                total_price = product.price * quantity
+                profit = (product.price - product.gross_price) * quantity
+
+                total_billing_sales += total_price
+                total_billing_profit += profit
+
+                billing_data.append([
+                    record.id,
+                    product.name,
+                    f"x{quantity}",
+                    f"${total_price:.2f}",
+                    f"${profit:.2f}"
+                ])
+
+    if len(billing_data) > 1:
+        billing_table = Table(billing_data)
+        billing_table.setStyle(style)
+        elements.append(billing_table)
+    else:
+        elements.append(Paragraph("No billing records found.", styles['Normal']))
+
+    elements.append(Spacer(1, 20))
+
+    # --- Grand Totals ---
+    elements.append(Paragraph("Summary", styles['Heading2']))
+    summary_data = [
+        ["Total Sales (Orders + Billing)", f"${(total_order_sales + total_billing_sales):.2f}"],
+        ["Total Profit (Orders + Billing)", f"${(total_order_profit + total_billing_profit):.2f}"]
+    ]
+
+    summary_table = Table(summary_data)
+    summary_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
+        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER')
+    ]))
+    elements.append(summary_table)
+
+    # Generate the PDF
+    doc.build(elements)
+    return response

@@ -37,8 +37,16 @@ urlpatterns = [
     path('send-newsletter/', views.send_newsletter, name='send_newsletter'),
     path('all/', views.all_categories_products, name='all_categories_products'),
     path('all-products/', views.all_products_view, name='all_products'),
-
-
+    path('billing/', views.billing_page, name='billing_page'),  # Billing page for generating bills
+    path('receipt/<int:receipt_id>/', views.generate_receipt, name='generate_receipt'),  # Receipt view
+    path('get-product-by-barcode/<str:barcode>/', views.get_product_by_barcode, name='get_product_by_barcode'),
+    path('billing-page/', views.billing_page, name='billing_page'),
+    path('billing-history/', views.billing_history, name='billing_history'),
+    path('deduct-stock/<str:barcode>/', views.deduct_stock, name='deduct_stock'),
+    path('barcode/generate/', views.barcode_generation_page, name='barcode_generation'),
+    path('restore-stock/<str:barcode>/', views.restore_stock, name='restore_stock'),
+    path("sales-overview/", views.sales_overview, name="sales_overview"),
+    path('generate_sales_pdf/', views.generate_sales_report, name='generate_sales_pdf'),
 ]
 
 # Serve media files during development

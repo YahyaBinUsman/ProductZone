@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Print Barcodes</title>
+    <style>
+        @media print {
+            .barcode-item {
+                page-break-after: always; /* Ensures each barcode gets its own page */
+                text-align: center;
+                margin-top: 50px;
+                margin-bottom: 50px;
+            }
+        }
+        .barcode-item {
+            text-align: center;
+            margin: auto;
+            width: 80mm; /* Adjust this to fit your sticker size */
+            height: 50mm; /* Adjust this to fit your sticker size */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px dashed black; /* For layout testing, remove in production */
+        }
+        .barcode-image {
+            max-width: 50mm; /* Ensure it fits the sticker */
+            height: auto;
+        }
+    </style>
+</head>
+<body onload="window.print()">
+    <div id="barcodes">
+        {% for barcode in barcodes %}
+            <div class="barcode-item">
+                <p>{{ barcode.name }}</p>
+                <img src="data:image/png;base64,{{ barcode.image }}" class="barcode-image" alt="Barcode">
+                <p>{{ barcode.barcode_number }}</p>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

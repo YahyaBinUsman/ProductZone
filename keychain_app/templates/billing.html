@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing Page</title>
+    <style>
+       /* General styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    margin: 30px 0;
+    color: #2c3e50;
+    font-size: 28px;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+/* Barcode section */
+.barcode-section {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.barcode-section input {
+    width: 280px;
+    padding: 12px;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.barcode-section button {
+    padding: 12px 20px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.barcode-section button:hover {
+    background-color: #2980b9;
+}
+
+/* Table and cart section */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+    font-size: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+th {
+    background-color: #3498db;
+    color: white;
+}
+
+td {
+    background-color: #fff;
+}
+
+td input[type="number"] {
+    width: 50px;
+    padding: 6px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Buttons for actions */
+button {
+    padding: 8px 16px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #c0392b;
+}
+
+/* Bottom Section */
+.bottom-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.total-section {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.total-section span {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.form-section {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+input[type="number"] {
+    padding: 10px;
+    font-size: 16px;
+    width: 200px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+select {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+/* Receipt Section */
+.receipt {
+    max-width: 350px;
+    margin: 20px auto;
+    padding: 15px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.receipt h3 {
+    font-size: 18px;
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+.receipt div {
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.receipt table {
+    width: 100%;
+    margin-bottom: 10px;
+    font-size: 12px;
+}
+
+.receipt th, .receipt td {
+    padding: 6px;
+}
+
+.receipt th {
+    background-color: #3498db;
+    color: white;
+}
+
+.receipt td {
+    background-color: #f9f9f9;
+}
+th:first-child, td:first-child {
+    width: 250px; /* Adjust the width as needed */
+}
+.receipt .total-section {
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    #receipt-section, #receipt-section * {
+        visibility: visible;
+    }
+
+    #receipt-section {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        padding: 10px;
+    }
+}
+
+    </style>
+    <script>
+        let cart = [];
+    
+        document.addEventListener('DOMContentLoaded', function () {
+            const barcodeInput = document.getElementById('barcode');
+    
+            barcodeInput.addEventListener('keyup', function (event) {
+                if (event.key === 'Enter') {
+                    addItem();
+                }
+            });
+        });
+    
+        function addItem() {
+            const barcode = document.getElementById('barcode').value.trim();
+            if (!barcode) return;
+        
+            // Simulate product fetch
+            fetch(`/get-product-by-barcode/${barcode}/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Check if stock is available first
+                        fetch(`/check-stock/${barcode}/`)
+                            .then(stockResponse => stockResponse.json())
+                            .then(stockData => {
+                                if (stockData.success && stockData.stock > 0) {
+                                    // Proceed to add the item if stock is available
+                                    const quantity = 1; // Default quantity
+                                    fetch(`/deduct-stock/${barcode}/`, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRFToken': '{{ csrf_token }}',
+                                        },
+                                        body: JSON.stringify({ quantity }),
+                                    })
+                                    .then(response => response.json())
+                                    .then(stockData => {
+                                        if (stockData.success) {
+                                            const existingItem = cart.find(item => item.barcode === barcode);
+                                            if (existingItem) {
+                                                existingItem.quantity++;
+                                            } else {
+                                                cart.push({
+                                                    barcode: barcode,
+                                                    name: data.name,
+                                                    price: parseFloat(data.price),
+                                                    quantity: quantity,
+                                                });
+                                            }
+                                            renderCart();
+                                            document.getElementById('barcode').value = ''; // Clear input
+                                        } else {
+                                            alert(stockData.error);
+                                        }
+                                    });
+                                } else {
+                                    alert('Insufficient stock for this product!');
+                                }
+                            });
+                    } else {
+                        alert('Product not found!');
+                    }
+                });
+        }
+        
+    
+        function removeItem(index) {
+            const item = cart[index];
+    
+            fetch(`/restore-stock/${item.barcode}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                body: JSON.stringify({ quantity: 1 }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (item.quantity > 1) {
+                        item.quantity--;
+                    } else {
+                        cart.splice(index, 1);
+                    }
+                    renderCart();
+                } else {
+                    alert(data.error);
+                }
+            });
+        }
+    
+        function renderCart() {
+            const cartTable = document.getElementById('cart-table-body');
+            cartTable.innerHTML = '';
+            let total = 0;
+            let totalGST = 0;
+        
+            cart.forEach((item, index) => {
+                let priceBeforeGST = item.price / 1.17;  // Calculate price before GST
+                let gstAmount = item.price - priceBeforeGST; // GST amount per item
+                let totalItemPrice = item.quantity * item.price; // Final total including GST
+                let totalItemGST = item.quantity * gstAmount; // Total GST for this item
+        
+                total += totalItemPrice;
+                totalGST += totalItemGST;
+        
+                const row = `
+                    <tr>
+                        <td>${item.name}</td>
+                        <td>
+                            <input type="number" value="${item.quantity}" 
+                                   min="1" 
+                                   onchange="updateQuantity(${index}, this.value)">
+                        </td>
+                        <td>${priceBeforeGST.toFixed(2)}</td>
+                        <td>17%</td>
+                        <td>${gstAmount.toFixed(2)}</td>
+                        <td>${item.price.toFixed(2)}</td>
+                        <td>${totalItemPrice.toFixed(2)}</td>
+                        <td>
+                            <button onclick="removeItem(${index})">Remove</button>
+                        </td>
+                    </tr>
+                `;
+                cartTable.innerHTML += row;
+            });
+        
+            originalTotal = total; // Store original total
+            document.getElementById('total').innerText = total.toFixed(2);
+            document.getElementById('total-gst').innerText = totalGST.toFixed(2); // Display total GST
+        
+            applyDiscount();
+            calculateChange();
+        }
+        
+        
+        function updateQuantity(index, newQuantity) {
+            newQuantity = parseInt(newQuantity, 10);
+            if (newQuantity <= 0) {
+                alert("Quantity must be at least 1");
+                renderCart();
+                return;
+            }
+        
+            const item = cart[index];
+            const oldQuantity = item.quantity;
+            const quantityDifference = newQuantity - oldQuantity;
+        
+            if (quantityDifference === 0) return;
+        
+            // Determine endpoint: increase or decrease stock
+            const endpoint = quantityDifference > 0 ? '/deduct-stock/' : '/restore-stock/';
+        
+            fetch(`${endpoint}${item.barcode}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                body: JSON.stringify({ quantity: Math.abs(quantityDifference) }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    item.quantity = newQuantity;
+                    renderCart();
+                } else {
+                    alert(data.error);
+                    renderCart();  // Re-render to reset input if stock update fails
+                }
+            })
+            .catch(error => {
+                console.error("Error updating quantity:", error);
+            });
+        }
+        
+        let originalTotal = 0; // Store original total to avoid compounding discounts
+
+function applyDiscount() {
+    const totalElement = document.getElementById('total');
+    const discountType = document.getElementById('discount-type').value;
+    const discountValue = parseFloat(document.getElementById('discount').value) || 0;
+
+    if (originalTotal === 0) {
+        originalTotal = parseFloat(totalElement.innerText) || 0; // Store the original total only once
+    }
+
+    let discountAmount = 0;
+
+    if (discountValue > 0) {
+        if (discountType === "%") {
+            discountAmount = (originalTotal * discountValue) / 100;
+        } else {
+            discountAmount = discountValue;
+        }
+    }
+
+    // Calculate new total and prevent negative values
+    let newTotal = Math.max(originalTotal - discountAmount, 0);
+    totalElement.innerText = newTotal.toFixed(2);
+
+    calculateChange(); // Ensure the change is updated
+}
+
+        
+    
+function calculateChange() {
+    const total = parseFloat(document.getElementById('total').innerText) || 0;
+    const cashReceived = parseFloat(document.getElementById('cash-received').value) || 0;
+    const change = cashReceived - total;
+
+    if (change < 0) {
+        document.getElementById('change').innerText = `Rs. ${change.toFixed(2)}`; // Display negative value
+        document.getElementById('change').style.color = "red";
+    } else {
+        document.getElementById('change').innerText = change.toFixed(2);
+        document.getElementById('change').style.color = "black";
+    }
+}
+
+
+    
+        function completeBilling() {
+            const cashReceived = parseFloat(document.getElementById('cash-received').value);
+            fetch('/billing-page/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                body: JSON.stringify({
+                    items: cart,
+                    cash_received: cashReceived,
+                    discount_type: document.getElementById('discount-type').value,
+                    discount_value: parseFloat(document.getElementById('discount').value) || 0,
+                }),
+            }).then(response => response.json()).then(data => {
+                if (data.success) {
+                    alert(`Billing completed! Receipt ID: ${data.receipt_id}`);
+                    window.location.reload();
+                } else {
+                    alert(data.error);
+                }
+            });
+        }
+        
+    
+        function completeAndPrintReceipt() {
+            // First complete the billing by calling the server endpoint
+            const cashReceived = parseFloat(document.getElementById('cash-received').value);
+            
+            fetch('/billing-page/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                body: JSON.stringify({
+                    items: cart,
+                    cash_received: cashReceived,
+                    discount_type: document.getElementById('discount-type').value,
+                    discount_value: parseFloat(document.getElementById('discount').value) || 0,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(`Billing completed! Receipt ID: ${data.receipt_id}`);  // Billing complete message
+        
+                    // Set receipt values
+                    document.getElementById('receipt-total').innerText = document.getElementById('total').innerText;
+                    document.getElementById('receipt-paid').innerText = document.getElementById('cash-received').value;
+                    document.getElementById('receipt-change').innerText = document.getElementById('change').innerText;
+                    document.getElementById('receipt-total-gst').innerText = document.getElementById('total-gst').innerText;
+                    
+                    const receiptItems = document.getElementById('receipt-items');
+                    receiptItems.innerHTML = '';
+                    
+                    cart.forEach(item => {
+                        let priceBeforeGST = item.price / 1.17;  // Calculate price before GST
+                        let gstAmount = item.price - priceBeforeGST; // GST amount
+                        
+                        const row = `
+                            <tr>
+                                <td>${item.name}</td>
+                                <td>${priceBeforeGST.toFixed(2)}</td>
+                                <td>17%</td>
+                                <td>${gstAmount.toFixed(2)}</td>
+                                <td>${item.price.toFixed(2)}</td>
+                                <td>${item.quantity}</td>
+                                <td>${(item.price * item.quantity).toFixed(2)}</td>
+                            </tr>
+                        `;
+                        receiptItems.innerHTML += row;
+                    });
+        
+                    // Show the receipt section for printing
+                    document.getElementById('receipt-section').style.display = 'block';
+        
+                    // Now trigger the print action
+                    window.print();
+                    window.location.reload();  // Refresh the page to reset everything after print
+                } else {
+                    alert(data.error);  // Handle any errors during billing completion
+                }
+            })
+            .catch(error => {
+                console.error("Error completing billing:", error);
+                alert('There was an error completing the billing. Please try again.');
+            });
+        }
+        
+        
+    </script>
+</head>
+<body>
+    <h1>Billing Page</h1>
+    <div class="container">
+        <div class="barcode-section">
+            <input type="text" id="barcode" placeholder="Scan or Enter Barcode">
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Price Before GST</th>
+                    <th>GST %</th>
+                    <th>GST Amount</th>
+                    <th>Price Incl. GST</th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="cart-table-body"></tbody>
+        </table>
+        
+        <div class="total-section">
+            Total GST: Rs. <span id="total-gst">0.00</span>
+        </div>
+        
+
+        <div class="bottom-section">
+            <div class="total-section">
+                Total: Rs. <span id="total">0.00</span>
+            </div>
+            <div class="form-section">
+                <input type="number" id="cash-received" placeholder="Cash Received" oninput="calculateChange()">
+                <div class="change-section">
+                    Change: Rs. <span id="change">0.00</span>
+                </div>
+            </div>
+            <div class="form-section">
+                <div class="form-section">
+                    <select id="discount-type" onchange="applyDiscount()">
+                        <option value="Rs">Rs</option>
+                        <option value="%">%</option>
+                    </select>
+                    <input type="number" id="discount" placeholder="Enter Discount" oninput="applyDiscount()">
+                </div>
+                
+            </div>
+            <button onclick="completeBilling()">Complete Billing</button>
+            <button onclick="completeAndPrintReceipt()">Complete & Print Receipt</button>
+        </div>
+    </div>
+
+    <!-- Receipt Section (Hidden initially) -->
+    <div id="receipt-section" class="receipt" style="display: none;">
+        <h3><i>Victoria Cloth & Store</i></h3>
+        <div>Usman Tower, 12 Usman Street, Muchin Pura</div>
+        <div>Tel: 0300 8885341 | 0300 4008513</div>
+        <div>Transaction ID: <span id="receipt-transaction-id">#00123</span></div>
+        <div>Date: <span id="receipt-date"></span></div>
+        <hr>
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Price Before GST</th>
+                    <th>GST %</th>
+                    <th>GST Amount</th>
+                    <th>Price Incl GST</th>
+                    <th>Qty</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody id="receipt-items"></tbody>
+        </table>
+        <hr>
+        <div>Total GST: Rs. <span id="receipt-total-gst"></span></div>
+        <div>Total Bill: Rs. <span id="receipt-total"></span></div>
+        <div>Cash Paid: Rs. <span id="receipt-paid"></span></div>
+        <div>Change: Rs. <span id="receipt-change"></span></div>
+    </div>  
+</body>
+</html>

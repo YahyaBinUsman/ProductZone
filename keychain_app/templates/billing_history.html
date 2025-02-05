@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Billing History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        form {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        form input, form button {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        form button {
+            margin-left: 10px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        form button:hover {
+            background: #45a049;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Billing History</h1>
+    <div class="container">
+        <form method="get">
+            <input type="date" name="date" value="{{ request.GET.date }}">
+            <button type="submit">Search</button>
+        </form>
+        
+
+        <table>
+            <tr>
+                <th>Bill ID</th>
+                <th>Date</th>
+                <th>Total Before Discount</th>
+                <th>Discount Type</th>
+                <th>Discount Value</th>
+                <th>Total After Discount</th>
+                <th>Cash Received</th>
+                <th>Change</th>
+            </tr>
+            {% for record in records %}
+            <tr>
+                <td>{{ record.id }}</td>
+                <td>{{ record.created_at }}</td>
+                <td>{{ record.total_amount }}</td>
+                <td>{{ record.discount_type }}</td>
+                <td>{{ record.discount_value }}</td>
+                <td>{{ record.discounted_total }}</td>
+                <td>{{ record.cash_received }}</td>
+                <td>{{ record.change }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        
+    </div>
+</body>
+</html>

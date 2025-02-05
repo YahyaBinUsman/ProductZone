@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Styles optimized for thermal printers */
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            width: 300px; /* Standard thermal paper width */
+        }
+        .receipt-header {
+            text-align: center;
+        }
+        .receipt-body {
+            margin-top: 20px;
+        }
+        .receipt-footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            text-align: left;
+            padding: 5px;
+        }
+        .total {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="receipt-header">
+        <h2>Store Name</h2>
+        <p>Address Line 1</p>
+        <p>Address Line 2</p>
+        <p>Phone: 123-456-7890</p>
+    </div>
+    <div class="receipt-body">
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.price }}</td>
+                    <td>{{ item.total }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="receipt-footer">
+        <p>Total: {{ total_amount }}</p>
+        <p>Cash Received: {{ cash_received }}</p>
+        <p>Change: {{ change }}</p>
+        <p>Thank you for your purchase!</p>
+    </div>
+</body>
+</html>

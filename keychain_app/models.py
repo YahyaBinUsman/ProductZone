@@ -1,7 +1,7 @@
 from django.db import models
 from decimal import Decimal
 from django.core.exceptions import ObjectDoesNotExist
-
+import random
 class Category(models.Model):
     name = models.CharField(max_length=100)
     url_name = models.SlugField(unique=True, default='none')  # Specify a default value
@@ -12,40 +12,30 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+import random
+from django.db import models
+from decimal import Decimal
+
 class Product(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     original_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-
     quantity = models.PositiveIntegerField()
     image = models.ImageField(upload_to='products/')
     is_featured = models.BooleanField(default=False)
-    is_discounted = models.BooleanField(default=False)  # New field for discounted items
-    is_best_seller = models.BooleanField(default=False)  # New field for best sellers
-    category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
+    is_discounted = models.BooleanField(default=False)
+    is_best_seller = models.BooleanField(default=False)
+    category = models.ForeignKey('Category', related_name='products', on_delete=models.CASCADE)
+    rack_number = models.CharField(max_length=50, blank=True, null=True)
+    barcode = models.CharField(max_length=12, unique=True, blank=False, null=False)  # Default barcode
+    gross_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default='300')  # New Field
 
-    def discounted_price(self):
-        """Calculates a 15% discounted price if the product is marked as discounted."""
-        if self.is_discounted:
-            return self.price * Decimal('0.85')  # 15% discount
-        return self.price
-    
+
     def save(self, *args, **kwargs):
-        if self.is_discounted:
-            if not self.original_price:
-                self.original_price = self.price
-            # Convert 0.85 to a Decimal
-            self.price = round(self.original_price * Decimal('0.85'), 2)
-        else:
-            if self.original_price:
-                self.price = self.original_price
-                self.original_price = None
-
+        # Do not generate barcode automatically anymore
         super().save(*args, **kwargs)
 
-    def __str__(self):
-        return self.name
     def __str__(self):
         return self.name
 
@@ -121,3 +111,16 @@ class NewsletterSubscriber(models.Model):
 
     def __str__(self):
         return self.email
+
+class BillingRecord(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    items = models.TextField()  # JSON string of purchased items
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # Before discount
+    discount_type = models.CharField(max_length=10, default="Rs")  # Rs or %
+    discount_value = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    discounted_total = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # After discount
+    cash_received = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    change = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+
+    def __str__(self):
+        return f"Bill #{self.id} - {self.created_at.strftime('%Y-%m-%d %H:%M:%S')}"

@@ -412,8 +412,9 @@ p {
     
     <!-- Featured Products Section -->
      <br>
+     <div id="featured-products">
     <h2>Featured Products</h2>
-    <section id="featured-products" class="product-grid">
+    <section  class="product-grid">
         {% for product in featured_products %}
                 <div class="product-card" data-product-id="{{ product.id }}">
                     <img src="{{ product.image.url }}" alt="{{ product.name }}">
@@ -427,6 +428,7 @@ p {
                     </form>                       </div>
         {% endfor %}
     </section>
+</div>
 
 
     <!-- Discounted Items Section -->

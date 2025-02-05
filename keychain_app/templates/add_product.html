@@ -178,18 +178,24 @@
     <div class="form-container">
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            
+
             <label for="name">Product Name</label>
             {{ form.name }}
 
             <label for="description">Product Description</label>
             {{ form.description }}
-
+            
+            <label for="gross_price">Gross Price</label>
+            {{ form.gross_price }}
+            
             <label for="price">Price</label>
             {{ form.price }}
 
             <label for="quantity">Quantity</label>
             {{ form.quantity }}
+
+            <label for="rack_number">Rack Number</label>
+            {{ form.rack_number }}
 
             <label for="image">Product Image</label>
             {{ form.image }}
@@ -199,6 +205,10 @@
 
             <label for="category">Category</label>
             {{ form.category }}
+
+            <label for="barcode">Generated Barcode</label>
+<input type="text" id="barcode" name="barcode" value="{{ form.instance.barcode }}">
+
 
             <button type="submit">Add Product</button>
         </form>
